@@ -14,7 +14,7 @@
 
 \begin{frontmatter}
 
-\title{How Minibus Taxis Move in Gauteng, South Africa}
+\title{When Does Driver Agency Matter? Comparing Data Replay and Agent-Based Optimisation for Paratransit Electrification in Cape Town, South Africa}
 
 \author[aff1]{J.~T. Sello\corref{cor1}}
 \ead{jtsello@sun.ac.za}
@@ -35,7 +35,7 @@
 \end{abstract}
 
 \begin{keyword}
-minibus taxi \sep GPS telemetry \sep vehicle-day \sep daily distance \sep Gauteng \sep paratransit
+    paratransit \sep minibus taxi \sep electrification \sep agent-based modelling \sep data replay \sep charging infrastructure \sep simulation-based optimisation \sep Cape Town
 \end{keyword}
 
 \end{frontmatter}
@@ -43,22 +43,154 @@ minibus taxi \sep GPS telemetry \sep vehicle-day \sep daily distance \sep Gauten
 \section{Introduction}
 \textcolor{red}{TODO: Complete introduction.}
 
-\textcolor{red}{TODO: Complete research questions:}
-\textcolor{red}{
-    \begin{itemize}
-        \item What is the consequence of making electrification investments under a model that excludes adaptive behaviour? --- This is the sort of methodological conclusion that can solidify the PhD.
-    \end{itemize}
-}
+\subsection{Paratransit electrification as a coupled planning problem}
+% Discuss > Establish that electrification couples previously weakly coupled systems: mobility <-> battery <-> charging <-> grid. and that paratransit adds another important coupling: electrification constraints <-> driver behaviour.
+% - Slow charging, limited range and finite chargers create opportunity costs that did not exist in the same form for ICE vehicles.
 
-\section{Literature review}
+% Discuss > Driver agency -> Drivers control much of the underlying mobility through decisions about where, when and how long to operate.
+
+% Discuss > Conclude -> Therefore infrastructure requirements may depend on whether mobility is treated as: fixed; or adaptive.
+
+
+\subsection{Modelling paratransit: the tale of two paradigms}
+% Discuss > Rehash the discussion had in the Gaurav paper + Booysen et al. sys-of-sys paper. Establish that the modelling of paratransit is a complex problem, and that the modelling of electrification is a complex problem, and that the two problems are coupled.
+
+% Discuss > State the methodological tention -> Data replay is strongly grounded in observed behaviour but assumes that mobility largely persists after electrification. Agent-based modelling can represent adaptive responses, but introduces behavioural assumptions, calibration requirements, computation, and uncertainty.
+
+% Discuss > Data-replay
+% - Frames successful electrification as: Can the electric fleet reproduce observed vehicle activity?
+
+% Discuss > Agent-based modelling
+% - Frames successful electrification as: Can the system satisfy passenger demand at acceptable waiting time, cost and grid impact while drivers respond to electrification?
+
+% Discuss > These are different notions of system performance.
+% - system-of-systems paper already motivates this broader progression by distinguishing current mobility from mobility generated through driver decisions and passenger-demand interactions.
+
+\subsection{Research gap}
+% Discuss > Frame as -> Existing studies establish electrification feasibility under observed mobility or develop behaviourally richer simulation frameworks, but there is limited evidence on how progressively richer representations of agency propagate from simulated system behaviour into optimised infrastructure decisions, and whether simpler-model solutions remain robust when evaluated under richer behavioural assumptions.
+
+Existing work can evaluate whether observed paratransit mobility is compatible with electrification~\cite{}, while behaviourally explicit models can represent adaptive responses to energy and charging constraints~\cite{}. What remains unclear is whether these different representations lead to materially different infrastructure planning decisions when applied to the same empirically observed transport subsystem, and whether infrastructure selected under fixed-mobility assumptions remains effective once driver and passenger interactions are allowed to respond endogenously.
+
+\subsection{Research questions}
+
+This study addresses the following research questions:
+\begin{enumerate}
+    % RQ1 - System representation
+    \item How do predicted electrification outcomes differ when the mobility of the same sampled paratransit fleet is represented as fixed empirical activity versus endogenous driver behaviour?
+    % RQ2 - Planning decision
+    \item How do the electrification infrastructure strategies selected by data replay and agent-based optimisation differ when each model is evaluated using the outcomes it can validly represent?
+    % RQ3 - Decision consequence (uni-directional regret)
+    \item What additional operational and passenger-service consequences become visible when a replay-derived infrastructure strategy is evaluated in the agent-based model?
+\end{enumerate}
+
+\subsection{Contributions}
+This study examines the implications of explicit behavioural representations of driver agency for paratransit electrification planning. It contributes to the literature by performing a controlled comparison of fixed-mobility data-replay and decision-adaptive agent-based modelling approaches applied to the same empirically observed paratransit subsystem. The model-comparison framework adheres to model-native objective spaces, rather than forcing a single objective space reduction across models with different behavioural assumptions. Additionally, the study performs independent simulation-based optimisation of charging infrastructure under each model, and evaluates the consequences of applying a data-replay-derived infrastructure strategy in the agent-based model. The findings provide insights into how progressively richer representations of driver agency can influence electrification outcomes and infrastructure planning decisions, guiding future research and policy development in the context of paratransit electrification.
+
+\section{Related work}
 \textcolor{red}{TODO: Complete literature review.}
 
 \section{Methodology}
 \textcolor{red}{TODO: Complete methodology.}
 
+% Figure > Three-model hybrid experimental design
+
+\subsection{Study context and data}
+
+\subsubsection{Case study: Cape Town minibus taxi paratransit}
+
+% Note > Model case-study matching
+% - The design principle I would use is:
+%   same physical case study + same fleet exposure + same network opportunity set + same resource competition
+% - Define a study domain
+%   - explicitly represented vehicles;
+%   - operational network nodes and edges;
+%   - candidate charging sites;
+%   - route/rank operating opportunities;
+%   - boundary conditions representing interactions outside the explicit domain.
+% - The ABm is ABM of a data-backed Cape Town paratransit subsystem --- not one of the entire CPT
+
+\subsubsection{Datasources}
+
+
+
+\subsection{The optimisation problem}
+
+
+\subsection{Empirical data-replay \( M_0 \)}
+
+% - Could this observed operating pattern be repeated indefinitely without progressively draining the battery?
+
+\subsection{Charging agency \( M_1 \)}
+
+\subsection{Agent-based model \( M_2 \)}
+
+
+\subsection{Behavioural calibration}
+% Discuss > How ICE-era empirical observation used to calibrated \theta_2
+% - daily distance;
+% - working duration;
+% - start/end time;
+% - dwell distributions;
+% - rank visitation;
+
+\subsection{Behavioural validation}
+
+% Discuss > Before introducing electrification, can the behavioural model reproduce relevant observed operational statistics?
+
+\subsection{Common electrification experiment}
+% Discuss > Before optimisation, evaluate every model under the same fixed reference infrastructure: x_{\text{ref}} -> Y_k = f(M_k, x_{\text{ref}}) for k = 0, 1, 2.
+% - Fix location(s)
+% This isolates how agency changes:
+% - kilometres;
+% - charging timing;
+% - queueing;
+% - energy;
+% - peak demand;
+% - SoC failures.
+% This is Experiment I.
+
 
 \section{Results}
 \textcolor{red}{TODO: Complete results.}
+
+\subsection{Empirical model validation}
+
+\begin{table}[htbp]
+    \centering
+    \footnotesize
+    \caption{Cumulative recovery of independent City of Johannesburg taxi-rank references through the reconstruction stages.}
+    \label{tab:reference_recovery}
+    \begin{minipage}{0.5\linewidth}
+        \begin{tabularx}{\linewidth}{@{}Xrrr@{}}
+            \toprule
+            \textbf{Metric} & \(M_0\) & \(M_1\) & \(M_2\) \\
+            \midrule
+            Daily vehicle distance & \textbf{-} &  &  \\
+            Operating duration & \textbf{-} &  &  \\
+            Rank arrival rate & \textbf{-} &  &  \\
+            Rank departure rate & \textbf{-} &  &  \\
+            Dwell duration & \textbf{-} &  &  \\
+            Move start time & \textbf{-} &  &  \\
+            Move end time & \textbf{-} &  &  \\
+            \bottomrule
+        \end{tabularx}
+        \smallskip
+
+        \footnotesize
+        \textit{Note:} Model \(M_0\) represents the mobility observed in the empirical data and is therefore used as the ICE-era reference.
+    \end{minipage}
+\end{table}
+
+\subsection{Baseline electrification under data replay}
+% Discuss > How does the system perform under the simplest model \( M_0 \) when electrification is introduced? 
+% - feasible vehicle-days;
+% - mobility/activity completed;
+% - charging-resource utilisation;
+% - charging energy;
+% - peak load;
+% - reasons for failed vehicle-days.
+
+\subsection{}
 
 % \begin{table}[htb]
 %     \centering
