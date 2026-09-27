@@ -40,6 +40,10 @@
 
 \end{frontmatter}
 
+% --------------------------------------------------
+%   Introduction
+% --------------------------------------------------
+
 \section{Introduction}
 \textcolor{red}{TODO: Complete introduction.}
 
@@ -86,69 +90,37 @@ This study addresses the following research questions:
 \subsection{Contributions}
 This study examines the implications of explicit behavioural representations of driver agency for paratransit electrification planning. It contributes to the literature by performing a controlled comparison of fixed-mobility data-replay and decision-adaptive agent-based modelling approaches applied to the same empirically observed paratransit subsystem. The model-comparison framework adheres to model-native objective spaces, rather than forcing a single objective space reduction across models with different behavioural assumptions. Additionally, the study performs independent simulation-based optimisation of charging infrastructure under each model, and evaluates the consequences of applying a data-replay-derived infrastructure strategy in the agent-based model. The findings provide insights into how progressively richer representations of driver agency can influence electrification outcomes and infrastructure planning decisions, guiding future research and policy development in the context of paratransit electrification.
 
+% --------------------------------------------------
+%   Literature Review
+% --------------------------------------------------
+
 \section{Related work}
 \textcolor{red}{TODO: Complete literature review.}
+
+
+% --------------------------------------------------
+%   Methodology
+% --------------------------------------------------
 
 \section{Methodology}
 \textcolor{red}{TODO: Complete methodology.}
 
-% Figure > Three-model hybrid experimental design
-
-\subsection{Study context and data}
-
-\subsubsection{Case study: Cape Town minibus taxi paratransit}
-
-% Note > Model case-study matching
-% - The design principle I would use is:
-%   same physical case study + same fleet exposure + same network opportunity set + same resource competition
-% - Define a study domain
-%   - explicitly represented vehicles;
-%   - operational network nodes and edges;
-%   - candidate charging sites;
-%   - route/rank operating opportunities;
-%   - boundary conditions representing interactions outside the explicit domain.
-% - The ABm is ABM of a data-backed Cape Town paratransit subsystem --- not one of the entire CPT
-
-\subsubsection{Datasources}
+\subsection{Study design}
 
 
-
-\subsection{The optimisation problem}
-
-
-\subsection{Empirical data-replay \( M_0 \)}
-
-% - Could this observed operating pattern be repeated indefinitely without progressively draining the battery?
-
-\subsection{Charging agency \( M_1 \)}
-
-\subsection{Agent-based model \( M_2 \)}
+\begin{figure}[htb!]
+    \centering
+    \includegraphics[width=\textwidth]{figures/system-diagram.pdf}
+    \caption{
+        Overview of the study design. The same empirical paratransit mobility data is used to parameterise both a data-replay model and an agent-based model. Each model is then used to independently optimise charging infrastructure, and the resulting infrastructure strategies are evaluated under each model's native assumptions. The agent-based model is also used to evaluate the consequences of applying a data-replay-derived infrastructure strategy in a decision-adaptive context. The result is then compared to the agent-based model's native infrastructure strategy to assess the implications of ignoring driver agency in electrification planning.
+    }
+    \label{fig:system_diagram}
+\end{figure}
 
 
-\subsection{Behavioural calibration}
-% Discuss > How ICE-era empirical observation used to calibrated \theta_2
-% - daily distance;
-% - working duration;
-% - start/end time;
-% - dwell distributions;
-% - rank visitation;
-
-\subsection{Behavioural validation}
-
-% Discuss > Before introducing electrification, can the behavioural model reproduce relevant observed operational statistics?
-
-\subsection{Common electrification experiment}
-% Discuss > Before optimisation, evaluate every model under the same fixed reference infrastructure: x_{\text{ref}} -> Y_k = f(M_k, x_{\text{ref}}) for k = 0, 1, 2.
-% - Fix location(s)
-% This isolates how agency changes:
-% - kilometres;
-% - charging timing;
-% - queueing;
-% - energy;
-% - peak demand;
-% - SoC failures.
-% This is Experiment I.
-
+% --------------------------------------------------
+%   Results
+% --------------------------------------------------
 
 \section{Results}
 \textcolor{red}{TODO: Complete results.}
