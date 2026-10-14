@@ -19,7 +19,7 @@
 
 \begin{frontmatter}
 
-\title{When Does Driver Agency Matter? Data Replay versus Agent-Based Modelling for Minibus-Taxi Electrification Pilots in Cape Town, South Africa}
+\title{Does Behavioural Fidelity Change Charging Infrastructure Decisions? Data Replay and Agent-Based Simulation for Minibus-Taxi Electrification in Cape Town}
 
 \author[aff1]{J.~T. Sello\corref{cor1}}
 \ead{jtsello@sun.ac.za}
@@ -62,17 +62,22 @@
 % Discuss > Establish that electrification couples previously weakly coupled systems: mobility <-> battery <-> charging <-> grid. and that paratransit adds another important coupling: electrification constraints <-> driver behaviour.
 % - Slow charging, limited range and finite chargers create opportunity costs that did not exist in the same form for ICE vehicles.
 
-Paratransit systems, such as minibus taxis, are a critical component of urban mobility in many cities, particularly in developing countries. As global efforts to reduce greenhouse gas emissions intensify, the electrification of these systems has become a focal point for sustainable urban transport planning~\cite{}. However, the transition from internal combustion engine (ICE) vehicles to electric vehicles (EVs) introduces a complex set of interdependencies that were previously weakly coupled. Specifically, the mobility of vehicles is now closely linked to vehicle drive-train efficiency, battery capacity, and charging infrastructure, which in turn affects the electrical grid and drivers' ability to service passenger demand~\cite{}. This coupling creates new challenges for planning and operation, as the limitations of electric vehicles (EVs), such as slower charging times and limited range, introduce opportunity costs that were not present for internal combustion engine (ICE) vehicles~\cite{}. When investigating the electrification of paratransit system, it is therefore essential that the planning models account for the interactions between these systems, as well as the adaptive behaviour of drivers who respond to these constraints in their operational decisions~\cite{}.
+Paratransit systems, such as minibus taxis, are a critical component of urban mobility in many cities, particularly in developing countries. As global efforts to reduce greenhouse gas emissions intensify, the electrification of these systems has become a focal point for sustainable urban transport planning~\cite{nasac2024_decarbonising_transport_in_africa, bankole2026_electrifying_paratransit_ssa}. However, the transition from internal combustion engine (ICE) vehicles to electric vehicles (EVs) introduces a complex set of interdependencies that were previously weakly coupled. Specifically, the mobility of vehicles is now closely linked to vehicle drive-train efficiency, battery capacity, and charging infrastructure, which in turn affects the electrical grid and drivers' ability to service passenger demand~\cite{booysen2025_sys_of_sys_em_planning}. This coupling creates new challenges for planning and operation, as the limitations of electric vehicles (EVs), such as slower charging times and limited range, changes the operational status quo, introducing opportunity costs that were not present for internal combustion engine (ICE) vehicles~\cite{}. When investigating the electrification of paratransit system, it is therefore essential that the planning models account for the interactions between these systems, as well as the adaptive behaviour of drivers who respond to these constraints in their operational decisions~\cite{}.
 
 % Discuss > Driver agency -> Drivers control much of the underlying mobility through decisions about where, when and how long to operate.
 
-
+In South Africa, minibus-taxi drivers have significant agency over their operational decisions, including where, when, and how long to operate~\cite{}. This agency allows drivers to adapt their behaviour in response to the constraints imposed by electrification, such as limited range and charging availability. As a result, the success of electrification initiatives is not solely dependent on the technical feasibility of EVs but also on how drivers respond to these new operational constraints. Understanding and modelling driver behaviour is therefore crucial for accurately predicting the outcomes of electrification and for designing effective charging infrastructure that meets both operational and passenger demand requirements.
 
 % Discuss > Conclude -> Therefore infrastructure requirements may depend on whether mobility is treated as: fixed; or adaptive.
+Therefore, the planning of charging infrastructure for paratransit electrification must consider whether mobility should be treated as fixed or adaptive. Fixed-mobility models, otherwise termed ``data-replay models'', assume that observed vehicle activity will largely persist after electrification, while adaptive-mobility models account for the potential changes in driver behaviour in response to introduced constraints. The choice between these two paradigms can significantly influence the predicted outcomes of electrification and the resulting infrastructure requirements, highlighting the importance of incorporating behavioural fidelity into planning models.
 
 
 \subsection{Modelling paratransit: the tale of two paradigms}
 % Discuss > Rehash the discussion had in the Gaurav paper + Booysen et al. sys-of-sys paper. Establish that the modelling of paratransit is a complex problem, and that the modelling of electrification is a complex problem, and that the two problems are coupled.
+
+Planning for the electrification of paratransit systems is a complex problem that requires careful consideration of both technical and behavioural factors. In the domain of assessing the integration of electric vehicles into paratransit systems, two primary modelling paradigms have emerged: fixed-mobility data-replay models and adaptive-mobility agent-based models. Each paradigm offers distinct advantages and limitations, and the choice between them can significantly impact the predicted outcomes of electrification initiatives. 
+
+
 
 % Discuss > State the methodological tention -> Data replay is strongly grounded in observed behaviour but assumes that mobility largely persists after electrification. Agent-based modelling can represent adaptive responses, but introduces behavioural assumptions, calibration requirements, computation, and uncertainty.
 
@@ -85,12 +90,13 @@ Paratransit systems, such as minibus taxis, are a critical component of urban mo
 % Discuss > These are different notions of system performance.
 % - system-of-systems paper already motivates this broader progression by distinguishing current mobility from mobility generated through driver decisions and passenger-demand interactions.
 
-\subsection{Electrification pilots in a mixed fleet}
-% Discuss > Pilots are community-scale, not fleet-scale -> The first electric minibus taxis will be a small group of vehicles that share stops, routes and hubs. A charger goes where these vehicles stop, so the pilot unit is a vehicle community, not a city fleet.
+% > Discuss > Electrification pilots in a mixed fleet
+% - Pilots are community-scale, not fleet-scale -> The first electric minibus taxis will be a small group of vehicles that share stops, routes and hubs. A charger goes where these vehicles stop, so the pilot unit is a vehicle community, not a city fleet.
+% - Early EVs compete with ICE vehicles -> On the same corridors, most vehicles stay ICE. Time at a charger is time in which an ICE competitor can carry the passenger. Data replay cannot represent this loss; an agent-based model with the full corridor population can.
+% - Conclude -> The comparison of the two paradigms is most relevant at the scale and in the market in which pilots will happen.
 
-% Discuss > Early EVs compete with ICE vehicles -> On the same corridors, most vehicles stay ICE. Time at a charger is time in which an ICE competitor can carry the passenger. Data replay cannot represent this loss; an agent-based model with the full corridor population can.
+Because of significant economical, infrastructural, and operational barriers, realistically, the first electric minibus taxis will be a small group of vehicles that share stops, routes, and hubs, rather than an entire electrified fleet. This means that, for the purposes of this study, the planning and evaluation of electrification initiatives are conducted at the community scale, where the interactions between electric and internal combustion engine (ICE) vehicles are particularly relevant. In such a mixed-fleet environment, the time spent by electric vehicles at charging stations represents an opportunity cost, as ICE competitors can continue to carry passengers during these periods. Furthermore, vehicle communities are not necessarily aligned with taxi associations or licensed routes, and the study does not assign any association to a vehicle or community. Therefore, the comparison of fixed-mobility data-replay models and adaptive-mobility agent-based models is most relevant at the scale and in the market in which electrification pilots are likely to occur. 
 
-% Discuss > Conclude -> The comparison of the two paradigms is most relevant at the scale and in the market in which pilots will happen.
 
 \subsection{Research gap}
 % Discuss > Frame as -> Existing studies establish electrification feasibility under observed mobility or develop behaviourally richer simulation frameworks, but there is limited evidence on whether the two representations of driver agency lead to different infrastructure decisions at pilot scale, and whether replay-derived solutions remain robust when drivers respond and compete with ICE vehicles.
@@ -122,23 +128,23 @@ This study examines the implications of explicit behavioural representations of 
 \section{Related work}
 \textcolor{red}{TODO: Complete literature review.}
 
-\subsection{Paratransit electrification from observed mobility}
-% Discuss > Replay and trajectory-based feasibility studies of minibus-taxi electrification (range, energy, charging opportunity, grid load). What they assume about mobility after electrification.
+\subsection{Electrification feasibility under observed mobility}
+% Discuss > Replay and trajectory-based feasibility studies fleet formal/informal electrification (range, energy, charging opportunity, grid load). What they assume about mobility after electrification.
 
-\subsection{Agent-based models of taxi and paratransit electrification}
+\subsection{Behavioural modelling of paratransit operations}
 % Discuss > Behavioural models of taxi, ride-hailing and paratransit fleets with charging decisions. Calibration practice and the data that they need. Treatment of competition and mixed fleets.
 
-\subsection{Charging infrastructure planning and model fidelity}
+\subsection{Charging infrastructure planning under operational uncertainty}
 % Discuss > Charging-site sizing and placement as simulation-based, multi-objective problems. Evidence on whether designs selected with a simple model remain good under a richer model (robustness, regret, multi-fidelity).
 
-\subsection{Fleet structure from GPS data}
+\subsection{Reconstructing paratransit networks and operating communities from GPS data}
 % Discuss > Community detection, route inference and stop detection from vehicle trajectories. Their use to define study units for pilots.
 
 % --------------------------------------------------
 %   Study area and data
 % --------------------------------------------------
 
-\section{Study design}
+\section{Study area and data}
 \textcolor{red}{TODO: Complete study area and data.}
 
 \subsection{Minibus-taxi operations in Cape Town}
@@ -150,6 +156,9 @@ This study examines the implications of explicit behavioural representations of 
 
 % Discuss > Heterogeneity -> Most variation is from day to day inside each vehicle (ICC 0.23 for distance to 0.38 for moving time; Sebenza exploration notebook, all days of 1 to 15 December).
 % Discuss > Where vehicles stop -> Ranks, termini and stations carry the long dwells (fill-and-go loading); the Site C rank in Khayelitsha alone has 2,314 stop events by 126 vehicles.
+
+% Discuss > Privacy -> Only aggregates are reported. The study never assigns a taxi association to a vehicle or community. Home nodes are numbered and never named by place, and they are not shown on maps.
+
 For this study, we use a subset of the Sebenza~\cite{} router data that covers 378 minibus taxis in Cape Town over 11 weekdays from 1 to 15 December 2025. The study area includes the City of Cape Town metropolitan area, as well as the surrounding Stellenbosch and Drakenstein municipalities, as defined by Census 2011 boundaries~\cite{}. A vehicle-day was considered valid if it had at least 50 km of movement within this polygon, resulting in 2,446 valid vehicle-days out of a total of 3,916 weekday vehicle-days. The GPS sampling interval is approximately 80 seconds and allows for the observation of start, end, and night positions of each day, although stops shorter than about 2 to 3 minutes may not be captured. 
 
 With respect to fleet operational characteristics, vehicles were found to drive a median of 190 km per day, with the 75th percentile at 240 km and the 90th percentile at 305 km, which exceeds the usable range of an electric vehicle (EV) of about XX km~\cite{}, with only 23.5\% of the screened days falling within this range. The taxis operate for approximately 17 to 18 hours from the first to the last detected movement, indicating a high level of daily activity. Heterogeneity in driving patterns was observed, with most variation occurring from day to day within each vehicle. Intraclass correlation coefficients (ICC) ranged from 0.23 for distance to 0.38 for moving time, indicating that individual vehicles exhibit consistent driving patterns across different days. The majority of long dwell times occur at ranks, termini, and stations, which serve as key locations for passenger (fill-and-go) loading and unloading. Table~\ref{tab:cpt_fleet_summary} summarises the distance, movement duration, and operating span of the vehicles during the December period, with interquartile ranges provided in brackets. These descriptive statistics provide a foundational understanding of the operational characteristics of the Cape Town region minibus-taxi fleet, which is essential for informing the subsequent analysis of electrification feasibility and infrastructure planning.
@@ -174,7 +183,7 @@ With respect to fleet operational characteristics, vehicles were found to drive 
     }
 \end{table}
 
-\subsection{Public transport and spatial data}
+\subsection{Mobility, public transport and spatial data sources}
 \label{sec:spatial_data}
 % Discuss > CITP workbook (artifact coct_citp/citp_workbook_2026_09: a compilation of CITP 2024 tables, the PTRS register and other public sources) -> Facility boardings at the main hub of each community (the source of k); Table 3-18 AM-peak vehicle trips in both directions of five corridors (the counter-peak load factors); a check of the demand level against the published boardings.
 % Discuss > PTRS route register (wc_ptrs) -> Valid operating licences; an upper bound of k only, because a licence can authorise many routes and is not an active vehicle.
@@ -182,19 +191,24 @@ With respect to fleet operational characteristics, vehicles were found to drive 
 % Discuss > OSM roads and land use -> Road lengths of all links; the residential end of a corridor for the peak direction.
 % Discuss > Census 2011 main places and subplaces -> The study-area polygon and the readable community and node names.
 
-\subsection{Data quality and study days}
+\subsection{Observation period, data quality and analysis sample}
 \label{sec:study_days}
 % Discuss > Operational day starts at 04:00. Gap rule: a gap longer than 600 s makes a vehicle-day invalid only when the vehicle moved more than 1,000 m during the gap. Only 62.5% of the vehicle-days are valid, and the share changes strongly by date (29% to 87%) while the active vehicles stay at 351 to 360 a day, which points to data loss, not to a change in operation.
 % Discuss > Day split -> Term weekdays 1 to 5 and 8 to 10 December; school-holiday weekdays 11, 12 and 15 December. Hold-out days 2 and 10 December. Calibration days 1, 3, 4, 5, 8 and 9 December.
 % Discuss > Use of the days -> The structural steps (stops, network, communities, routes) use all 11 weekdays. fleet_scale, demand, targets, hand_tuning and calibration use the calibration days only. M_R replays the 8 term weekdays. Long-distance days are not replayed.
 % Discuss > No data-quality exclusion of a community: valid share 0.59 to 0.75, gap time 1% to 2%, outside-network share 0.14 to 0.47.
 
-\subsection{Vehicle and charging assumptions}
-\label{sec:vehicle_assumptions}
-% Discuss > Assumption set abm_baseline_evidence v1 -> Higer H5C: 70.47 kWh usable, 0.38 kWh/km (about 185 km from full to empty; about 130 km in the 0.9 C to 0.2 C window), 60 kW vehicle limit, 0.90 charging efficiency.
-% Discuss > The same EV values, battery window (0.2 C reserve, 0.9 C maximum), site chargers (min(P, 60 kW), first in first out) and home charging (3.7 kW, a socket outlet, at every vehicle) in both models, so differences come from the drivers. There is no case without home charging.
 
-% Discuss > Privacy -> Only aggregates are reported. The study never assigns a taxi association to a vehicle or community. Home nodes are numbered and never named by place, and they are not shown on maps.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/fig01_study_context_a.pdf}\\[0.5em]
+    \includegraphics[width=0.32\textwidth]{figures/fig01_study_context_b.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{figures/fig01_study_context_c.pdf}\hfill
+    \includegraphics[width=0.32\textwidth]{figures/fig01_study_context_d.pdf}
+    \caption{Study context. (a) South Africa with the study area and a zoom on Cape Town and the surrounding municipalities (Census 2011 boundaries); the coloured boxes give the extent of (b) to (d). (b) Khayelitsha, (c) Bellville and (d) Wynberg: the configured network of each community as straight links between nodes (grey), the configured routes of the community drivers as straight links between their stops (colour), the route stops (dots), the formal ranks (squares) and the main hub (star). Home nodes and the links to them are not shown.}
+    \label{fig:context}
+\end{figure}
+
 
 % --------------------------------------------------
 %   Methodology
@@ -203,12 +217,98 @@ With respect to fleet operational characteristics, vehicles were found to drive 
 \section{Methodology}
 \label{sec:methodology}
 
-This section presents the methodological framework that is used to compare fixed-mobility data replay with decision-adaptive agent-based modelling for the planning of minibus-taxi electrification pilots. The methodology is designed to directly address the research questions (RQ1 to RQ4) posed in Section~\ref{sec:research_questions}, with a particular focus on isolating the effect of driver agency on the charging infrastructure that each model selects. To this end, both models are applied to the same empirically observed vehicles, share the same vehicle and charging assumptions, and select from the same set of candidate charging designs, such that a difference in the selected infrastructure can be attributed mainly to the representation of driver behaviour.
+\subsection{Comparative design and shared assumptions}
+\label{sec:methodology_design}
 
-The methodology follows a structured sequence. First, stop events, an operational stop network and a library of representative routes are derived from the router GPS data of the full Cape Town fleet (Sections~\ref{sec:network} and~\ref{sec:routes}). Second, vehicle communities are detected in the fleet, and three communities are selected as electrification pilots by a rule that is frozen before any agent-based simulation is run (Section~\ref{sec:communities}). Third, the data-replay model and the agent-based model are configured for each selected community (Sections~\ref{sec:replay} and~\ref{sec:abm}), the latter with a corridor population and a latent passenger demand that are scaled to published boarding counts (Section~\ref{sec:demand}) and calibrated against the observed duty cycles of the community vehicles (Section~\ref{sec:calibration}). Finally, each model selects a charging design under its own objectives, the replay-derived design is cross-evaluated in the agent-based model, and the results are compared across sensitivity cases and communities (Sections~\ref{sec:objectives} to~\ref{sec:synthesis}).
+% Discuss > Establish the experimental logic before describing either model.
 
-\subsection{Comparison framework}
-\label{sec:framework}
+% Discuss > Discuss the common electrified vehicles, the fixed-mobility versus adaptive-mobility distinction, the shared charging-design space, model-native objectives, cross-evaluation and the known asymmetry in charging during rank-loading queues.
+% - Assumption set abm_baseline_evidence v1 -> Higer H5C: 70.47 kWh usable, 0.38 kWh/km (about 185 km from full to empty; about 130 km in the 0.9 C to 0.2 C window), 60 kW vehicle limit, 0.90 charging efficiency.
+% - The same EV values, battery window (0.2 C reserve, 0.9 C maximum), site chargers (min(P, 60 kW), first in first out) and home charging (3.7 kW, a socket outlet, at every vehicle) in both models, so differences come from the drivers. There is no case without home charging.
+
+
+\begin{figure}[htb!]
+    \centering
+    % TODO: Redraw figures/system-diagram.drawio for the 13-step pipeline: stops -> network -> route library -> communities -> per community [routes -> fleet_scale -> demand -> baseline_config -> targets -> hand_tuning -> calibration] and [replay] -> experiments (search from the M_R design, validation, cross-evaluation, sensitivity) -> synthesis.
+    \includegraphics[width=\textwidth]{figures/system-diagram.pdf}
+    \caption{
+        Overview of the study design. Vehicle communities are found in the router GPS data on one Cape Town stop network, and three are selected for electrification by a frozen rule. For each community, the same observed vehicles are electrified in a data-replay model (\MR) and in an agent-based model (\MA) that also simulates synthetic internal-combustion vehicles on the community's routes. \MR{} evaluates every charging design and selects the replay design; \MA{} searches the same design space from the replay design under its own objectives. The replay design is evaluated in \MA{} beside the \MA{} design to measure the consequence of ignoring driver agency, and the results of the three communities are compared.
+    }
+    \label{fig:system_diagram}
+\end{figure}
+
+
+\subsection{Modelling minibus-taxi operations}
+
+\subsubsection{Fixed-mobility data repplay}
+% Discuss > Describe the replay of observed trajectories under electric-vehicle energy and charging constraints (Pretorius et al.), including charging queues, overnight charging, steady-state iteration and vehicle-day status classification.
+
+\subsubsection{Decision-adaptive data replay}
+% NOTE: Keep the explanation focused on the behavioural features that distinguish the adaptive model from replay and that are new from the previous Sello et al. paper.
+% Discuss > Describe the event-driven simulation, driver decision mechanisms, route choice, idling, stop durations, passenger boarding, driver memory, charging decisions and evaluation horizon.
+
+\subsubsection{Mixed-fleet population and passenger demand}
+
+% Discuss > Explain the construction of the synthetic internal-combustion population, the population scale, the inference of passenger demand from observed departures and published boarding counts, and the assumptions used to distribute demand through the network and over time.
+
+\subsection{Calibration and validating the agent-based model}
+% Discuss > Describe the operational targets, fitting procedure, search objectives and constraints, independent-seed validation, and hold-out-day assessment. Explain which targets are essential for energy and charging analysis and which are realism checks.
+
+
+\subsection{Reconstructing the operational network and vehicle communities}
+\label{sec:methodology_network}
+
+\subsubsection{Stop-event detection and network construction}
+
+% Discuss > Describe the extraction of stop events, identification of operational nodes and directed links, treatment of formal infrastructure, and network validation.
+
+\subsubsection{Route reconstruction and driver-specific route sets}
+
+% Discuss > Explain the identification of anchor dwells, trip clustering, construction of representative routes and assignment of eligible routes to individual vehicles.
+
+\subsubsection{Community detection and electrification-pilot screening}
+
+% Discuss > Describe the multi-view similarity approach, community-detection procedure, definition of hubs, replay-based electrification screen and frozen rule used to select the three cases.
+
+
+\subsection{Charging infrastructure design experiment}
+
+\subsubsection{Candidate sites and charging-design space}
+
+% Discuss > Define the candidate hubs, connector quantities and power levels, and the limits of the design space.
+
+\subsubsection{Performance measures and design-selection rules}
+
+% Discuss > Explain the reliability, passenger-service and infrastructure-load measures. Set out how each model selects a design using its own valid objectives, without implying that their objective spaces are identical.
+
+\subsubsection{Cross-evaluation and sensitivity analysis}
+
+% Discuss > Explain the evaluation of the replay-derived design under adaptive operation, the paired comparisons and the tested sensitivity cases.
+
+
+% --------------------------------------------------
+%   Results
+% --------------------------------------------------
+
+\section{Results}
+
+\subsection{Empirical communities and model validation}
+
+\subsection{Differences in predicted outcomes under a common design}
+
+\subsection{Differences in selected charging infrastructure}
+
+\subsection{Cross-model performance of the selected designs}
+
+\subsection{Robustness and computational trade-offs}
+
+
+
+
+
+
+
+
 % Discuss > The unit of analysis is a vehicle community. A pipeline of 13 named steps builds the inputs of each community: stops, network, routes (fleet library), communities, routes (driver route sets), fleet_scale, demand, baseline_config, targets, hand_tuning, calibration, replay, experiments, synthesis.
 
 % Discuss > Each step has one settings module (each threshold with a written reason and a sensitivity check), a manifest with input, settings, code and output digests (a rerun that writes the same tables does not make the downstream steps stale), and a human decision with a diagnostic notebook. The steps have validity checks, not research gates.
@@ -248,15 +348,6 @@ The use of the study days follows a strict separation between structural and fit
 
 The inputs of each community are built by a pipeline of 13 named steps, which is illustrated in Figure~\ref{fig:system_diagram}. Each step has a single settings module, in which every threshold is accompanied by a written reason and, where relevant, a sensitivity check. Each run of a step writes a manifest that records the digests of its inputs, settings, code and outputs, such that a step becomes stale only when an input, a setting or the code on which it depends has changed. Each step ends with the review of a diagnostic notebook and a recorded human decision to either accept the result or change a rule and run the step again. The steps contain implementation-validity checks (e.g., output schemas, non-empty outputs and resolvable references), but no automatic research gates. Details of the pipeline are provided in Appendix~\ref{app:reproducibility}.
 
-\begin{figure}[htb!]
-    \centering
-    % TODO: Redraw figures/system-diagram.drawio for the 13-step pipeline: stops -> network -> route library -> communities -> per community [routes -> fleet_scale -> demand -> baseline_config -> targets -> hand_tuning -> calibration] and [replay] -> experiments (search from the M_R design, validation, cross-evaluation, sensitivity) -> synthesis.
-    \includegraphics[width=\textwidth]{figures/system-diagram.pdf}
-    \caption{
-        Overview of the study design. Vehicle communities are found in the router GPS data on one Cape Town stop network, and three are selected for electrification by a frozen rule. For each community, the same observed vehicles are electrified in a data-replay model (\MR) and in an agent-based model (\MA) that also simulates synthetic internal-combustion vehicles on the community's routes. \MR{} evaluates every charging design and selects the replay design; \MA{} searches the same design space from the replay design under its own objectives. The replay design is evaluated in \MA{} beside the \MA{} design to measure the consequence of ignoring driver agency, and the results of the three communities are compared.
-    }
-    \label{fig:system_diagram}
-\end{figure}
 
 \subsection{Stop events and the operational network}
 \label{sec:network}
@@ -589,15 +680,6 @@ Since the three communities are three case studies rather than a sample, the syn
     \end{tabularx}
 \end{table}
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=\textwidth]{figures/fig01_study_context_a.pdf}\\[0.5em]
-    \includegraphics[width=0.32\textwidth]{figures/fig01_study_context_b.pdf}\hfill
-    \includegraphics[width=0.32\textwidth]{figures/fig01_study_context_c.pdf}\hfill
-    \includegraphics[width=0.32\textwidth]{figures/fig01_study_context_d.pdf}
-    \caption{Study context. (a) South Africa with the study area and a zoom on Cape Town and the surrounding municipalities (Census 2011 boundaries); the coloured boxes give the extent of (b) to (d). (b) Khayelitsha, (c) Bellville and (d) Wynberg: the configured network of each community as straight links between nodes (grey), the configured routes of the community drivers as straight links between their stops (colour), the route stops (dots), the formal ranks (squares) and the main hub (star). Home nodes and the links to them are not shown.}
-    \label{fig:context}
-\end{figure}
 
 \begin{table}[htbp]
     \centering
