@@ -51,16 +51,156 @@ The eligible routes of a driver are the smallest set of its routes, ordered by t
 
 \section{Agent-based model specification}
 \label{app:abm}
-% Discuss > ODD description of parasim-engine as configured (docs/model-agent-based.md): entities, process overview, route choice, stopping and boarding, demand, charging, memory, stochasticity and observation.
-% Discuss > Engine corrections made in the study (a connector only when the policy says charge and the shift has not ended; the energy of the last charging step counts; the route energy test and the charge before going home; charging continues below the need of the cheapest route; no route that a full battery cannot finish): what each corrects, and that the ICE logs stay identical.
 
-\subsection{Population and shifts}
+This appendix describes \MA{} as configured in this study, with the seven elements of the Overview, Design concepts and Details (ODD) protocol in its second update~\cite{grimm2020_odd_second_update}. Since the drivers' decisions are the subject of the comparison, the design concepts also answer the questions of the ODD+D extension for human decision-making~\cite{muller2013_odd_d}. The model is the discrete-event engine of \citet{sello2025_stellenbosch_embt_abm} with the changes of Section~\ref{sec:abm} and Appendix~\ref{app:abm_corrections}. Table~\ref{tab:abm_parameters} gives the values of the behavioural parameters.
+
+\subsection{Purpose and patterns}
+\label{app:abm_purpose}
+
+The purpose of \MA{} is to predict the outcomes of a charging design for an electrified minibus-taxi community when the drivers can adapt to it: when they work, which routes they drive, how long they wait for passengers, when they idle and when and where they charge. The model therefore generates the movement of the vehicles and the passenger service, which \MR{} takes as given or cannot represent (Table~\ref{tab:model_comparison}).
+
+The model is evaluated against these patterns: the distributions of the daily distance, the daily moving time and the day-to-day variation of the daily distance of the observed vehicles (the calibration targets of Table~\ref{tab:calibration_fit}); the hourly share of moving vehicles, as a realism check; a served share of at least 95\% of the requests; and a seat occupancy on route runs of up to 0.6. The fidelity check of Section~\ref{sec:representation} also compares the simulated movement with the observed movement in the quantities that the replay rules use.
+
+\subsection{Entities, state variables and scales}
+\label{app:abm_entities}
+
+Table~\ref{tab:abm_entities} lists the entities of the model and their state variables. A driver is in one of eight states: at home, on a route, idling, heading home, seeking a charger, waiting to charge, charging or stranded. The last four states apply only to EVs.
+
+\begin{table}[htbp]
+    \centering
+    \footnotesize
+    \caption{Entities of \MA{} and their state variables.}
+    \label{tab:abm_entities}
+    \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.2\linewidth}X@{}}
+        \toprule
+        \textbf{Entity} & \textbf{State variables} \\
+        \midrule
+        Node & Identifier; a node exists only as an end of an edge and can be a rank \\
+        Rank & A first-in, first-out loading queue of the on-route taxis at a formal rank \\
+        Edge & A directed link between two nodes, with a fixed road length and a travel-time model (Appendix~\ref{app:abm_travel}) \\
+        Route & An ordered list of stops; consecutive stops are connected on the network \\
+        Driver & Home node, idle locations, eligible routes, shift distribution, vehicle, policies, memory, state, location, passengers on board, and the passengers and passenger distance of the current day \\
+        Vehicle & ICE: 15 seats. EV: also the usable battery capacity, the energy consumption rate and the energy level \\
+        Request & Origin, destination, request time, boarding time, arrival time and expiry time \\
+        Memory & The streaming statistics of the route runs and the charging visits of a driver in each 30-minute interval of the day \\
+        Charging station & Connectors, connector power and a first-in, first-out queue (EV runs only) \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+Time is continuous, in seconds from the start of the run, and one day is 86,400~s. Every simulated day is the same typical term weekday: all days have the same shift distributions and the same demand. Space is the operational network of the community, with 561 to 598 nodes, including the homes of the drivers, and directed edges between them. The model has no positions between nodes. A run has a warm-up, 14 settling days and 14 evaluation days (Appendix~\ref{app:abm_initialisation}).
+
+\subsection{Process overview and scheduling}
+\label{app:abm_process}
+
+The engine is a discrete-event simulation in continuous time~\cite{law2015_simulation_modeling}. A priority queue holds the scheduled events, and the earliest event is processed first. Events with the same time are processed in the order in which they were scheduled. Table~\ref{tab:abm_events} lists the events.
+
+\begin{table}[htbp]
+    \centering
+    \footnotesize
+    \caption{Events of \MA{} and their main effects.}
+    \label{tab:abm_events}
+    \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.22\linewidth}X@{}}
+        \toprule
+        \textbf{Event} & \textbf{Main effect} \\
+        \midrule
+        Day start & Expires the requests that still wait from the previous day, generates the requests of the day, restores each stranded driver at home with a full battery and schedules the next day start 24~h later \\
+        Trip request & The passenger boards a compatible taxi that is stopped at the origin node, or otherwise waits there \\
+        Trip expiry & The request expires if it still waits \\
+        Driver departure & Off a route: applies home charging and starts the decision procedure. On a route: the driver leaves the stop for the next stop \\
+        Driver arrival & Applies the energy and time of the travel and then acts on the state of the driver, for example the stop procedure at a stop \\
+        Driver evaluation & Evaluates a driver that waits at a stop, idles, waits to charge or charges \\
+        Charging stopped & Closes the charging session and gives the connector to the next driver in the queue \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+A driver that is not on a route decides in this order. First, it returns home if its shift has ended; an EV that would arrive home below its reserve charges first. Second, an EV that is not full consults its charging policy. Third, the driver chooses between its routes and idling (Appendix~\ref{app:abm_choice}). An EV whose energy does not cover the chosen route, the drive from its last stop to the nearest station and its reserve charges first. A chosen route sends the driver to the first stop of the route.
+
+At each stop of a route, the passengers for the stop alight, and the route ends at its final stop. An empty driver whose shift has ended goes home, and a full taxi departs. Otherwise, the expired requests are removed, the compatible requests board, the driver joins the loading queue if the node is a rank, and the stop decision of Section~\ref{sec:abm} determines whether the driver waits or departs.
+
+\subsection{Design concepts}
+\label{app:abm_concepts}
+
+\paragraph{Basic principles and theoretical background} The drivers are boundedly rational: they choose among their eligible routes and idling with a multinomial logit model~\cite{mcfadden1974_conditional_logit,train2009_discrete_choice} that uses remembered and currently observed demand. The model follows minibus-taxi operation rather than demand-responsive dispatch: taxis load at ranks on a first-in, first-out basis and depart when sufficiently full, drive fixed routes between terminals, and wait at stops according to their remembered demand. No operator assigns requests to vehicles. The behavioural parameters are calibrated to the duty cycles of the observed vehicles (Section~\ref{sec:calibration}).
+
+\paragraph{Emergence} The movement of the vehicles, their daily distance and moving time, the site load, the charger queues, the passenger waits and the distribution of passengers between the EVs and the ICE taxis emerge from the decisions of the drivers and their competition for requests. None of these quantities is an input.
+
+\paragraph{Adaptation and individual decision-making} A driver decides when to return home, which route to drive or whether to idle, and how long to wait at each stop. An EV driver also decides when to charge. Each decision is a stochastic choice whose probabilities depend on the remembered demand of the current interval of the day, the current demand at the node, the occupancy of the vehicle and, for an EV, its energy level.
+
+\paragraph{Objectives} The utility of a route increases with the waiting requests that it can carry, the remembered passengers and passenger distance of its runs, and decreases with the remembered run distance and the competing drivers at the node (Appendix~\ref{app:abm_choice}). The utility of idling increases when the driver remembers the current interval as quiet. The drivers do not optimise an income over the day.
+
+\paragraph{Learning} The memory of each driver records its route runs and charging visits as streaming means and variances in 30-minute intervals of the day, with no decay. The memory persists over days, so a driver learns where and when its routes carry passengers. In a cold run, the temperature of the choice model decreases from 1 to 0.1 over ten days, such that the drivers first try all their routes~\cite{sutton2018_reinforcement_learning}. The EV drivers learn their charging behaviour during the 14 settling days.
+
+\paragraph{Prediction} A driver predicts the passengers of a route from its memory of the current interval. With the last-run rule, a driver predicts the end time of a route from the remembered duration or, without a memory, from the shortest-path durations between its stops. An EV predicts the energy of a route, of the drive from the last stop to the nearest station and of the drive home from the shortest static paths.
+
+\paragraph{Sensing} A driver senses the waiting requests at its current node that each of its routes can carry, the other on-route drivers at the node that drive the same route, the passengers on board, its own energy level and its memory. It does not sense the demand or the queues at other nodes.
+
+\paragraph{Interaction} The drivers interact indirectly through competition: a request boards the first compatible taxi at its origin, in the loading queue at a rank or by arrival time at another node. EV drivers also interact through the connectors and the first-in, first-out queues at the charging stations.
+
+\paragraph{Stochasticity} The engine uses its own random number generator, and two runs with the same configuration and seed are identical. The working days and shift times, the travel times, the request counts and times, the route choices, the stop decisions, the intervals between evaluations and the idle locations are random draws. A feature without information, for example a route without a memory in the current interval, is a uniform random number. The engine seed of a run is 101 plus the seed offset of the run. The synthetic population is a separate seeded draw, so all runs of a community have the same drivers.
+
+\paragraph{Collectives} The model has no collectives. A community, a rank queue and a charger queue do not make decisions.
+
+\paragraph{Heterogeneity} Each agent has its own home, eligible routes, idle locations and shift distribution, which come from its observed vehicle. A synthetic copy has the routes, idle locations and shift pattern of its agent, a nearby home and a shifted shift. All drivers of a community have the same behavioural parameters (Table~\ref{tab:abm_parameters}).
+
+\paragraph{Observation} The engine logs the route runs, the requests, the driver states and the charging sessions of the evaluation days. The measures of a design (Table~\ref{tab:objectives}) and of the calibration (Table~\ref{tab:calibration_fit}) are computed from these logs. A simulated agent-day is one day from 00:00 to 24:00.
+
+\subsection{Initialisation}
+\label{app:abm_initialisation}
+
+The build of a community creates the drivers from the observed agents and their synthetic copies (Appendix~\ref{app:abm_population}), with a fixed seed. A cold run starts with empty memories and runs a warm-up period followed by 14 evaluation days~\cite{welch1983_statistical_analysis_simulation,law2015_simulation_modeling}. The warm-up length of each community, between 49 and 91 days, is the first day after which the seven-day means of the served passengers, their share of the requests, the occupancy and the route-choice shares remain within a tolerance of their long-run means on three seeds, rounded up to whole weeks. To reduce the computational cost, the warm-up is run once, and the resulting driver memories are saved as a warm start. Each subsequent run loads these memories, disables exploration, and runs 14 settling days followed by 14 evaluation days. The warm-up lengths are 49, 63 and 91 days in Khayelitsha, Bellville and Wynberg, respectively. In the experiments, the EVs start the settling days with a full battery, and the seed offsets of the five validation runs give the engine seeds 102 to 106.
+
+\subsection{Input data}
+\label{app:abm_inputs}
+
+The model uses no external time series during a run. All days use the same derived inputs: the network and its travel-time models (Appendix~\ref{app:abm_travel}), the eligible routes, homes and idle locations of the agents (Section~\ref{sec:routes}), their shift distributions (Appendix~\ref{app:abm_population}), the origin--destination demand and its hourly profiles (Appendix~\ref{app:abm_demand}), the vehicle and charging values (Section~\ref{subsubsec:vehicle_assumptions}) and, in the experiments, the charging design.
+
+\subsection{Submodels}
+\label{app:abm_submodels}
+
+\begin{table}[htbp]
+    \centering
+    \footnotesize
+    \caption{Behavioural parameters of \MA{} in each community. The first nine parameters are calibrated (Appendix~\ref{app:calibration}); Khayelitsha uses the values of its hand-tuning start point. The other parameters are fixed in all communities.}
+    \label{tab:abm_parameters}
+    \begin{tabularx}{\linewidth}{@{}Xlrrr@{}}
+        \toprule
+        \textbf{Parameter} & Symbol & Khayelitsha & Bellville & Wynberg \\
+        \midrule
+        Idle bias & $\beta_0$ & 0.207 & $-$0.793 & 0.207 \\
+        Idle demand weight & $\beta_h$ & 1.18 & 2.61 & 1.18 \\
+        Stop bias & $b$ & 0.181 & 3.12 & 0.181 \\
+        Maximum stop duration (s) & $T_{\max}$ & 301 & 674 & 301 \\
+        First-stop bias & $b_1$ & $-$1.43 & $-$2.41 & $-$1.43 \\
+        First-stop demand weight & $w_{d,1}$ & 16.9 & 26.6 & 16.9 \\
+        Maximum first-stop duration (s) & $T_{\max,1}$ & 3,121 & 3,932 & 3,121 \\
+        Shift spread & $\psi$ & 0.466 & 0.189 & 0.466 \\
+        Shift end offset (s) & $\delta$ & $-$982 & $-$5,094 & $-$982 \\
+        \addlinespace
+        Stop demand and occupancy weights & $w_d$, $w_o$ & \multicolumn{3}{c}{2.0 and 4.0} \\
+        Route weights: demand, competition, distance & & \multicolumn{3}{c}{0.10, 0.25 and 0.10} \\
+        Route weights: passengers, passenger distance & & \multicolumn{3}{c}{0.30 and 0.25} \\
+        Idle income weight & $\beta_I$ & \multicolumn{3}{c}{0.05} \\
+        Final temperature and exploration time & $\tau$, $t_x$ & \multicolumn{3}{c}{0.1 and 10 days (0 in warm-started runs)} \\
+        Mean interval between stop evaluations (s) & & \multicolumn{3}{c}{60, exponentially distributed} \\
+        Memory interval (min) & & \multicolumn{3}{c}{30} \\
+        Request expiry (h) & & \multicolumn{3}{c}{2} \\
+        Last-run rule & & On & Off & Off \\
+        Travel-time excess factors $c_w$ & & 1.31--1.50 & -- & -- \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\subsubsection{Population and shifts}
+\label{app:abm_population}
 
 The drivers of a community comprise its agents and their synthetic ICE copies. Each agent keeps its home node, its eligible routes and its idle locations, which are the terminals of its routes. Since the observed vehicles are only a sample of the taxis that operate from a hub, each agent receives \( \lfloor k - 1 \rfloor \) or \( \lceil k - 1 \rceil \) ICE copies from a seeded Bernoulli draw, such that the population is on average \( k \) times the number of agents, where \( k \) is the scale factor of Section~\ref{sec:demand}. A copy adopts the routes, idle locations and shift pattern of its agent, its home is drawn from the five network nodes nearest to the agent's home, and the start and end of its shift are moved by a common normal draw with a standard deviation of 30~min. This construction rests on the assumption that the observed agents are representative of the taxis that load at the hub of the community, both in the routes that they drive and in their working hours. The resulting populations comprise 1{,}358, 1{,}673 and 686 drivers in Khayelitsha, Bellville and Wynberg, respectively, of which the electrified agents form only 2.6\% to 6.6\% (Table~\ref{tab:models}).
 
 Each agent has a typical-weekday shift, of which the start and end times are normally distributed with the mean and standard deviation of the first and last movements on its calendar days in the calibration period, and each day is a working day with the observed probability of activity. Two calibrated parameters, the shift spread \( \psi \) and the shift end offset \( \delta \), scale the standard deviations and move the mean end time, respectively. The offset is necessary because the observed end of a shift is the arrival at home, whereas the simulated end is the time at which the driver starts to return home. In Khayelitsha, a last-run rule additionally prevents a driver from starting a route that it expects to end after its shift end, because too many agents otherwise remained active late at night.
 
-\subsection{Travel time}
+\subsubsection{Travel time}
+\label{app:abm_travel}
 
 The travel time of an edge \( \ell \) that a driver enters in time window \( w \) is modelled as follows:
 \begin{equation}
@@ -74,7 +214,8 @@ The travel time of an edge \( \ell \) that a driver enters in time window \( w \
 
 \noindent where \( s_\ell \) is the road length of the edge, \( \pi_{\ell w} \) is the share of observed hops without excess time, \( \mu_{\ell w} \) and \( \sigma_{\ell w} \) are the parameters of a log-normal fit of the observed excess times~\cite{fosgerau2012_travel_time_variability}, and \( c_w \) is an optional excess factor. The four time windows are the night (19:00 to 06:00), the AM peak (06:00 to 09:00), the midday (09:00 to 15:00) and the PM peak (15:00 to 19:00). The fit uses the hops of the whole fleet on the calibration days, excluding hops slower than 5~km/h, since such hops contain a stand rather than driving and would make the simulated vehicles much slower than the observed vehicles. Edges with fewer than five retained hops receive a fixed excess from the pooled speed of the window, reverse edges copy the model of their observed counterpart, and close-node links use the median speed of the short observed edges. In Khayelitsha, where the simulated agents drove faster than the observed vehicles in every window, the excess is scaled by a factor \( c_w \) for each window to match the observed median speed. Drivers travel along shortest paths by road length~\cite{dijkstra1959_note_on_two_problems}, and the model does not represent congestion. Only the 18 formal ranks of the network act as engine ranks with loading queues.
 
-\subsection{Route choice}
+\subsubsection{Route choice}
+\label{app:abm_choice}
 
 A driver that is not on a route first returns home when its shift has ended. Otherwise, an EV driver consults its charging policy, after which the driver chooses between its routes and idling with a multinomial logit model~\cite{mcfadden1974_conditional_logit,train2009_discrete_choice}:
 \begin{equation}
@@ -83,19 +224,18 @@ A driver that is not on a route first returns home when its shift has ended. Oth
 
 \noindent where \( U_j \) is the utility of route \( j \) or of idling, and \( \tau(t) \) is a temperature that decreases from 1 to 0.1 during an initial exploration period of ten days, such that drivers initially sample all of their routes~\cite{sutton2018_reinforcement_learning}. The utility of a route is a weighted sum of normalised features: the waiting requests at the current node that the route can carry, the competing drivers at the node on the same route, and the remembered distance, passengers and passenger distance per run of the route in the current interval of the day. The utility of idling comprises a bias \( \beta_0 \), a demand term with weight \( \beta_h \) that increases as the driver's remembered demand in the current interval decreases, and a small income term, such that drivers idle more during intervals that they remember as quiet. The route weights are fixed at the values of an earlier calibration of the model, whereas \( \beta_0 \) and \( \beta_h \) are calibrated (Section~\ref{sec:calibration}).
 
-\subsection{Boarding and memory}
+\subsubsection{Boarding and memory}
+\label{app:abm_boarding}
 
 A passenger boards only a taxi that is at the origin node, has a free seat and serves a route on which the destination follows the origin; at a rank, the first compatible taxi in the loading queue is selected. Otherwise, the request waits and expires after 2~h. Passengers do not walk to other nodes or switch to other modes. The memory of each driver records the distance, duration, passengers and passenger distance of each completed route run, as well as the queue length, waiting time and charging time of each charging visit, as streaming statistics in 30-minute intervals of the day. A driver therefore learns where and when its routes carry passengers.
 
-\subsection{Run horizon}
-
-A cold run starts with empty memories and runs a warm-up period followed by 14 evaluation days~\cite{welch1983_statistical_analysis_simulation,law2015_simulation_modeling}. The warm-up length of each community, between 49 and 91 days, is the first day after which the seven-day means of the served passengers, their share of the requests, the occupancy and the route-choice shares remain within a tolerance of their long-run means on three seeds, rounded up to whole weeks. To reduce the computational cost, the warm-up is run once, and the resulting driver memories are saved as a warm start. Each subsequent run loads these memories, disables exploration, and runs 14 settling days followed by 14 evaluation days.
-
-\subsection{Charging and reserve rules}
+\subsubsection{Charging and reserve rules}
+\label{app:abm_charging}
 
 To prevent avoidable stranding, an EV maintains a reserve of \( 0.2\,C \). It does not select a route that a full battery cannot complete together with the drive from the last stop to the nearest station and the reserve. Moreover, it starts a route only when its energy covers the drive to the first stop, the route, the drive to the nearest station and the reserve, and otherwise charges first, and it charges before returning home when it would otherwise arrive below the reserve. At a station, a driver takes a connector only while it still needs to charge: before its shift end, while it is below its charge target or the energy needed for its cheapest route, or while its policy requests charging; and after its shift end, only while it would otherwise arrive home below the reserve. Home charging at 3.7~kW is applied for the time at home. An EV that nevertheless strands loses the passengers on board and is restored at home with a full battery at the next day start. These rules are corrections of the engine that replace its earlier charging behaviour without a setting to revert to it. Since ICE drivers never charge, the corrections do not change the ICE runs, which was verified by reproducing the logs of a frozen ICE run exactly.
 
-\subsection{Passenger demand}
+\subsubsection{Passenger demand}
+\label{app:abm_demand}
 
 A departure is an anchor-to-anchor trip of an agent on the calibration days that is at least 1~km long and leaves the catchment of its origin. The catchment is defined as all nodes within 300~m of the same facility of the Comprehensive Integrated Transport Plan (CITP) of the City of Cape Town or, if no such facility exists, the origin node alone, which removes short movements within a rank complex. Since the stop rates, slow-moving shares and speeds of the observed trips do not distinguish loaded from empty legs at this sampling interval, the direction of demand is taken from survey data. Each departure receives a load factor \( \lambda \), which equals 1 except for departures in the counter-peak direction of a corridor during the AM peak (06:00 to 09:00) and in the AM-peak direction during the PM peak (15:00 to 19:00). For these departures, \( \lambda \) equals the ratio of counter-peak to peak vehicle trips on the corridor in CITP Table 3-18, which ranges between 0.09 and 0.39, or the mean ratio of 0.21 for corridors without a survey. The peak direction of a corridor is the surveyed direction with more AM-peak trips or, for corridors without a survey, the direction from its residential end, which is identified from OSM land use. Since the agents drive only their eligible routes in \MA, the departures of each agent are moreover redistributed onto its eligible routes in proportion to their load factors with a weight \( \omega_d \), such that each agent retains its total load and the supply and demand remain consistent with what the agents drive.
 
@@ -114,6 +254,30 @@ Each departure with load factor \( \lambda \) on a route with node sequence \( s
 \noindent where the sum covers the eligible departures \( d \) on valid vehicle-days and \( r_{od}(d) \) is the number of requests that departure \( d \) generates on the pair. Since \( k \) is derived from the same departures, load factors and weights, the terminal requests at the hub equal the facility boardings by construction. Moreover, demand is generated only for servable pairs, i.e., pairs that lie in order on an eligible route of an agent.
 
 The daily requests of each pair are distributed over the hours of the day according to the profile of its direction class (peak, counter-peak or no direction). In Wynberg, the profile is the load of the agents' eligible departures in each hour, including the evening trips home, without which the profile would have almost no evening peak. In Khayelitsha and Bellville, the departures of the agents are almost uniform over the day, whereas their moving time shows clear morning and evening peaks, i.e., at the peaks, the taxis move longer rather than more often. The profile of these communities is therefore the observed moving time of the agents in each hour, shifted earlier by half the median trip duration to approximate the boarding time and weighted by the mean load factor of the class in the period. Wynberg retains the departure-based timing with which it was calibrated and accepted. In the engine, the number of requests of each pair in each 15-minute interval is drawn from a Poisson distribution with uniformly distributed request times, which yields a non-homogeneous Poisson process with a piecewise-constant rate~\cite{ross2014_probability_models}. The same profile applies to every simulated day. The resulting demand levels are given in Table~\ref{tab:models}, and the demand is audited against the corridor survey counts and the published boardings at facilities outside the communities.
+
+\subsection{Engine corrections in this study}
+\label{app:abm_corrections}
+
+Table~\ref{tab:abm_corrections} lists the corrections of the charging behaviour of the engine that this study made. Each correction replaces the earlier behaviour, and no setting restores it. Since ICE drivers never charge, the corrections do not change the ICE runs: a frozen ICE run gives identical logs with the corrected engine.
+
+\begin{table}[htbp]
+    \centering
+    \footnotesize
+    \caption{Corrections of the charging behaviour of the engine.}
+    \label{tab:abm_corrections}
+    \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.36\linewidth}X@{}}
+        \toprule
+        \textbf{Correction} & \textbf{Defect that it corrects} \\
+        \midrule
+        A driver at a station takes a connector only when its charging policy requests charging and its shift has not ended & Sessions held a connector without a need for energy, and drivers charged after their shift end \\
+        The energy of a charging step is credited before the policy decides whether to continue & Each session lost the energy of its last charging step \\
+        An EV starts a route only when its energy covers the drive to the first stop, the route, the drive from the last stop to the nearest station and the reserve; otherwise it charges first & EVs started routes that they could not finish and stranded \\
+        An EV charges before it returns home when it would otherwise arrive below the reserve & EVs stranded on the drive home \\
+        Before its shift end, a driver at a station also charges while its energy is below the need of its cheapest route & A waiting driver left the queue when its policy stopped requesting a charge, and the route test sent it back to the end of the queue \\
+        An EV does not select a route that it cannot finish from a full battery & Long routes caused strandings that no charging could prevent \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
 
 \section{Calibration targets and search}
 \label{app:calibration}
