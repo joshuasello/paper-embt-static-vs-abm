@@ -119,21 +119,89 @@ This study examines the implications of explicit behavioural representations of 
 % --------------------------------------------------
 
 \section{Related work}
-\textcolor{red}{TODO: Complete literature review.}
+\label{sec:related_work}
 
 \subsection{Electrification feasibility under observed mobility}
-% Discuss > Replay and trajectory-based feasibility studies fleet formal/informal electrification (range, energy, charging opportunity, grid load). What they assume about mobility after electrification.
+\label{sec:rw_replay}
+% Discuss > P1: Formal fleets -> Trajectory replay is the established feasibility test. Range adequacy of private vehicles from observed driving; e-taxi charging siting from taxi GPS traces. Trips are fixed and charging demand is inferred from where vehicles already stop.
 
+Assessing the feasibility of electrifying a fleet of vehicles requires an understanding of the energy requirements of the vehicles and the availability of charging infrastructure. The most common way to obtain both is to replay the observed movement of the fleet through an EV energy model. GPS logs and travel surveys of private vehicles show that most daily driving fits within the range of an affordable EV that charges once a day~\cite{pearre2011_ev_range_required}, and the dwell patterns of taxi fleets have been used to site and size charging stations~\cite{cai2014_beijing_taxi_charging_siting, tu2016_etaxi_charging_location, yang2017_etaxi_siting_sizing}. In each case the trips are fixed, and a vehicle can charge only where it already stops.
 
+% Discuss > P2: SSA paratransit -> The same approach is the default for minibus taxis, because vehicle tracking is the only data that records the duty cycle on which electrification depends. Lineage: data case, energy, mobility simulation, solar and grid, interdependence, equity, viability, Cape Town transition, measured vehicle performance.
 
-\subsection{Behavioural modelling of paratransit operations}
-% Discuss > Behavioural models of taxi, ride-hailing and paratransit fleets with charging decisions. Calibration practice and the data that they need. Treatment of competition and mixed fleets.
+For minibus taxis in sub-Saharan Africa, data replay has become a significant planning method, partly because vehicle tracking is the only data that records the duty cycle on which electrification depends~\cite{rix2022_taxi_tracking_embt_planning}. Tracked vehicles have been used to estimate energy consumption~\cite{hull2023_high_fidelity_paratransit_energy, giliomee2023_simulating_embt_mobility, abraham2025_empirically_validated_embt_sim, sello2026_ekamva_performance}, to assess charging opportunities with grid and solar supply~\cite{abraham2021_solar_embt_charging, booysen2022_embt_load_shedding,sello2026_embt_in_cpt}, and to measure the share of vehicle-days that remain viable under different charging designs~\cite{pretorius2025_viability_existing_mbt_mobility, pretorius2024_grid_mobility_interdependence, booysen2026_cpt_embt_transition}, which can differ sharply between groups of drivers in the same town~\cite{pretorius2024_uneven_transitions}. In Cape Town, replay underpins estimates of energy demand, emissions and operator costs~\cite{sello2026_embt_in_cpt}. More recently, trip GPS trajectories have been used to empirically measure the energy consumption of the first commercial electric minibus taxi in South Africa~\cite{sello2026_ekamva_performance}.
 
-\subsection{Charging infrastructure planning under operational uncertainty}
-% Discuss > Charging-site sizing and placement as simulation-based, multi-objective problems. Evidence on whether designs selected with a simple model remain good under a richer model (robustness, regret, multi-fidelity).
+% Discuss > P3: The assumption -> Every study above assumes that mobility persists after electrification. A vehicle-day that cannot be completed is written off rather than adapted, so mixed-fleet conclusions follow partly from the assumption. Scheduled-mobility models relax the assumption by optimising operation centrally, but they describe a reformed system rather than current operation. Neither paradigm represents drivers competing for passengers.
 
-\subsection{Reconstructing paratransit networks and operating communities from GPS data}
-% Discuss > Community detection, route inference and stop detection from vehicle trajectories. Their use to define study units for pilots.
+Underlying these studies is the assumption that mobility persists after electrification. A vehicle-day that cannot be completed on battery power is written off rather than adapted, so the conclusion that a mixed fleet is needed follows partly from the assumption itself~\cite{}. % TODO: Gaurav paper. 
+Scheduled-mobility models relax this assumption by optimising vehicle schedules and charging centrally, including the joint deployment of electric and ICE vehicles~\cite{pretorius2024_scheduling_mixed_fleets, wust2025_mbt_scheduling}, but they describe a reformed system rather than current operation~\cite{booysen2025_sys_of_sys_em_planning}. Neither paradigm represents drivers who compete for passengers, so neither can measure the passengers that an EV loses to ICE competitors while it charges. Data replay therefore answers whether today's trips can be electrified, not how operation would change once they are.
+
+\subsection{Behavioural simulation of taxi and paratransit fleets with charging}
+\label{sec:rw_abm}
+% Discuss > P1: Formal fleets -> Agent-based and discrete-event models of electric taxi, ride-hailing and autonomous fleets let vehicles decide when and where to charge. Observed e-taxi fleets show that drivers organise charging around their shifts and favour a few stations. Charging-behaviour assumptions alone change the estimated infrastructure need by a factor of 2.3 to 4.5, yet supply-side planning studies still use simplistic behaviour.
+% TODO: It would be nice to include the thredbo19 paper in this paragraph
+Agent-based and discrete-event simulations relax the persistence assumption by letting vehicles decide when and where to charge. Simulations of electric taxi and ridesourcing fleets show that EVs can match the service of ICE fleets given adequate charging infrastructure~\cite{bischoff2014_etaxi_abm, bauer2019_ridesourcing_electrification}, and simulations of autonomous fleets have been used to jointly size the fleet and its charging facilities~\cite{chen2016_saev_fleet_charging, yang2023_eamod_fleet_charging_design}. Observed charging supports this focus on behaviour: in Shenzhen's fully electric taxi fleet, drivers organise their charging around their shifts and concentrate on a few stations~\cite{lei2022_etaxi_charging_dynamics}. How this behaviour is represented also changes the infrastructure that is planned. In an agent-based simulation of Sweden, realistic charging archetypes required 2.3 to 4.5 times more public chargers per vehicle than refuelling-style charging~\cite{liao2023_charging_behaviour_infra_needs}, yet supply-side planning studies still rely mostly on simplistic behavioural assumptions~\cite{patil2023_charging_behaviour_infra_review, vanderkam2019_abm_charging_behaviour}.
+
+% Discuss > P2: Paratransit -> Shorter history. MATSim minibus operators; paratransit response to formal transit; Kampala paratransit as a complex adaptive system; empirical evidence on driver labour supply and movement; one framework for electric minibus taxis with adaptive drivers.
+
+Paratransit simulation has a shorter history. Co-evolutionary operator models in MATSim reproduce the main minibus corridors of a South African metropolitan area~\cite{neumann2015_towards_mbt_simulation_in_sa}, agent-based simulation shows that paratransit operators gain most from long headways in formal transit~\cite{joubert2020_behavioural_response_of_paratransit}, and Kampala's minibus taxis have been modelled as a complex adaptive system~\cite{ndibatya2021_paratransit_abm_thesis}. These models are consistent with evidence that drivers' working hours respond partly to daily revenue~\cite{schlueter2020_stochastic_mbt_behaviour_prediction} and that drivers search widely for passengers~\cite{ndibatya2021_characterising_mbt_movement}, but none of them represents electric vehicles. To our knowledge, only one framework simulates electric minibus taxis whose drivers choose their routes, waiting and charging in response to remembered demand and battery state~\cite{sello2025_stellenbosch_embt_abm}, and this study builds on it.
+
+% Discuss > P3: Cost and blind spot -> Behavioural realism costs calibration against observed patterns, which replay avoids. Formal-fleet models usually simulate a fully electric fleet or a single operator, so passengers lost to ICE competitors while an EV charges are not measured. Mixed paratransit fleets have been treated as a scheduling problem, not as competition.
+
+The price of behavioural realism is calibration. An agent-based model must reproduce several observed patterns at once~\cite{thiele2014_abm_parameter_estimation}, and there is no generally accepted procedure for validating it~\cite{collins2024_abm_validation_methods}, a burden that replay avoids by construction. The formal-fleet models also simulate either a fully electric fleet or a single operator, so they cannot measure the passengers that an EV loses to ICE competitors while it charges. In paratransit, mixed fleets have so far been treated as a scheduling problem rather than as competition~\cite{pretorius2024_scheduling_mixed_fleets, wust2025_mbt_scheduling}. Yet early pilots will place a few EVs among many ICE vehicles on the same corridors, where this competition determines what electrification costs the drivers who adopt it first.
+
+% TODO: Decide whether to include this section --- commented out ATM.
+% \subsection{Charging infrastructure planning as simulation-based design}
+% \label{sec:rw_design}
+% % Budget > ~200 words, two paragraphs.
+
+% % Discuss > P1: Location and sizing -> Usually an optimisation over a demand that is fixed in advance. E-bus planning adds scheduling, queues and demand uncertainty. Behaviour is simplistic on the supply side.
+% % Cite > kchaou2021_charging_location_review, metais2022_charging_infra_review (reviews); rogge2018_ebus_fleet_charging, perumal2022_ebus_planning_review, uslu2021_ebus_charging_waiting_times, an2020_ebus_infra_uncertainty (e-bus); patil2023_charging_behaviour_infra_review
+% Charging infrastructure planning is usually formulated as a location and sizing problem over a demand that is known in advance.
+
+% % Discuss > P2: When demand responds to the design -> The design has to be evaluated by simulation, as in simulation-based transit design. Robust decision-making varies the scenario, not the model. Multi-fidelity methods use a cheap model to guide an expensive one but assume that both target the same objective. Few studies test whether a design selected in a simple model remains good when it is evaluated in a richer one.
+% % Cite > nnene2023_simopt_transit_network (simulation-based design); lempert2006_robust_strategies, mcphail2018_robustness_metrics (robustness); peherstorfer2018_multifidelity_survey (multi-fidelity)
+% When demand responds to the design, the design must be evaluated by simulation, and the choice of simulation becomes part of the design decision.
+
+\subsection{Paratransit networks and operating communities from GPS data}
+\label{sec:rw_gps}
+% Discuss > P1: GPS and phone traces map paratransit where no formal route data exists: open network data, route typologies, trip counts per road segment, movement patterns. Their units are routes, corridors and road segments. Vehicles have been grouped by home location, but not by shared hubs and corridors, which is the unit that would share chargers. Method citations (Leiden, consensus clustering, TF--IDF, Jaccard) stay in Section 4.
+
+Where paratransit has no formal route data, GPS and phone traces have been used to reconstruct it. Mobile-phone mapping produced open network data for Nairobi's matatus~\cite{williams2015_digital_matatu}, and collaborative mapping in Nairobi and Maputo has made minibus systems visible in planning~\cite{klopp2019_mapping_minibuses}. In South Africa, more than 500 Cape Town routes have been clustered into trunk, intermediate and feeder routes~\cite{dupreez2019_paratransit_route_typology}, and GPS traces from Tshwane have been extrapolated to minibus-taxi trip counts per street segment~\cite{debeer2025_quantifying_paratransit}, while traces from Kampala reveal how drivers search for passengers~\cite{ndibatya2021_characterising_mbt_movement}. This work builds on general methods for stop detection and trajectory mining~\cite{zheng2015_trajectory_data_mining}, and its units of analysis are routes, corridors and road segments. Vehicles have been grouped by home location~\cite{pretorius2024_uneven_transitions}, but not by the hubs and corridors that they share, which is the unit at which a charging pilot would be planned.
+
+\subsection{Comparing models of different structure}
+\label{sec:rw_comparison}
+% Discuss > P1: Docking and alignment -> An established practice in agent-based modelling, usually aimed at showing that two models agree on common outputs. In eMBT work, two energy-simulation tools have been reconciled. Replay and ABM do not share an output, and multi-fidelity methods assume they do. Model choice is not neutral: it fixes which outcomes planners can see. This motivates model-native selection followed by cross-evaluation.
+
+Comparing models of different structure is an established practice in agent-based modelling. Docking tests whether two models of the same system produce equivalent results, at the level of numerical, distributional or relational equivalence~\cite{axtell1996_aligning_simulation_models}, and independent replication can expose artefacts that a single implementation hides~\cite{collins2024_abm_validation_methods}. In minibus-taxi electrification, the alignment of two energy-simulation tools reconciled consumption estimates that differed by a factor of more than two~\cite{abraham2023_aligned_embt_simulation}. These comparisons ask whether models agree on a common output. Data replay and agent-based simulation do not share one: replay reports whether a vehicle-day strands, whereas the agent-based model, for this study, focuses on how many passengers an EV carries. The choice of model therefore shapes which outcomes planners can see~\cite{saltelli2020_models_serve_society, booysen2025_sys_of_sys_em_planning}. % TODO: Gaurav paper.
+A fair comparison lets each model select a design by its own measures and then evaluates both designs in the model that can represent the outcomes of both.
+
+% Discuss > P2: Positioning and gap -> Introduce the table, then one paragraph that states the gap and points to the RQs: no study electrifies the same observed vehicles in a replay and an adaptive model, selects charging infrastructure in each on its own measures, and cross-evaluates the designs in a mixed fleet.
+
+Table~\ref{tab:related_work} positions the studies discussed against this one. Replay studies of minibus taxis observe the vehicles that would be electrified but hold their movement fixed. Behavioural models let drivers adapt, but they have not been compared with replay on the same vehicles, and outside scheduling studies they have not placed EVs in a mixed fleet. No study has electrified the same observed vehicles in both paradigms, selected charging infrastructure in each by its own measures, and evaluated the resulting designs where EVs compete with ICE vehicles for passengers. This study addresses that gap through the research questions in Section~\ref{sec:research_questions}.
+
+\begin{table}[htbp]
+    \centering
+    \footnotesize
+    \caption{Representative studies of fleet electrification by the way they represent mobility and charging. Replay: observed trajectories; scheduled: centrally optimised operation; adaptive: driver or dispatcher decisions.}
+    \label{tab:related_work}
+    % TODO > The cells are a first pass from the abstracts; check each against the paper. "?" marks a cell to confirm.
+    \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.2\linewidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
+        \toprule
+        \textbf{Study} & \textbf{Fleet} & \textbf{Mobility} & \textbf{Charging infrastructure} & \textbf{Passenger service} & \textbf{ICE competition} & \textbf{Same vehicles in both paradigms} \\
+        \midrule
+        \citet{pearre2011_ev_range_required} & Private cars & Replay & Not designed & No & No & No \\
+        \citet{tu2016_etaxi_charging_location}; \citet{yang2017_etaxi_siting_sizing} & E-taxi & Replay & Optimised & No & No & No \\
+        \citet{bischoff2014_etaxi_abm}; \citet{bauer2019_ridesourcing_electrification} & E-taxi, ridesourcing & Adaptive & Evaluated, sized & Yes & No & No \\
+        \citet{chen2016_saev_fleet_charging}; \citet{yang2023_eamod_fleet_charging_design} & Autonomous fleet & Adaptive (dispatch) & Optimised & Yes & No & No \\
+        \citet{liao2023_charging_behaviour_infra_needs} & Private cars & Adaptive & Sized & No & No & No \\
+        \citet{giliomee2023_simulating_embt_mobility}; \citet{pretorius2024_grid_mobility_interdependence} & Minibus taxi & Replay & Evaluated & No & No & No \\
+        \citet{pretorius2024_scheduling_mixed_fleets}; \citet{wust2025_mbt_scheduling} & Minibus taxi & Scheduled & Evaluated & ? & Mixed fleet, no competition & No \\
+        \citet{sello2025_stellenbosch_embt_abm} & Minibus taxi & Adaptive & Evaluated & Yes & ? & No \\
+        This study & Minibus taxi & Replay and adaptive & Selected in each, cross-evaluated & Yes (\MA) & Yes (\MA) & Yes \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
 
 % --------------------------------------------------
 %   Study area and data
