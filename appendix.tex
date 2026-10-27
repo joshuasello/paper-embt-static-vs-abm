@@ -1,4 +1,5 @@
 % !TEX root = main.tex
+% CHANGE: "Appendix~\ref{" -> "\ref{" in this file (10 places, with the Table C.18 caption): elsarticle already prints "Appendix" before an appendix number (supervisor).
 \section{Validation of the vehicle communities}
 \label{app:communities}
 % Discuss > Evidence tests (communities.md 4.5) -> Null model (100 randomised fleets by curveball trades; modularity z and p), seed stability (median ARI of 50 seeds), temporal stability (early against late dates, ARI and NMI) and view agreement (each view against the combined partition). Take the values of the accepted partition from evidence.parquet; the values of the earlier runs are of replaced partitions.
@@ -19,7 +20,36 @@ Vehicle communities are detected with a multi-view similarity graph. Each vehicl
 
 \noindent where \( A_{uv} \) is the edge weight between vehicles \( u \) and \( v \), \( k_u \) is the strength of vehicle \( u \), \( W \) is the total edge weight, \( c_u \) is the community of \( u \), and \( \mathbf{1}[\cdot] \) is the indicator function. A larger \( \gamma \) produces smaller communities.
 
-For each resolution \( \gamma \in \{0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 2.5, 3\} \), the Leiden algorithm is run with 50 seeds, and the seed partitions are combined into a consensus partition~\cite{lancichinetti2012_consensus_clustering}. A resolution is eligible when its median seed partition contains at least two communities of five or more vehicles, and when its consensus partition retains at least 90\% of corridor use within one community, where a corridor is an undirected pair of consecutive anchor dwells that recurs on at least three vehicle-days and two dates. The latter condition encodes the operational meaning of a community, namely vehicles that share corridors in a common operating area. Of the eligible resolutions, the most stable resolution, as measured by the mean pairwise adjusted Rand index (ARI)~\cite{hubert1985_comparing_partitions} of its seed partitions, is selected. Vehicles in communities of fewer than five vehicles are not assigned to a community. The existence of the communities is tested against a null model of randomised fleets~\cite{strona2014_curveball}, and their seed stability, temporal stability and agreement across views are assessed in this appendix.
+For each resolution \( \gamma \in \{0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 2.5, 3\} \), the Leiden algorithm is run with 50 seeds, and the seed partitions are combined into a consensus partition~\cite{lancichinetti2012_consensus_clustering}. A resolution is eligible when its median seed partition contains at least two communities of five or more vehicles, and when its consensus partition retains at least 90\% of corridor use within one community, where a corridor is an undirected pair of consecutive anchor dwells that recurs on at least three vehicle-days and two dates. The latter condition encodes the operational meaning of a community, namely vehicles that share corridors in a common operating area. Of the eligible resolutions, the most stable resolution, as measured by the mean pairwise adjusted Rand index (ARI)~\cite{hubert1985_comparing_partitions} of its seed partitions, is selected. Vehicles in communities of fewer than five vehicles are not assigned to a community. The existence of the communities is tested against a null model of randomised fleets~\cite{strona2014_curveball}, and their seed stability, temporal stability and agreement across views are given in Table~\ref{tab:community_evidence}.
+
+% CHANGE: New subsection and table: the evidence tests of the accepted partition (supervisor: Appendix A promises these results, but none are given). Values from tabA1_community_evidence.
+\subsection{Evidence that the communities exist}
+
+The observed modularity of the accepted partition is 0.698, against 0.495 (standard deviation 0.015) for 100 randomised fleets with the same row and column totals, which gives $z = 13.1$ and $p = 0.0099$, the smallest $p$ that 100 randomised fleets can give (Table~\ref{tab:community_evidence}). The partitions of the 50 seeds agree with a median pairwise ARI of 0.891. A partition from the early dates against one from the late dates, over the 315 vehicles in both halves, gives an ARI of 0.620 and a normalised mutual information (NMI) of 0.639, so the communities persist over the study period but some vehicles change community. Each single view agrees with the combined partition with an ARI of 0.486 (edges) to 0.775 (ranks). The accepted partition keeps 91.8\% of the use of the 498 recurring corridors within one community.
+
+\begin{table}[htbp]
+    \centering
+    \footnotesize
+    \caption{Evidence tests of the accepted community partition. Null model: 100 randomised fleets by curveball trades. Seed stability: the median pairwise ARI of the partitions of 50 seeds. Temporal stability: the partition of the early dates against that of the late dates. View agreement: the partition of each view against the combined partition.}
+    \label{tab:community_evidence}
+    % Source: tabA1_community_evidence.
+    \begin{tabularx}{\linewidth}{@{}Xr@{}}
+        \toprule
+        \textbf{Test} & \textbf{Value} \\
+        \midrule
+        Modularity, observed & 0.698 \\
+        Modularity, 100 randomised fleets, mean (SD) & 0.495 (0.015) \\
+        $z$ and $p$ of the observed modularity & 13.1 and 0.0099 \\
+        Seed stability, median pairwise ARI & 0.891 \\
+        Temporal stability, ARI and NMI (315 vehicles in both halves) & 0.620 and 0.639 \\
+        View agreement, nodes, ARI (NMI) & 0.746 (0.777) \\
+        View agreement, edges, ARI (NMI) & 0.486 (0.579) \\
+        View agreement, ranks, ARI (NMI) & 0.775 (0.843) \\
+        View agreement, OD pairs, ARI (NMI) & 0.632 (0.680) \\
+        Corridor use in one community (498 recurring corridors) & 0.918 \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
 
 \section{Network construction and coverage}
 \label{app:network}
@@ -53,7 +83,7 @@ The eligible routes of a driver are the smallest set of its routes, ordered by t
 \section{Agent-based model specification}
 \label{app:abm}
 
-This appendix describes \MA{} as configured in this study, with the seven elements of the Overview, Design concepts and Details (ODD) protocol in its second update~\cite{grimm2020_odd_second_update}. Since the drivers' decisions are the subject of the comparison, the design concepts also answer the questions of the ODD+D extension for human decision-making~\cite{muller2013_odd_d}. The model is the discrete-event engine of \citet{sello2025_stellenbosch_embt_abm} with the changes of Section~\ref{sec:abm} and Appendix~\ref{app:abm_corrections}. Table~\ref{tab:abm_parameters} gives the values of the behavioural parameters.
+This appendix describes \MA{} as configured in this study, with the seven elements of the Overview, Design concepts and Details (ODD) protocol in its second update~\cite{grimm2020_odd_second_update}. Since the drivers' decisions are the subject of the comparison, the design concepts also answer the questions of the ODD+D extension for human decision-making~\cite{muller2013_odd_d}. The model is the discrete-event engine of \citet{sello2025_stellenbosch_embt_abm} with the changes of Section~\ref{sec:abm} and \ref{app:abm_corrections}. Table~\ref{tab:abm_parameters} gives the values of the behavioural parameters.
 
 \subsection{Purpose and patterns}
 \label{app:abm_purpose}
@@ -78,7 +108,7 @@ Table~\ref{tab:abm_entities} lists the entities of the model and their state var
         \midrule
         Node & Identifier; a node exists only as an end of an edge and can be a rank \\
         Rank & A first-in, first-out loading queue of the on-route taxis at a formal rank \\
-        Edge & A directed link between two nodes, with a fixed road length and a travel-time model (Appendix~\ref{app:abm_travel}) \\
+        Edge & A directed link between two nodes, with a fixed road length and a travel-time model (\ref{app:abm_travel}) \\
         Route & An ordered list of stops; consecutive stops are connected on the network \\
         Driver & Home node, idle locations, eligible routes, shift distribution, vehicle, policies, memory, state, location, passengers on board, and the passengers and passenger distance of the current day \\
         Vehicle & ICE: 15 seats. EV: also the usable battery capacity, the energy consumption rate and the energy level \\
@@ -89,7 +119,7 @@ Table~\ref{tab:abm_entities} lists the entities of the model and their state var
     \end{tabularx}
 \end{table}
 
-Time is continuous, in seconds from the start of the run, and one day is 86,400~s. Every simulated day is the same typical term weekday: all days have the same shift distributions and the same demand. Space is the operational network of the community, with 561 to 598 nodes, including the homes of the drivers, and directed edges between them. The model has no positions between nodes. A run has a warm-up, 14 settling days and 14 evaluation days (Appendix~\ref{app:abm_initialisation}).
+Time is continuous, in seconds from the start of the run, and one day is 86,400~s. Every simulated day is the same typical term weekday: all days have the same shift distributions and the same demand. Space is the operational network of the community, with 561 to 598 nodes, including the homes of the drivers, and directed edges between them. The model has no positions between nodes. A run has a warm-up, 14 settling days and 14 evaluation days (\ref{app:abm_initialisation}).
 
 \subsection{Process overview and scheduling}
 \label{app:abm_process}
@@ -116,7 +146,7 @@ The engine is a discrete-event simulation in continuous time~\cite{law2015_simul
     \end{tabularx}
 \end{table}
 
-A driver that is not on a route decides in this order. First, it returns home if its shift has ended; an EV that would arrive home below its reserve charges first. Second, an EV that is not full consults its charging policy. Third, the driver chooses between its routes and idling (Appendix~\ref{app:abm_choice}). An EV whose energy does not cover the chosen route, the drive from its last stop to the nearest station and its reserve charges first. A chosen route sends the driver to the first stop of the route.
+A driver that is not on a route decides in this order. First, it returns home if its shift has ended; an EV that would arrive home below its reserve charges first. Second, an EV that is not full consults its charging policy. Third, the driver chooses between its routes and idling (\ref{app:abm_choice}). An EV whose energy does not cover the chosen route, the drive from its last stop to the nearest station and its reserve charges first. A chosen route sends the driver to the first stop of the route.
 
 At each stop of a route, the passengers for the stop alight, and the route ends at its final stop. An empty driver whose shift has ended goes home, and a full taxi departs. Otherwise, the expired requests are removed, the compatible requests board, the driver joins the loading queue if the node is a rank, and the stop decision of Section~\ref{sec:abm} determines whether the driver waits or departs.
 
@@ -129,7 +159,7 @@ At each stop of a route, the passengers for the stop alight, and the route ends 
 
 \paragraph{Adaptation and individual decision-making} A driver decides when to return home, which route to drive or whether to idle, and how long to wait at each stop. An EV driver also decides when to charge. Each decision is a stochastic choice whose probabilities depend on the remembered demand of the current interval of the day, the current demand at the node, the occupancy of the vehicle and, for an EV, its energy level.
 
-\paragraph{Objectives} The utility of a route increases with the waiting requests that it can carry, the remembered passengers and passenger distance of its runs, and decreases with the remembered run distance and the competing drivers at the node (Appendix~\ref{app:abm_choice}). The utility of idling increases when the driver remembers the current interval as quiet. The drivers do not optimise an income over the day.
+\paragraph{Objectives} The utility of a route increases with the waiting requests that it can carry, the remembered passengers and passenger distance of its runs, and decreases with the remembered run distance and the competing drivers at the node (\ref{app:abm_choice}). The utility of idling increases when the driver remembers the current interval as quiet. The drivers do not optimise an income over the day.
 
 \paragraph{Learning} The memory of each driver records its route runs and charging visits as streaming means and variances in 30-minute intervals of the day, with no decay. The memory persists over days, so a driver learns where and when its routes carry passengers. In a cold run, the temperature of the choice model decreases from 1 to 0.1 over ten days, such that the drivers first try all their routes~\cite{sutton2018_reinforcement_learning}. The EV drivers learn their charging behaviour during the 14 settling days.
 
@@ -150,12 +180,14 @@ At each stop of a route, the passengers for the stop alight, and the route ends 
 \subsection{Initialisation}
 \label{app:abm_initialisation}
 
-The build of a community creates the drivers from the observed agents and their synthetic copies (Appendix~\ref{app:abm_population}), with a fixed seed. A cold run starts with empty memories and runs a warm-up period followed by 14 evaluation days~\cite{welch1983_statistical_analysis_simulation,law2015_simulation_modeling}. The warm-up length of each community, between 49 and 91 days, is the first day after which the seven-day means of the served passengers, their share of the requests, the occupancy and the route-choice shares remain within a tolerance of their long-run means on three seeds, rounded up to whole weeks. To reduce the computational cost, the warm-up is run once, and the resulting driver memories are saved as a warm start. Each subsequent run loads these memories, disables exploration, and runs 14 settling days followed by 14 evaluation days. The warm-up lengths are 49, 63 and 91 days in Khayelitsha, Bellville and Wynberg, respectively. In the experiments, the EVs start the settling days with a full battery, and the seed offsets of the five validation runs give the engine seeds 102 to 106.
+The build of a community creates the drivers from the observed agents and their synthetic copies (\ref{app:abm_population}), with a fixed seed. A cold run starts with empty memories and runs a warm-up period followed by 14 evaluation days~\cite{welch1983_statistical_analysis_simulation,law2015_simulation_modeling}. The warm-up length of each community, between 49 and 91 days, is the first day after which the seven-day means of the served passengers, their share of the requests, the occupancy and the route-choice shares remain within a tolerance of their long-run means on three seeds, rounded up to whole weeks. To reduce the computational cost, the warm-up is run once, and the resulting driver memories are saved as a warm start. Each subsequent run loads these memories, disables exploration, and runs 14 settling days followed by 14 evaluation days. The warm-up lengths are 49, 63 and 91 days in Khayelitsha, Bellville and Wynberg, respectively. In the experiments, the EVs start the settling days with a full battery, and the seed offsets of the five validation runs give the engine seeds 102 to 106.
+% CHANGE: Added the seeds of the fresh evaluation and the sensitivity cases.
+The cross-evaluation uses the fresh engine seeds 201 to 210, and the sensitivity cases use 201 to 205; no fresh seed is used to select a design.
 
 \subsection{Input data}
 \label{app:abm_inputs}
 
-The model uses no external time series during a run. All days use the same derived inputs: the network and its travel-time models (Appendix~\ref{app:abm_travel}), the eligible routes, homes and idle locations of the agents (Section~\ref{sec:routes}), their shift distributions (Appendix~\ref{app:abm_population}), the origin--destination demand and its hourly profiles (Appendix~\ref{app:abm_demand}), the vehicle and charging values (Section~\ref{subsubsec:vehicle_assumptions}) and, in the experiments, the charging design.
+The model uses no external time series during a run. All days use the same derived inputs: the network and its travel-time models (\ref{app:abm_travel}), the eligible routes, homes and idle locations of the agents (Section~\ref{sec:routes}), their shift distributions (\ref{app:abm_population}), the origin--destination demand and its hourly profiles (\ref{app:abm_demand}), the vehicle and charging values (Section~\ref{subsubsec:vehicle_assumptions}) and, in the experiments, the charging design.
 
 \subsection{Submodels}
 \label{app:abm_submodels}
@@ -163,7 +195,8 @@ The model uses no external time series during a run. All days use the same deriv
 \begin{table}[htbp]
     \centering
     \footnotesize
-    \caption{Behavioural parameters of \MA{} in each community. The first nine parameters are calibrated (Appendix~\ref{app:calibration}); Khayelitsha uses the values of its hand-tuning start point. The other parameters are fixed in all communities.}
+    % CHANGE: Caption explains why Khayelitsha and Wynberg have the same calibrated values (supervisor: the old caption contradicted Section 4.6.1).
+    \caption{Behavioural parameters of \MA{} in each community. The first nine parameters are calibrated (\ref{app:calibration}). Khayelitsha started its search from the calibrated values of Wynberg, and no validated trial fitted its duty cycles better, so it keeps the Wynberg values (Table~\ref{tab:calibration_search}); its model differs from that of Wynberg in the travel-time scale, the last-run rule, the demand and the observed shifts. The other parameters are fixed in all communities.}
     \label{tab:abm_parameters}
     \begin{tabularx}{\linewidth}{@{}Xlrrr@{}}
         \toprule
@@ -298,14 +331,75 @@ The calibration targets are computed from the observed agents on the calibration
 
 Following~\cite{thiele2014_abm_parameter_estimation}, the calibration proceeds in two stages. First, hand tuning from the warm start locates a starting point within the region of plausible operation and identifies gaps that no behavioural parameter can close. Such gaps required changes to model rules, namely the travel-time scaling and the last-run rule in Khayelitsha. Second, a search strategy is frozen in a versioned file whose SHA-256 digest is recorded. The strategy specifies nine parameters and their bounds (the idle bias and idle demand weight; the stop bias and maximum stop duration; the first-stop bias, demand weight and maximum duration; and the shift spread and shift end offset), the objectives, the constraint and the budget. The Khayelitsha strategy weights the movement family by 0.25 relative to the duty-cycle families, since a search with equal weights traded the duty cycles for the hourly shape of the day, whereas the Bellville and Wynberg strategies use equal weights and apply this priority at the acceptance. The search uses the multivariate tree-structured Parzen estimator (TPE) of Optuna~\cite{bergstra2011_hyperparameter_optimisation,akiba2019_optuna,ozaki2022_multiobjective_tpe} with two objectives, namely the minimisation of the loss and the maximisation of the occupancy capped at 0.6, subject to the served-share constraint. Each trial runs one seed from the warm start, and the search starts with a batch of 40 trials, of which 10 are space-filling start trials, followed by optional continuation batches of 20 trials. Selected points on the feasible front are subsequently validated with cold runs, which include the full warm-up, on three fresh seeds.
 
+% CHANGE: New paragraph and table: the search result of each community, which explains the Khayelitsha values of Table tab:abm_parameters (supervisor). Values from tabC1_calibration_search.
+Table~\ref{tab:calibration_search} gives the result of the search in each community. The search loss is that of one seed from the warm start; the cold loss is the mean of three cold runs. A lower search loss does not always give a lower cold loss. In Khayelitsha, the search started from the calibrated values of Wynberg. The best search trial had a lower search loss than the start point (1.785 against 1.887), but a higher cold loss (2.010 against 1.988), so the start point was accepted. In Wynberg, the accepted trial has a higher search loss than the start point but a lower cold loss.
+
+\begin{table}[htbp]
+    \centering
+    \footnotesize
+    \caption{Calibration search of each community: the start point, the search trial with the lowest search loss and the accepted point. Trial 0 is the start point. Trials: the completed search trials. Search loss: one seed from the warm start. Cold loss: the mean of three cold runs with the full warm-up. A dash shows a point that was not validated with cold runs.}
+    \label{tab:calibration_search}
+    % Source: tabC1_calibration_search.
+    \begin{tabularx}{\linewidth}{@{}Xlrrrr@{}}
+        \toprule
+        \textbf{Community} & Point & Trial & Trials & Search loss & Cold loss \\
+        \midrule
+        Khayelitsha & Start & 0 & 40 & 1.887 & 1.988 \\
+                    & Best search trial & 17 & & 1.785 & 2.010 \\
+                    & Accepted & 0 & & 1.887 & 1.988 \\
+        \addlinespace
+        Bellville   & Start & 0 & 32 & 2.326 & -- \\
+                    & Best search trial & 20 & & 1.901 & 2.067 \\
+                    & Accepted & 28 & & 1.914 & 2.002 \\
+        \addlinespace
+        Wynberg     & Start & 0 & 39 & 1.894 & 2.476 \\
+                    & Best search trial & 0 & & 1.894 & 2.476 \\
+                    & Accepted & 25 & & 1.985 & 2.377 \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
 \subsection{Assessment and hold-out}
 
 Each validated point is assessed with graded levels (good, acceptable or limited), which are expressed relative to the loss of the observed agents against their own targets over resampled calibration dates, so that the losses of the three communities are comparable. The acceptance prioritises realistic behaviour and the duty-cycle families, followed by the stability across seeds, the served share and the occupancy, and finally the hourly shape of the day. After the acceptance, a hold-out report compares the fit of the accepted model against the targets of the hold-out days (2 and 10 December) with its fit against the calibration targets. The resulting hold-out gap is assessed against the loss of the observed hold-out days against the calibration targets, which quantifies how much two days differ from six days in the data alone. The hold-out days test only the calibrated behaviour, since the network, the communities and the routes use all study weekdays.
 
-% TODO: The Bluedot replication is not part of the new pipeline (the study uses only the Sebenza Cape Town fleet). Rerun it with the same steps, or remove this appendix.
-\section{Replication with a second fleet}
-% Discuss > Bluedot, November 2022 (28 days, 621 vehicles, 05:00--20:00 only): 23 communities, seed ARI 1.0, early and late ARI 0.92; screening classes. Night is not observed, so overnight-only viability is optimistic.
+% CHANGE: Removed the appendix "Replication with a second fleet" and its TODO: the Bluedot replication is not part of the new pipeline, and a Gauteng replication is future work (Section 6.3). In its place, a new appendix with the bound check (supervisor: check whether x_A sits at its 2N-hat bound).
+\section{Upper bound of the design space}
+\label{app:bound_check}
 
+The design space allows up to \(2\hat{N}_j\) connectors at hub \(j\) (Section~\ref{sec:design_space}). In Khayelitsha, the best validated design, 19-8-6, reaches this bound at hubs 2 and 3. Three designs above the bound, up to \(3\hat{N}_j\), are therefore evaluated in \MA{} on the five selection seeds (Table~\ref{tab:bound_check}). None of them improves the EV passenger change: the differences to the best design are $-0.1$ to $-1.0$ percentage points, within two standard errors. The designs 19-12-9 and 25-12-9 give identical runs, because the drivers do not use the additional connectors at hub 1. In \MR, all four designs strand the same share of the vehicle-days. The bound therefore does not constrain the selection.
+
+\begin{table}[htbp]
+    \centering
+    \footnotesize
+    \caption{The best validated Khayelitsha design and three designs above the bound $2\hat{N}_j = (20, 8, 6)$, with 50~kW connectors. \MA: the means over the five selection seeds, and the paired difference to the best design with its standard error. \MR: the stranded share of the vehicle-days and the peak site load.}
+    \label{tab:bound_check}
+    % Source: tab14_bound_check.
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{@{}lrrrrrr@{}}
+        \toprule
+        & & \multicolumn{3}{c}{\MA} & \multicolumn{2}{c}{\MR} \\
+        \cmidrule(lr){3-5}\cmidrule(l){6-7}
+        \textbf{Design} & Installed (kW) & Peak (kW) & EV passenger change (SE) & Difference to best (SE) & Stranded (share) & Peak (kW) \\
+        \midrule
+        19-8-6 (best) & 1,650 & 860 & $-$0.027 (0.009) & -- & 0.549 & 500 \\
+        19-10-8 & 1,850 & 910 & $-$0.037 (0.007) & $-$0.010 (0.007) & 0.549 & 500 \\
+        19-12-9 & 2,000 & 890 & $-$0.029 (0.009) & $-$0.001 (0.003) & 0.549 & 500 \\
+        25-12-9 & 2,300 & 890 & $-$0.029 (0.009) & $-$0.001 (0.003) & 0.549 & 500 \\
+        \bottomrule
+    \end{tabular}
+    }
+\end{table}
+
+% CHANGE: Filled the empty appendix "Reproducibility" (supervisor: Appendices E and F are empty).
 \section{Reproducibility}
 \label{app:reproducibility}
 % Discuss > The 13 steps, their manifests (input, settings, code and output digests) and the human decision of each step, mapped to the sections of this paper. The parasim-engine commit and the SHA-256 of the engine executable in the experiments inputs. No paths, pseudonyms or coordinates.
+
+The study code is in the \texttt{emanalysis} repository, in the project \texttt{embt\_replay\_vs\_abm}. The router telemetry is private and is not published; the paper reports aggregates only. Each step of the pipeline (\texttt{src/pipeline.py}) writes its outputs with a manifest that records the digests of its inputs, its settings, its code and its outputs, so a changed input marks every later step as out of date. Each step also has validity checks and a notebook in which the researcher records the decision of the step, for example the network review, the community partition and the accepted calibration; the selection of the charging designs follows the rules of Section~\ref{sec:selection} with no manual choice.
+
+The agent-based model is the engine \texttt{parasim-engine}, branch \texttt{charging-corrections}, commit \texttt{fd5e946}. The SHA-256 of the engine executable in the manifests of all experiment runs is
+\begin{center}
+    \texttt{44bb30f2b511e3ea70152a710a7b1bb5ecd2f4fb8324a7ecab0a9bc8f2652eda}.
+\end{center}
+\noindent The engine seed of a run is 101 plus its seed offset: the design search uses seed 101, the selection uses the seeds 102 to 106, the cross-evaluation uses the fresh seeds 201 to 210 and the sensitivity cases use 201 to 205.
