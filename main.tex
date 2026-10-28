@@ -182,7 +182,7 @@ Table~\ref{tab:related_work} positions the studies discussed against this one. R
 \begin{table}[htbp]
     \centering
     \footnotesize
-    \caption{Representative studies of fleet electrification by the way they represent mobility and charging. Replay: observed trajectories; scheduled: centrally optimised operation; adaptive: driver or dispatcher decisions.}
+    \caption[Representative studies of fleet electrification]{Representative studies of fleet electrification by the way they represent mobility and charging. Replay: observed trajectories; scheduled: centrally optimised operation; adaptive: driver or dispatcher decisions.}
     \label{tab:related_work}
     % TODO > The cells are a first pass from the abstracts; check each against the paper. "?" marks a cell to confirm.
     \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.2\linewidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
@@ -225,7 +225,7 @@ Shown in Figure~\ref{fig:study_context}a, the study area is the union of the Cit
     \includegraphics[width=0.32\textwidth]{figures/study_context_b.pdf}\hfill
     \includegraphics[width=0.32\textwidth]{figures/study_context_c.pdf}\hfill
     \includegraphics[width=0.32\textwidth]{figures/study_context_d.pdf}
-    \caption{Study context. (a) South Africa with the study area and a zoom on Cape Town and the surrounding municipalities (Census 2011 boundaries~\cite{statssa2012_census2011, frith2013_census2011}); the coloured boxes give the extent of (b) to (d). (b) Khayelitsha, (c) Bellville and (d) Wynberg: the configured network of each community as straight links between nodes (grey), the configured routes of the community drivers as straight links between their stops (colour), the route stops (dots), the formal ranks (squares) and the main hub (star). Home nodes and the links to them are not shown.}
+    \caption[Cape Town study context]{Study context. (a) South Africa with the study area and a zoom on Cape Town and the surrounding municipalities (Census 2011 boundaries~\cite{statssa2012_census2011, frith2013_census2011}); the coloured boxes give the extent of (b) to (d). (b) Khayelitsha, (c) Bellville and (d) Wynberg: the configured network of each community as straight links between nodes (grey), the configured routes of the community drivers as straight links between their stops (colour), the route stops (dots), the formal ranks (squares) and the main hub (star). Home nodes and the links to them are not shown.}
     \label{fig:study_context}
 \end{figure}
 
@@ -239,7 +239,7 @@ Table~\ref{tab:cpt_fleet_summary} summarises the duty cycle of the observed Cape
 \begin{table}[htbp]
     \centering
     \footnotesize
-    \caption{Duty cycle of the Cape Town fleet by day class. Long-distance: the share of all vehicle-days with 50~km or more outside the study area. Distance and driving window: over the valid vehicle-days, with the interquartile range in brackets; the driving window runs from the end of the stop that contains the first point of the day to the start of the stop that contains the last point. Within range: the share of the valid vehicle-days of 130~km or less, the distance of the EV battery window.}
+    \caption[Duty cycle of the Cape Town fleet by day class]{Duty cycle of the Cape Town fleet by day class. Long-distance: the share of all vehicle-days with 50~km or more outside the study area. Distance and driving window: over the valid vehicle-days, with the interquartile range in brackets; the driving window runs from the end of the stop that contains the first point of the day to the start of the stop that contains the last point. Within range: the share of the valid vehicle-days of 130~km or less, the distance of the EV battery window.}
     \label{tab:cpt_fleet_summary}
     % Source: stops/cape_town/vehicle_days.parquet and stop_events.parquet (accepted stops output); driving window by common.ev.drive_windows (D140).
     \resizebox{\textwidth}{!}{%
@@ -268,7 +268,7 @@ Table~\ref{tab:reference_data} lists the public data that complement the telemet
 \begin{table}[htbp]
     \centering
     \footnotesize
-    \caption{Public data used with the telemetry.}
+    \caption[Public data used with the telemetry]{Public data used with the telemetry.}
     \label{tab:reference_data}
     \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.3\linewidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{0.25\linewidth}@{}}
         \toprule
@@ -311,7 +311,7 @@ The representation of vehicle movement is the primary difference under investiga
 \begin{table}[htbp]
     \centering
     \footnotesize
-    \caption{Elements of the two models. Movement is the treatment of the comparison; the other elements are the same in both models, made equivalent, or present in one model only.}
+    \caption[Elements of the two models]{Elements of the two models. Movement is the treatment of the comparison; the other elements are the same in both models, made equivalent, or present in one model only.}
     \label{tab:model_comparison}
     \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.2\linewidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}Xl@{}}
         \toprule
@@ -355,8 +355,7 @@ The data-replay model evaluates every candidate charging design and selects a re
 \begin{figure}[htb!]
     \centering
     \includegraphics[width=\textwidth]{figures/system-diagram.pdf}
-    \caption{
-        Overview of the study design. GPS telemetry is used to reconstruct the operational network, infer routes and identify vehicle communities. Three communities are selected using a predefined screening rule. The same observed vehicles are electrified in the data-replay model (\(\MR\)) and the agent-based model (\(\MA\)); the latter also simulates synthetic ICE vehicles operating on the same corridors. The data-replay model evaluates all candidate charging designs and selects \(\xR\). The agent-based model searches the same design space and selects \(\xA\). Both designs are evaluated in the agent-based model, and their passenger-service outcomes are compared. The representation check \(\xS\) applies the replay rules to the simulated movement of \(\MA\). Both models share the vehicles, EV values, candidate sites and design space \(\mathbf{x} \in \mathcal{X}\). The three communities are then compared to assess the size and the form of the differences.
+    \caption[Study design]{Overview of the study design. GPS telemetry is used to reconstruct the operational network, infer routes and identify vehicle communities. Three communities are selected using a predefined screening rule. The same observed vehicles are electrified in the data-replay model (\(\MR\)) and the agent-based model (\(\MA\)); the latter also simulates synthetic ICE vehicles operating on the same corridors. The data-replay model evaluates all candidate charging designs and selects \(\xR\). The agent-based model searches the same design space and selects \(\xA\). Both designs are evaluated in the agent-based model, and their passenger-service outcomes are compared. The representation check \(\xS\) applies the replay rules to the simulated movement of \(\MA\). Both models share the vehicles, EV values, candidate sites and design space \(\mathbf{x} \in \mathcal{X}\). The three communities are then compared to assess the size and the form of the differences.
     }
     \label{fig:system_diagram}
 \end{figure}
@@ -504,7 +503,7 @@ Each model evaluates designs using the measures it can represent, as summarised 
 \begin{table}[htbp]
     \centering
     \footnotesize
-    \caption{Model-native measures of a charging design. All measures use the evaluation days of \MA{} or the replayed term weekdays of \MR. A dash shows a measure that the model cannot represent.}
+    \caption[Model-native measures of a charging design]{Model-native measures of a charging design. All measures use the evaluation days of \MA{} or the replayed term weekdays of \MR. A dash shows a measure that the model cannot represent.}
     \label{tab:objectives}
     \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.24\linewidth}Xll@{}}
         \toprule
@@ -571,7 +570,7 @@ The community-detection procedure identifies eight vehicle communities (Table~\r
 \begin{table}[htbp]
     \centering
     \footnotesize
-    \caption{Electrification screening of each community and the reason for each exclusion. $V_1$, $V_2$ and $V_3$ are the shares of the screened vehicle-days that are viable with overnight charging only, with overnight and hub charging at the first three hubs, and with hub charging only. Binding is $V_2 - V_1$ in percentage points. A main hub is formal when it is a rank, a station or a terminus.}
+    \caption[Electrification screening of each community]{Electrification screening of each community and the reason for each exclusion. $V_1$, $V_2$ and $V_3$ are the shares of the screened vehicle-days that are viable with overnight charging only, with overnight and hub charging at the first three hubs, and with hub charging only. Binding is $V_2 - V_1$ in percentage points. A main hub is formal when it is a rank, a station or a terminus.}
     \label{tab:screening}
     % Source: tab02_screening.
     \begin{tabularx}{\linewidth}{@{}lrlrrrrlX@{}}
@@ -595,7 +594,7 @@ The selected communities differ in how well their operation is represented by th
 \begin{table}[htbp]
     \centering
     \footnotesize
-    \caption{The selected communities, their data and their configured models. Agents are the EV drivers and their synthetic ICE copies in \MA, with the scale factor $k$. Routes are the distinct configured routes of the drivers. Valid: the valid share of the community's vehicle-days. Off net.: the share of the driving outside the network. Route cov.: the median share of a vehicle's trip distance on its eligible routes, over the 93, 44 and 25 vehicles with an eligible route before routes shorter than 5~km were excluded.}
+    \caption[The selected communities, their data and their configured models]{The selected communities, their data and their configured models. Agents are the EV drivers and their synthetic ICE copies in \MA, with the scale factor $k$. Routes are the distinct configured routes of the drivers. Valid: the valid share of the community's vehicle-days. Off net.: the share of the driving outside the network. Route cov.: the median share of a vehicle's trip distance on its eligible routes, over the 93, 44 and 25 vehicles with an eligible route before routes shorter than 5~km were excluded.}
     \label{tab:models}
     % Source: tab01_models and tab03_data_quality.
     \begin{tabularx}{\linewidth}{@{}Xrrrrrrrrr@{}}
@@ -617,7 +616,7 @@ The calibrated ICE baselines reproduce the central parts of the observed duty-cy
 \begin{table}[htbp]
     \centering
     \footnotesize
-    \caption{Duty-cycle fit of the baseline agent-based model of each community. Obs.: the calibration target from the agent-days of the observed agents on the calibration days. \MA: the run of the accepted configuration from its warm start. \MR{} replays the observed movement, so it reproduces the observed values by construction and is not shown. The served share (constraint: at least 0.95) and the seat occupancy (goal: up to 0.6) are plausibility checks with no observed value.}
+    \caption[Duty-cycle fit of the baseline agent-based model]{Duty-cycle fit of the baseline agent-based model of each community. Obs.: the calibration target from the agent-days of the observed agents on the calibration days. \MA: the run of the accepted configuration from its warm start. \MR{} replays the observed movement, so it reproduces the observed values by construction and is not shown. The served share (constraint: at least 0.95) and the seat occupancy (goal: up to 0.6) are plausibility checks with no observed value.}
     \label{tab:calibration_fit}
     % Source: tab04_calibration.
     \begin{tabularx}{\linewidth}{@{}Xrrrrrr@{}}
@@ -653,7 +652,7 @@ However, two differences remain. First, simulated overnight periods are 1.5--2.5
 \begin{table}[htbp]
     \centering
     \footnotesize
-    \caption{Observed against simulated movement, measured with the quantities of the replay rules. Obs.: the replayed vehicle-days of the agents on the eight term weekdays. Sim.: the home-to-home duties of the agents in the calibrated ICE runs of \MA{} (first eight evaluation days of five seeds). Distances and times are P50 [P10--P90]. A site opportunity is a stop of 10~min or more within 100~m of a candidate site. The battery window is $0.7\,C$. The ceiling is the highest not-stranded share that \MR{} reaches with unlimited connectors at the three sites.}
+    \caption[Observed against simulated movement in the quantities of the replay rules]{Observed against simulated movement, measured with the quantities of the replay rules. Obs.: the replayed vehicle-days of the agents on the eight term weekdays. Sim.: the home-to-home duties of the agents in the calibrated ICE runs of \MA{} (first eight evaluation days of five seeds). Distances and times are P50 [P10--P90]. A site opportunity is a stop of 10~min or more within 100~m of a candidate site. The battery window is $0.7\,C$. The ceiling is the highest not-stranded share that \MR{} reaches with unlimited connectors at the three sites.}
     \label{tab:fidelity}
     % Source: <study folder>/representation/<community>/movement.parquet.
     \resizebox{\textwidth}{!}{%
@@ -679,7 +678,7 @@ However, two differences remain. First, simulated overnight periods are 1.5--2.5
     \centering
     % Figure > Observed against simulated movement, one column per community in the order (a) Khayelitsha, (b) Bellville, (c) Wynberg. Rows: the empirical cumulative distribution of the daily distance and of the overnight time (observed: the replayed vehicle-days; simulated: the duties of the five ICE seeds, one thin line per seed), and the charging opportunities per vehicle-day at each candidate site as paired bars. Source: representation/<community>/sim_days.parquet and the replay vehicle-days. Aggregates only; no vehicle identifiers.
     \includegraphics[width=\textwidth]{figures/fidelity.pdf}
-    \caption{Observed against simulated movement in each community: (a) Khayelitsha, (b) Bellville, (c) Wynberg. Top and middle: the empirical cumulative distribution of the daily distance and of the overnight time. Observed: the replayed vehicle-days of the agents on the eight term weekdays. Simulated: the home-to-home duties of the agents in the calibrated ICE runs of \MA, one line for each of the five seeds. Bottom: the site opportunities per vehicle-day at each candidate site, as in Table~\ref{tab:fidelity}.}
+    \caption[Observed against simulated movement]{Observed against simulated movement in each community: (a) Khayelitsha, (b) Bellville, (c) Wynberg. Top and middle: the empirical cumulative distribution of the daily distance and of the overnight time. Observed: the replayed vehicle-days of the agents on the eight term weekdays. Simulated: the home-to-home duties of the agents in the calibrated ICE runs of \MA, one line for each of the five seeds. Bottom: the site opportunities per vehicle-day at each candidate site, as in Table~\ref{tab:fidelity}.}
     \label{fig:fidelity}
 \end{figure}
 
@@ -695,7 +694,7 @@ For this common design, the models predict the same peak site load because all i
 \begin{table}[htbp]
     \centering
     \footnotesize
-    \caption{Outcomes of the selected \MR{} design of each community in both models. \MR: the replayed term weekdays; \MA: the mean over ten fresh seeds of 14 evaluation days each. The below-reserve share of \MR{} counts the vehicle-days below $0.2\,C$; \MA{} reports it with another definition, so its cell is empty. A dash shows a measure that the model cannot represent.}
+    \caption[Outcomes of the selected \MR{} design in both models]{Outcomes of the selected \MR{} design of each community in both models. \MR: the replayed term weekdays; \MA: the mean over ten fresh seeds of 14 evaluation days each. The below-reserve share of \MR{} counts the vehicle-days below $0.2\,C$; \MA{} reports it with another definition, so its cell is empty. A dash shows a measure that the model cannot represent.}
     \label{tab:reference_design}
     % Source: tab05_reference_design.
     \begin{tabularx}{\linewidth}{@{}Xrrrrrr@{}}
@@ -722,7 +721,7 @@ For this common design, the models predict the same peak site load because all i
     \centering
     % Figure > Mechanism under the reference design x_R, one column per community. (a) The mean daily site load profile (kW against the hour of the day) in M_R and in M_A, with the installed power as a line. (b) The status of the replayed vehicle-days in M_R (viable, below reserve, stranded) split by the cause: no site opportunity, or more energy need than the window and one night give. (c) The battery level at the start of driving in M_A against M_R. Source: replay design tables and the experiments validation runs of x_R.
     \includegraphics[width=\textwidth]{figures/mechanism.pdf}
-    \caption{Charging under the reference design $\xR$ in both models: (a) Khayelitsha, (b) Bellville, (c) Wynberg. Top: the mean site load over the day in 15-minute intervals (\MR: the replayed term weekdays; \MA: ten fresh seeds of 14 evaluation days each) and the installed power (dashed). Middle: the replay status of the conclusive vehicle-days in \MR, divided by the condition of the day. A day needs site charging when one night of home charging at 3.7~kW does not cover its energy need. Bottom: the empirical cumulative distribution of the battery level at the start of driving (\MR: the start level of the replayed vehicle-day; \MA: the first logged level after the agent leaves home).}
+    \caption[Charging under the reference design $\xR$ in both models]{Charging under the reference design $\xR$ in both models: (a) Khayelitsha, (b) Bellville, (c) Wynberg. Top: the mean site load over the day in 15-minute intervals (\MR: the replayed term weekdays; \MA: ten fresh seeds of 14 evaluation days each) and the installed power (dashed). Middle: the replay status of the conclusive vehicle-days in \MR, divided by the condition of the day. A day needs site charging when one night of home charging at 3.7~kW does not cover its energy need. Bottom: the empirical cumulative distribution of the battery level at the start of driving (\MR: the start level of the replayed vehicle-day; \MA: the first logged level after the agent leaves home).}
     \label{fig:mechanism}
 \end{figure}
 
@@ -744,14 +743,14 @@ Each design evaluated in both models (Table~\ref{tab:two_by_two}) shows that the
     \includegraphics[width=\textwidth]{figures/design_space_a.pdf}\\[0.5em]
     \includegraphics[width=\textwidth]{figures/design_space_b.pdf}\\[0.5em]
     \includegraphics[width=\textwidth]{figures/design_space_c.pdf}
-    \caption{Design space of each community in both models, each in its model-native objectives: (a) Khayelitsha, (b) Bellville, (c) Wynberg. Left, \MR: every enumerated design (grey), the Pareto front (line), the ceiling of the not-stranded share (dashed) and 95\% of it (dotted), and the selected \MR{} design (diamond). Right, \MA: the validated designs (mean $\pm$ one standard error over the five selection seeds), the 95\% limit of the selection rule (dashed), the selected \MA{} design (star) and the \MR{} design evaluated in \MA{} (diamond).}
+    \caption[Design space of each community in both models]{Design space of each community in both models, each in its model-native objectives: (a) Khayelitsha, (b) Bellville, (c) Wynberg. Left, \MR: every enumerated design (grey), the Pareto front (line), the ceiling of the not-stranded share (dashed) and 95\% of it (dotted), and the selected \MR{} design (diamond). Right, \MA: the validated designs (mean $\pm$ one standard error over the five selection seeds), the 95\% limit of the selection rule (dashed), the selected \MA{} design (star) and the \MR{} design evaluated in \MA{} (diamond).}
     \label{fig:design_space}
 \end{figure}
 
 \begin{table}[htbp]
     \centering
     \footnotesize
-    \caption{Design that each model selects in each community: the connectors $N_1$, $N_2$ and $N_3$ at the first three hubs, the power $P$ of a connector, the installed power and the peak site load. A design ID $n\,N_1$-$N_2$-$N_3$\_$p\,P$ gives the same values.}
+    \caption[Design that each model selects in each community]{Design that each model selects in each community: the connectors $N_1$, $N_2$ and $N_3$ at the first three hubs, the power $P$ of a connector, the installed power and the peak site load. A design ID $n\,N_1$-$N_2$-$N_3$\_$p\,P$ gives the same values.}
     \label{tab:selected_designs}
     % Source: tab06_selected_designs.
     \begin{tabularx}{\linewidth}{@{}XlXrrrrrr@{}}
@@ -773,7 +772,7 @@ Each design evaluated in both models (Table~\ref{tab:two_by_two}) shows that the
 \begin{table}[htbp]
     \centering
     \footnotesize
-    \caption{Selected design of each model for each selection rule. Relative: the cheapest design that keeps at least the fraction $\tau$ of the service of the best design ($\tau = 0.95$ is the main rule of both models). Knee: the front design nearest to the origin when each objective is scaled to its range on the front. Designs are $N_1$-$N_2$-$N_3$ connectors of $P$~kW. The \MA{} values are from the five selection seeds; the peak site load of \MR{} equals its installed power.}
+    \caption[Selected design of each model for each selection rule]{Selected design of each model for each selection rule. Relative: the cheapest design that keeps at least the fraction $\tau$ of the service of the best design ($\tau = 0.95$ is the main rule of both models). Knee: the front design nearest to the origin when each objective is scaled to its range on the front. Designs are $N_1$-$N_2$-$N_3$ connectors of $P$~kW. The \MA{} values are from the five selection seeds; the peak site load of \MR{} equals its installed power.}
     \label{tab:sweep}
     % Source: tab10_selection_sweep.
     \begin{tabularx}{\linewidth}{@{}Xlllrllrr@{}}
@@ -806,7 +805,7 @@ Each design evaluated in both models (Table~\ref{tab:two_by_two}) shows that the
 \begin{table}[htbp]
     \centering
     \footnotesize
-    \caption{Connector estimate $\hat{N}_j$ and upper bound $2\hat{N}_j$ of each candidate hub, with the connectors of the selected designs. $\tau = 0.99$: the \MA{} design of the 99\% tolerance where it differs from $\xA$.}
+    \caption[Connector estimate and upper bound of each candidate hub]{Connector estimate $\hat{N}_j$ and upper bound $2\hat{N}_j$ of each candidate hub, with the connectors of the selected designs. $\tau = 0.99$: the \MA{} design of the 99\% tolerance where it differs from $\xA$.}
     \label{tab:hubs}
     % Source: tab13_hubs.
     \begin{tabularx}{\linewidth}{@{}Xrlrrrrr@{}}
@@ -831,7 +830,7 @@ Each design evaluated in both models (Table~\ref{tab:two_by_two}) shows that the
 \begin{table}[htbp]
     \centering
     \footnotesize
-    \caption{Each selected design evaluated in both models. \MR: the stranded share of the vehicle-days and the peak site load on the replayed term weekdays. \MA: the EV passenger change against the ICE counterfactual (mean and standard error over ten fresh seeds) and the peak site load. $\tau = 0.99$: the \MA{} design of the 99\% tolerance where it differs from $\xA$.}
+    \caption[Each selected design evaluated in both models]{Each selected design evaluated in both models. \MR: the stranded share of the vehicle-days and the peak site load on the replayed term weekdays. \MA: the EV passenger change against the ICE counterfactual (mean and standard error over ten fresh seeds) and the peak site load. $\tau = 0.99$: the \MA{} design of the 99\% tolerance where it differs from $\xA$.}
     \label{tab:two_by_two}
     % Source: tab11_two_by_two.
     \resizebox{\textwidth}{!}{%
@@ -865,7 +864,7 @@ The decomposition combines behavioural effects with the differences in the model
 \begin{table}[htbp]
     \centering
     \footnotesize
-    \caption{Representation and behaviour effects. $\xS$ is the design that the \MR{} rule selects on the simulated ICE movement of \MA. The step $\xR \rightarrow \xS$ isolates the representation effect; $\xS \rightarrow \xA$ contains the behaviour effect and the change of service measure and selection rule. Designs are $N_1$-$N_2$-$N_3$ connectors of 50~kW, with the installed power in kW. Change: the change of installed power in kW; moved: half the summed absolute change of the connectors per site. Cost: the EV passenger change in \MA{} of the first design minus that of the second, with its standard error over ten fresh paired seeds; the two parts sum to the cost in Table~\ref{tab:cross_evaluation}.}
+    \caption[Representation and behaviour effects]{Representation and behaviour effects. $\xS$ is the design that the \MR{} rule selects on the simulated ICE movement of \MA. The step $\xR \rightarrow \xS$ isolates the representation effect; $\xS \rightarrow \xA$ contains the behaviour effect and the change of service measure and selection rule. Designs are $N_1$-$N_2$-$N_3$ connectors of 50~kW, with the installed power in kW. Change: the change of installed power in kW; moved: half the summed absolute change of the connectors per site. Cost: the EV passenger change in \MA{} of the first design minus that of the second, with its standard error over ten fresh paired seeds; the two parts sum to the cost in Table~\ref{tab:cross_evaluation}.}
     \label{tab:decomposition}
     \resizebox{\textwidth}{!}{%
     \begin{tabular}{@{}lllrrrrrr@{}}
@@ -897,7 +896,7 @@ The time that the EV agents spend on charging explains the size and the form of 
 \begin{table}[htbp]
     \centering
     \footnotesize
-    \caption{The selected \MR{} design $\xR$ against the selected \MA{} design $\xA$, both evaluated in \MA: means over ten fresh seeds, and the paired difference ($\xR$ minus $\xA$) with its standard error. The ICE run is the counterfactual of both designs. No EV-day strands in any run.}
+    \caption[The selected \MR{} design against the selected \MA{} design in \MA]{The selected \MR{} design $\xR$ against the selected \MA{} design $\xA$, both evaluated in \MA: means over ten fresh seeds, and the paired difference ($\xR$ minus $\xA$) with its standard error. The ICE run is the counterfactual of both designs. No EV-day strands in any run.}
     \label{tab:cross_evaluation}
     % Source: tab07_cross_evaluation.
     \resizebox{\textwidth}{!}{%
@@ -923,7 +922,7 @@ The time that the EV agents spend on charging explains the size and the form of 
 \begin{table}[htbp]
     \centering
     \footnotesize
-    \caption{Capture share: the share of the passengers that the EV agents lose and the other drivers take, from the EV run and the ICE run of the same seed. Lost: the passengers that the EV agents lose; gained: the change of the passengers of all other drivers; both are means over the seeds for the 14 evaluation days of a run. Capture share: gained divided by lost, as the mean over the seeds of the share of each seed. Fresh: the ten fresh seeds; selection: the five selection seeds. In Bellville, the passengers lost are few against the variation of the passengers of the other 1,629 drivers, so the capture share is not determined.}
+    \caption[Capture share of the passengers that the EV agents lose]{Capture share: the share of the passengers that the EV agents lose and the other drivers take, from the EV run and the ICE run of the same seed. Lost: the passengers that the EV agents lose; gained: the change of the passengers of all other drivers; both are means over the seeds for the 14 evaluation days of a run. Capture share: gained divided by lost, as the mean over the seeds of the share of each seed. Fresh: the ten fresh seeds; selection: the five selection seeds. In Bellville, the passengers lost are few against the variation of the passengers of the other 1,629 drivers, so the capture share is not determined.}
     \label{tab:ice_capture}
     % Source: tab12_ice_capture.
     \begin{tabularx}{\linewidth}{@{}Xlrrrr@{}}
@@ -948,7 +947,7 @@ The time that the EV agents spend on charging explains the size and the form of 
     \centering
     % Figure > When and why the EVs lose passengers, one column per community. (a) The passengers of the EV agents per hour of the day under x_R and x_A, as the difference from the ICE counterfactual of the same seed (mean and band over five seeds). (b) The time per EV-day spent on the drive to a charger, in the charger queue and charging, under x_R and x_A. Source: experiments validation runs (states and charging logs) and their ICE counterfactuals.
     \includegraphics[width=\textwidth]{figures/passenger_loss.pdf}
-    \caption{Passenger loss of the EVs over the day and the time that they spend on charging, under the replay design $\xR$ and the agent-based design $\xA$, both evaluated in \MA: (a) Khayelitsha, (b) Bellville, (c) Wynberg. Top: the passengers of the EV agents by the start hour of their route runs, minus those of the same agents in the ICE counterfactual of the same seed (mean $\pm$ one standard error over ten fresh seeds). Bottom: the minutes for each EV agent-day on the drive to a charger, in the charger queue and charging.}
+    \caption[Passenger loss of the EVs over the day and the time spend on charging]{Passenger loss of the EVs over the day and the time that they spend on charging, under the replay design $\xR$ and the agent-based design $\xA$, both evaluated in \MA: (a) Khayelitsha, (b) Bellville, (c) Wynberg. Top: the passengers of the EV agents by the start hour of their route runs, minus those of the same agents in the ICE counterfactual of the same seed (mean $\pm$ one standard error over ten fresh seeds). Bottom: the minutes for each EV agent-day on the drive to a charger, in the charger queue and charging.}
     \label{fig:passenger_loss}
 \end{figure}
 
@@ -962,14 +961,14 @@ Higher energy consumption widens the gap between the designs, and lower consumpt
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{figures/sensitivity.pdf}
-    \caption{Sensitivity of the EV passenger change in \MA{} in each community (colour). (a) EV passenger change against internal-combustion operation of the selected \MA{} design. (b) EV passenger change of the selected \MR{} design minus that of the selected \MA{} design, both evaluated in \MA{}, in percentage points; below zero, the \MR{} design loses more passengers. Mean $\pm$ one standard error over five fresh seeds in each case and ten in the base case.}
+    \caption[Sensitivity of the EV passenger change in \MA{} in each community]{Sensitivity of the EV passenger change in \MA{} in each community (colour). (a) EV passenger change against internal-combustion operation of the selected \MA{} design. (b) EV passenger change of the selected \MR{} design minus that of the selected \MA{} design, both evaluated in \MA{}, in percentage points; below zero, the \MR{} design loses more passengers. Mean $\pm$ one standard error over five fresh seeds in each case and ten in the base case.}
     \label{fig:sensitivity}
 \end{figure}
 
 \begin{table}[htbp]
     \centering
     \footnotesize
-    \caption{EV passenger change against internal-combustion operation of the selected \MA{} and \MR{} designs, both evaluated in \MA, in each sensitivity case. Means over five fresh seeds; the base case uses the ten fresh seeds.}
+    \caption[EV passenger change in sensitivity cases]{EV passenger change against internal-combustion operation of the selected \MA{} and \MR{} designs, both evaluated in \MA, in each sensitivity case. Means over five fresh seeds; the base case uses the ten fresh seeds.}
     \label{tab:sensitivity}
     % Source: tab08_sensitivity, part (a).
     \begin{tabularx}{\linewidth}{@{}Xrrrrrr@{}}
@@ -994,7 +993,7 @@ The cross-community synthesis (Table~\ref{tab:synthesis}) shows the form and the
 \begin{table}[htbp]
     \centering
     \footnotesize
-    \caption{Size and form of each difference between the models in each community: whether the two models select the same design, the installed power of the \MA{} design minus that of the \MR{} design, the form of the change (more capacity, other hubs, or both), and the EV passenger change of the \MR{} design minus that of the \MA{} design in \MA{} with its standard error over ten fresh seeds (equal within two standard errors). Three communities do not give a statistical generalisation.}
+    \caption[Size and form of each difference between the models]{Size and form of each difference between the models in each community: whether the two models select the same design, the installed power of the \MA{} design minus that of the \MR{} design, the form of the change (more capacity, other hubs, or both), and the EV passenger change of the \MR{} design minus that of the \MA{} design in \MA{} with its standard error over ten fresh seeds (equal within two standard errors). Three communities do not give a statistical generalisation.}
     \label{tab:synthesis}
     % Source: tab09_synthesis.
     \resizebox{\textwidth}{!}{%
@@ -1017,7 +1016,7 @@ The replay model evaluates all designs of a community in 2.2 to 67.5~s in one pr
 \begin{table}[htbp]
     \centering
     \footnotesize
-    \caption{Computational cost of each phase in each community. Each design evaluation of \MR{} and each engine run of \MA{} uses one process. Runs: the designs of \MR{} or the engine runs of \MA, with the paired ICE runs. Run time: the sum of the wall times of the runs. Elapsed: the wall time of the phase, with two runs at the same time; the search trials record only their run time. Memory: the peak resident memory of one run.}
+    \caption[Computational cost of each phase in each community]{Computational cost of each phase in each community. Each design evaluation of \MR{} and each engine run of \MA{} uses one process. Runs: the designs of \MR{} or the engine runs of \MA, with the paired ICE runs. Run time: the sum of the wall times of the runs. Elapsed: the wall time of the phase, with two runs at the same time; the search trials record only their run time. Memory: the peak resident memory of one run.}
     \label{tab:computational_cost}
     % Source: tab15_computational_cost.
     \begin{tabularx}{\linewidth}{@{}Xlrrrrr@{}}
@@ -1054,7 +1053,7 @@ The cost model turns the passenger difference into a decision (Table~\ref{tab:co
 \begin{table}[htbp]
     \centering
     \footnotesize
-    \caption{Annual cost and break-even fare of the selected designs (rand of December 2025, without VAT). Connectors: the installed connector cost, annualised over ten years at a discount rate of 0. Demand: the City of Cape Town demand and network capacity charges of the sites. EV passengers: the passengers that the EV agents carry each day (ten fresh seeds). Extra: against $\xR$, with 250 operating days a year. Break-even fare: the fare at which the extra fare revenue pays the extra cost, in the base case and its range over the discount rates of 4, 8 and 12\% and 300 operating days. Dominates: the design costs less and carries more passengers. $\tau = 0.99$: the \MA{} design of the 99\% tolerance where it differs from $\xA$.}
+    \caption[Annual cost and break-even fare of the selected designs]{Annual cost and break-even fare of the selected designs (rand of December 2025, without VAT). Connectors: the installed connector cost, annualised over ten years at a discount rate of 0. Demand: the City of Cape Town demand and network capacity charges of the sites. EV passengers: the passengers that the EV agents carry each day (ten fresh seeds). Extra: against $\xR$, with 250 operating days a year. Break-even fare: the fare at which the extra fare revenue pays the extra cost, in the base case and its range over the discount rates of 4, 8 and 12\% and 300 operating days. Dominates: the design costs less and carries more passengers. $\tau = 0.99$: the \MA{} design of the 99\% tolerance where it differs from $\xA$.}
     \label{tab:cost_model}
     % Source: tab16_cost_model.
     \resizebox{\textwidth}{!}{%
