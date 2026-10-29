@@ -226,9 +226,9 @@ Table~\ref{tab:related_work} positions the studies discussed against this one. R
 % CHANGE: "route associations" -> "taxi associations", as elsewhere in the paper; hold-back described as stopping to wait for more passengers (R2 self-review #15).
 Minibus taxis carry the largest share of the public-transport trips in Cape Town~\cite{statssa2022_nhts, coct2023_citp}. Their operation is shaped by vehicle owners, taxi associations and the provincial operating-licence system~\cite{behrens2015_paratransit, vegter2020_sa_mbt_industry}. Five operating characteristics are particularly relevant to electrification and to the models developed in this study.
 
-First, passengers commonly board at taxi ranks, where vehicles queue on a first-in, first-out basis and depart when sufficiently full~\cite{behrens2015_paratransit}. This is known as fill-and-go loading. Second, passengers may board or alight at stops along a route, although boarding is generally concentrated at terminals. Third, vehicles tend to operate on a limited set of routes between established terminals~\cite{coct2021_taxiroutes, dupreez2019_paratransit_route_typology}. Fourth, drivers may stop and wait for more passengers, or move slowly along a route to find them, a practice referred to here as hold-back~\cite{ndibatya2021_characterising_mbt_movement}. Finally, demand is directional and varies over the day. During the morning peak, many passengers travel from residential areas towards employment centres, leaving some taxis with relatively few passengers on the return journey~\cite{coct2023_citp}. The pattern often reverses in the evening.
+First, passengers commonly board at taxi ranks, where vehicles queue on a first-in, first-out basis and depart when sufficiently full~\cite{behrens2015_paratransit}. This is known as ``fill-and-go'' loading. Second, passengers may board or alight at stops along a route, although boarding is generally concentrated at terminals. Third, vehicles tend to operate on a limited set of routes between established terminals~\cite{coct2021_taxiroutes, dupreez2019_paratransit_route_typology}. Fourth, drivers may stop and wait for more passengers, or move slowly along a route to find them, a practice referred to here as ``hold-back''~\cite{ndibatya2021_characterising_mbt_movement}. Finally, demand is directional and varies over the day. During the morning peak, many passengers travel from residential areas towards employment centres, leaving some taxis with relatively few passengers on the return journey~\cite{coct2023_citp}. The pattern often reverses in the evening.
 
-These features create specific charging constraints. Long dwell periods at ranks and terminals provide potential charging opportunities, but a taxi that leaves a loading queue to charge may lose its position and the passengers it would otherwise have carried. The models therefore need to represent both the availability of charging opportunities and the cost of using them.
+These features create specific charging constraints. Long dwell periods at ranks and terminals during the midday off-peak hours provide potential charging opportunities, but a taxi that leaves a loading queue to charge may lose its position and the passengers it would otherwise have carried. The models therefore need to represent both the availability of charging opportunities and the cost of using them.
 
 Shown in Figure~\ref{fig:study_context}a, the study area is the union of the City of Cape Town metropolitan municipality and the surrounding Stellenbosch and Drakenstein municipalities. Telemetry data outside the area is flagged but not deleted. Around 19\% of the driven distance lies outside the study area, and a vehicle-day with 50~km or more outside the area is considered a long-distance day.
 
@@ -385,10 +385,8 @@ Each model evaluates designs using the measures it can represent, as summarised 
         \midrule
         Stranded share & EV vehicle-days whose battery level reaches 0 & Pareto front and selection & Reported \\
         Peak site load (kW) & Peak of the summed grid power of all site sessions & Pareto front and selection & Search and selection \\
-        Site and home energy (kWh a day) & Grid energy at the sites and at the homes & Reported & Reported \\
+        Site energy (kWh a day) & Grid energy at the sites & Reported & Reported \\
         Expired share & Expired requests over all requests (EVs and ICE vehicles) & -- & Search and selection \\
-        Mean passenger wait (min) & Time from the request to the boarding of served requests & -- & Search \\
-        EV passengers carried & Passengers that the EV agents carry & -- & Search \\
         EV passenger change & EV passengers against the EV agents in their ICE counterfactual & -- & Selection \\
         \bottomrule
     \end{tabularx}
@@ -442,7 +440,7 @@ Vehicle communities are identified from four views of observed operation: dwell 
 Each vehicle is connected to its 15 nearest neighbours in a similarity graph. The Leiden algorithm partitions this graph across a range of resolution parameters, using 50 random seeds at each resolution. The seed-level partitions are combined into a consensus partition. A resolution of 0.75 is selected, producing eight communities while providing the best stability among the resolutions that retain at least 90\% of corridor use within a single community.
 
 % CHANGE: V_3 is hub charging only, not "depot only" charging; "binding" defined and used for the screening condition (R2 self-review #12).
-Candidate charging sites are identified from each community's most frequently used non-home nodes. Nodes are ranked by the number of community vehicles with dwell periods of at least 20 minutes, and the first three are retained as candidate sites in both models. Each community is then screened using the energy core of \(\MR\) under three charging scenarios: overnight charging only; overnight charging plus unrestricted 60 kW charging at the three candidate hubs; and hub charging only, without overnight charging. The corresponding viable shares of vehicle-days are denoted by \(V_1\), \(V_2\) and \(V_3\). The binding of hub charging, \(B = V_2 - V_1\), is the gain in the viable share when hub charging is added to overnight charging. A large binding means that overnight charging alone leaves many vehicle-days non-viable, so the community needs hub chargers. For each candidate hub, the estimated connector requirement is based on the 95th percentile of the observed daily peak number of simultaneous charging sessions in the second scenario. This screening rule was established to avoid biasing the outcomes of the data-replay agent-based comparison.
+Candidate charging sites are identified from each community's most frequently used non-home nodes. Nodes are ranked by the number of community vehicles with dwell periods of at least 20 minutes, and the first three are retained as candidate sites in both models. Each community is then screened using the energy core of \(\MR\) under two charging scenarios: overnight charging only, and overnight charging plus unrestricted 60 kW charging at the three candidate hubs. The corresponding viable shares of vehicle-days are denoted by \(V_1\) and \(V_2\). The binding of hub charging, \(B = V_2 - V_1\), is the gain in the viable share when hub charging is added to overnight charging. A large binding means that overnight charging alone leaves many vehicle-days non-viable, so the community needs hub chargers. For each candidate hub, the estimated connector requirement is based on the 95th percentile of the observed daily peak number of simultaneous charging sessions in the second scenario. This screening rule was established to avoid biasing the outcomes of the data-replay agent-based comparison.
 
 A community qualifies for pilot selection when it contains at least 15 vehicles, has a formal main hub, has a binding of hub charging of at least 15 percentage points (\(B \geq 15\)), and has eligible routes that represent at least 30\% of the median driver's trip distance. The last condition ensures that the agent-based model represents a meaningful share of community operation. The three qualifying communities with the highest \(V_2\) values are selected, subject to having distinct main hubs. Consequently, the results apply most directly to communities that meet these electrification-readiness criteria, rather than to all minibus-taxi communities. 
 
@@ -572,7 +570,7 @@ Each model selects its design with the measures of Section~\ref{sec:objectives}.
 % CHANGE: The ceiling is the highest not-stranded share of the enumerated designs; the 99-connector design only checks that the design space reaches it (R2 self-review #6: the text described the check as the ceiling). "viable" -> "not stranded" (#2). The 40 trials evaluate 36 to 39 distinct designs (#7), and "validated design" is defined (#11).
 The replay model is deterministic, allowing every candidate design to be evaluated. Its Pareto front is therefore exact within the specified design space. Because replayed vehicles cannot divert to a charging station, even unlimited connectors cannot prevent every vehicle-day from stranding. The ceiling is therefore the highest not-stranded share of the enumerated designs, which is the service of the best design. A design with 99 connectors at each candidate site confirms that the design space reaches this ceiling. The replay candidates must reach at least 95\% of the ceiling. Among those candidates, \(\xR\) is selected by minimising peak site load and then installed power. The selected design is used as the common reference for the first research question.
 
-The agent-based model is more computationally expensive, so it cannot feasibly evaluate every candidate design. Instead, a multi-objective TPE search proposes 40 trials using one seed per trial, starting from \(\xR\). A design that the search proposes again reuses its first result, so the 40 trials evaluate 36 to 39 distinct designs (Table~\ref{tab:computational_cost}). The search minimises expired passenger requests, mean passenger waiting time and peak site load, while maximising the passengers carried by the EV agents. The resulting candidates and \(\xR\) are then evaluated on five new seeds, the selection seeds, with their paired ICE counterfactuals; a design evaluated on these seeds is called a validated design. Unlike the replay front, the agent-based front is therefore an estimate. The final agent-based design, \(\xA\), is chosen with the relative tolerance of the replay rule. With \(S = 1 + \Delta_{\mathrm{EV}}\), a candidate must keep at least 95\% of the EV passengers of the best validated design, \(S \ge 0.95\,S_{\text{best}}\), and its mean expired-request share must be within one percentage point of the minimum. Among the candidates, the selected design has the lowest peak site load and then the lowest installed power. No design is selected manually. The two models therefore use the same form of tolerance. The selection is also reported for tolerances of 90\%, 97.5\% and 99\%, and for the knee of each front, the front design nearest to the origin when each objective is scaled to its range on the front. A validated EV run that strands invalidates the selection; this condition applies to the selection runs only.
+The agent-based model is more computationally expensive, so it cannot feasibly evaluate every candidate design. Instead, a multi-objective TPE search proposes 40 trials using one seed per trial, starting from \(\xR\). A design that the search proposes again reuses its first result, so the 40 trials evaluate 36 to 39 distinct designs (Table~\ref{tab:computational_cost}). The search minimises expired passenger requests, mean passenger waiting time and peak site load, while maximising the passengers carried by the EV agents. The resulting candidates and \(\xR\) are then evaluated on five new seeds, the selection seeds, with their paired ICE counterfactuals; a design evaluated on these seeds is called a validated design. Unlike the replay front, the agent-based front is therefore an estimate. The final agent-based design, \(\xA\), is chosen with the relative tolerance of the replay rule. With \(S = 1 + \Delta_{\mathrm{EV}}\), a candidate must keep at least 95\% of the EV passengers of the best validated design, \(S \ge 0.95\,S_{\text{best}}\), and its mean expired-request share must be within one percentage point of the minimum. Among the candidates, the selected design has the lowest peak site load and then the lowest installed power. No design is selected manually. The two models therefore use the same form of tolerance. The selection is also reported for tolerances of 90\%, 97.5\% and 99\% (\ref{app:supplementary}). A validated EV run that strands invalidates the selection; this condition applies to the selection runs only.
 
 
 \subsubsection{Cross-evaluation, sensitivity and synthesis}
@@ -604,30 +602,8 @@ To relate the passenger result to an operator's decision, each design is also pr
 
 \subsubsection{Communities}
 
-The community-detection procedure identifies eight vehicle communities (Table~\ref{tab:screening}). Hub charging improves viability in every community, but the attainable viable share remains limited because the fleet's median daily distance of 190 km exceeds the 130 km of the EV's battery window. The predefined screening rule selects Bellville (\(V_2=73.6\%\)), Wynberg (\(V_2=50.3\%\)) and Khayelitsha (\(V_2=36.9\%\)). Three communities fail at least one eligibility criterion, while two eligible communities rank below the selected three.
-
-\begin{table}[htbp]
-    \centering
-    \footnotesize
-    \caption[Electrification screening of each community]{Electrification screening of each community and the reason for each exclusion. $V_1$, $V_2$ and $V_3$ are the shares of the screened vehicle-days that are viable with overnight charging only, with overnight and hub charging at the first three hubs, and with hub charging only. Binding: the binding of hub charging, $B = V_2 - V_1$ in percentage points, the gain in the viable share when hub charging is added to overnight charging; a community is eligible only when $B \geq 15$. A main hub is formal when it is a rank, a station or a terminus.}
-    \label{tab:screening}
-    % Source: tab02_screening.
-    % CHANGE: Caption explains the binding of hub charging and its threshold (R2 self-review #12). Text above: "130 km operating range" -> the 130 km battery window (#15).
-    \begin{tabularx}{\linewidth}{@{}lrlrrrrlX@{}}
-        \toprule
-        \textbf{Community} & Vehicles & Main hub & $V_1$ (\%) & $V_2$ (\%) & $V_3$ (\%) & Binding (pp) & Selected & Reason \\
-        \midrule
-        C1 Khayelitsha & 101 & Rank & 14.4 & 36.9 & 5.9 & 22.5 & Yes & -- \\
-        C2 & 65 & Terminus & 15.1 & 34.4 & 2.6 & 19.3 & No & A higher-ranked candidate was selected \\
-        C3 & 51 & Rank & 15.5 & 34.4 & 8.6 & 18.9 & No & A higher-ranked candidate was selected \\
-        C4 Bellville & 44 & Rank & 23.9 & 73.6 & 2.5 & 49.7 & Yes & -- \\
-        C5 Wynberg & 26 & Terminus & 21.9 & 50.3 & 4.7 & 28.4 & Yes & -- \\
-        C6 & 17 & Terminus & 31.5 & 51.4 & 3.6 & 19.8 & No & Routes cover too little of the driving \\
-        C7 & 17 & Terminus & 55.0 & 70.6 & 15.6 & 15.6 & No & Routes cover too little of the driving \\
-        C8 & 14 & Rank & 45.5 & 71.6 & 9.1 & 26.1 & No & Fewer vehicles than the minimum \\
-        \bottomrule
-    \end{tabularx}
-\end{table}
+% CHANGE: Screening table moved to the appendix; the paragraph keeps the selection.
+The community-detection procedure identifies eight vehicle communities, and the predefined screening rule selects Bellville (\(V_2=73.6\%\)), Wynberg (\(V_2=50.3\%\)) and Khayelitsha (\(V_2=36.9\%\)); three communities fail at least one eligibility criterion, and two eligible communities rank below the selected three (Table~\ref{tab:screening}).
 
 The selected communities differ in how well their operation is represented by the inferred route sets and network. Their median route coverage ranges from 36.9\% to 62.9\% of trip distance, while the share of driving outside the operational network ranges from 18.6\% to 41.0\% (Table~\ref{tab:models}). These differences are important when interpreting the agent-based results, because its drivers are restricted to the inferred network and their eligible routes.
 
@@ -652,37 +628,8 @@ The selected communities differ in how well their operation is represented by th
 
 \subsubsection{Calibration}
 
-The calibrated ICE baselines reproduce the central parts of the observed duty-cycle distributions that determine EV energy use and charging opportunities (Table~\ref{tab:calibration_fit}). The differences between observed and simulated median daily distance are 2.3, 12.9 and 1.4 km in Khayelitsha, Bellville and Wynberg, respectively. The corresponding differences in median daily moving time are 0.3, 0.2 and 0.5 hours. In all three communities, the model serves at least 95.2\% of passenger requests.
-
-\begin{table}[htbp]
-    \centering
-    \footnotesize
-    \caption[Duty-cycle fit of the baseline agent-based model]{Duty-cycle fit of the baseline agent-based model of each community. Obs.: the calibration target from the vehicle-days of the qualified vehicles on the calibration days. \MA: the run of the accepted configuration from its warm start. \MR{} replays the observed movement, so it reproduces the observed values by construction and is not shown. The served share (constraint: at least 0.95) and the seat occupancy (goal: up to 0.6) are plausibility checks with no observed value.}
-    \label{tab:calibration_fit}
-    % Source: tab04_calibration.
-    % CHANGE: Caption: "agent-days of the observed agents" -> "vehicle-days of the qualified vehicles" (supervisor R2 #52: "agents" only in M_A).
-    \begin{tabularx}{\linewidth}{@{}Xrrrrrr@{}}
-        \toprule
-        & \multicolumn{2}{c}{Khayelitsha} & \multicolumn{2}{c}{Bellville} & \multicolumn{2}{c}{Wynberg} \\
-        \cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(l){6-7}
-        \textbf{Measure} & Obs. & \MA & Obs. & \MA & Obs. & \MA \\
-        \midrule
-        Daily distance, P10 (km) & 126.4 & 120.2 & 110.3 & 114.0 & 113.1 & 91.0 \\
-        Daily distance, P50 (km) & 212.6 & 210.3 & 150.5 & 163.4 & 200.5 & 201.9 \\
-        Daily distance, P90 (km) & 323.4 & 317.9 & 226.7 & 231.6 & 298.7 & 318.4 \\
-        Moving time, P10 (h) & 5.20 & 4.82 & 3.74 & 3.65 & 4.34 & 2.99 \\
-        Moving time, P50 (h) & 8.27 & 8.58 & 5.20 & 5.05 & 6.04 & 6.58 \\
-        Moving time, P90 (h) & 11.47 & 12.21 & 7.52 & 6.83 & 9.58 & 9.55 \\
-        Daily distance CV, P10 & 0.04 & 0.13 & 0.09 & 0.13 & 0.08 & 0.14 \\
-        Daily distance CV, P50 & 0.15 & 0.20 & 0.14 & 0.17 & 0.14 & 0.20 \\
-        Daily distance CV, P90 & 0.75 & 0.34 & 0.37 & 0.26 & 0.73 & 0.35 \\
-        Served requests (share) & -- & 0.958 & -- & 0.952 & -- & 0.967 \\
-        Seat occupancy on route runs & -- & 0.39 & -- & 0.57 & -- & 0.44 \\
-        \bottomrule
-    \end{tabularx}
-\end{table}
-
-The main remaining discrepancies occur in the distribution tails. In Wynberg, the 10th percentile of simulated daily distance is 91 km, compared with 113 km in the observations. The simulated agents also vary less from day to day than the observed vehicles: the 90th percentile of the distance coefficient of variation is 0.26--0.35 in the simulation, compared with 0.37--0.75 in the observations. The simulated hourly activity profiles also have lower peaks and relatively more activity around midday. Despite these differences, the accepted configurations meet the predefined hold-out criteria. The hold-out gaps are 0.83, 0.58 and 0.65 in Khayelitsha, Bellville and Wynberg, respectively, all below their corresponding acceptance limits of 1.31, 1.69 and 1.75. This supports the use of the calibrated models for the planned comparisons, while the residual differences in activity patterns remain relevant to their interpretation.
+% CHANGE: Shortened to the fit of the medians, the remaining differences and the hold-out result; the values are in Table tab:calibration_fit.
+The calibrated ICE baselines reproduce the median daily distance within 1.4 to 12.9~km and the median daily moving time within 0.2 to 0.5~h, and they serve at least 95.2\% of passenger requests (Table~\ref{tab:calibration_fit}). The remaining differences lie in the tails: the simulated agents vary less from day to day than the observed vehicles, and their hourly activity has lower peaks (Section~\ref{sec:discussion_limitations}). The accepted configurations meet the predefined hold-out criteria in all three communities (hold-out gaps 0.83, 0.58 and 0.65 against limits of 1.31, 1.69 and 1.75).
 
 \subsubsection{Agreement between observed and simulated movement}
 
@@ -718,14 +665,6 @@ However, two differences remain. First, simulated overnight periods are 1.5--2.5
     }
 \end{table}
 
-\begin{figure}[htbp]
-    \centering
-    % Figure > Observed against simulated movement, one column per community in the order (a) Khayelitsha, (b) Bellville, (c) Wynberg. Rows: the empirical cumulative distribution of the daily distance and of the overnight time (observed: the replayed vehicle-days; simulated: the duties of the five ICE seeds, one thin line per seed), and the charging opportunities per vehicle-day at each candidate site as paired bars. Source: representation/<community>/sim_days.parquet and the replay vehicle-days. Aggregates only; no vehicle identifiers.
-    \includegraphics[width=\textwidth]{figures/fidelity.pdf}
-    \caption[Observed against simulated movement]{Observed against simulated movement in each community: (a) Khayelitsha, (b) Bellville, (c) Wynberg. Top and middle: the empirical cumulative distribution of the daily distance and of the overnight time. Observed: the replayed vehicle-days of the qualified vehicles on the eight term weekdays. Simulated: the home-to-home duties of their agents in the calibrated ICE runs of \MA, one line for each of the five seeds. Bottom: the site opportunities per vehicle-day at each candidate site, as in Table~\ref{tab:fidelity}.}
-    \label{fig:fidelity}
-\end{figure}
-
 \subsection{Electrification outcomes under a common design (RQ1)}
 \label{sec:results_rq1}
 
@@ -733,9 +672,7 @@ Under the reference design \(\xR\), the two models predict substantially differe
 
 % CHANGE: "electrified agents" -> "EV agents" (supervisor R2 #52: consistent terms). "of the comparison" -> "of the base case" (R2 self-review #19). New sentences on why M_R reports less home energy (#9), from the replay and experiments outputs. Table: the non-viable share of M_R and the low-battery share of M_A as separate rows (#3); M_A values from experiments_fresh main_means.parquet.
 % CHANGE: Non-viable and low-battery rows removed from the table; the low-battery evidence kept as one sentence.
-In the agent-based model, no EV run of the base case strands because drivers can travel to charging stations. The drivers also seldom fall below the \(0.2\,C\) reserve: a route run ends or a charging session starts below it on only 0.6\%, 0.4\% and 1.6\% of the EV agent-days. This improved ability to obtain energy comes with a passenger-service cost. Under the same reference design, site energy use is 2.8, 1.7 and 4.0 times the replay values in Khayelitsha, Bellville and Wynberg, respectively. The model also records 2.4, 1.5 and 3.8 times as many site charging sessions. The EV agents nevertheless carry 18.1\%, 6.9\% and 26.4\% fewer passengers than in their corresponding ICE counterfactuals.
-
-For this common design, the models predict the same peak site load because all installed connectors are used at the peak. The replay model reports lower site energy partly because stranded vehicles stop charging and leave the active fleet. It reports much less home energy for three reasons. It replays only the valid vehicle-days, about 58, 29 and 12 a day against the 89, 44 and 20 EV agents of \(\MA\); a stranded vehicle leaves the active fleet and no longer charges at home; and the simulated overnight periods are 1.5 to 2.5~h longer (Section~\ref{sec:representation}). Figure~\ref{fig:mechanism} illustrates the differences in charging patterns, battery levels and the causes of replay failure.
+In the agent-based model, no EV run of the base case strands because drivers can travel to charging stations. This improved ability to obtain energy comes with a passenger-service cost. Under the same reference design, site energy use is 2.8, 1.7 and 4.0 times the replay values in Khayelitsha, Bellville and Wynberg, respectively, and the EV agents carry 18.1\%, 6.9\% and 26.4\% fewer passengers than in their corresponding ICE counterfactuals. Both models reach the same peak site load, because all installed connectors are used at the peak; the replay model reports lower site energy partly because stranded vehicles stop charging and leave the active fleet. Figure~\ref{fig:mechanism} illustrates the differences in charging patterns, battery levels and the causes of replay failure.
 
 \begin{table}[htbp]
     \centering
@@ -752,10 +689,6 @@ For this common design, the models predict the same peak site load because all i
         Stranded EV-days (share) & 0.570 & 0.000 & 0.226 & 0.000 & 0.490 & 0.000 \\
         Peak site load (kW) & 250 & 250 & 200 & 200 & 100 & 100 \\
         Site energy (kWh a day) & 1,368 & 3,791 & 1,020 & 1,778 & 299 & 1,198 \\
-        Home energy (kWh a day) & 356 & 2,102 & 323 & 1,081 & 129 & 435 \\
-        Site sessions a day & 99.1 & 239.5 & 83.1 & 120.5 & 16.4 & 62.4 \\
-        Expired requests (share) & -- & 0.041 & -- & 0.049 & -- & 0.034 \\
-        Mean passenger wait (min) & -- & 2.1 & -- & 4.5 & -- & 16.9 \\
         EV passenger change against ICE & -- & $-$0.181 & -- & $-$0.069 & -- & $-$0.264 \\
         \bottomrule
     \end{tabularx}
@@ -773,13 +706,11 @@ For this common design, the models predict the same peak site load because all i
 \label{sec:results_rq2}
 % CHANGE: The two peaks of x_A in Khayelitsha are tied to their seeds, 600 kW on the fresh seeds and 580 kW on the selection seeds (R2 self-review #4). Removed the one-standard-error rule, which round 1 dropped from the method (#1). The bound check names the best validated design and why its bound matters (#8).
 
-The models select different charging designs in all three communities (Table~\ref{tab:selected_designs} and Figure~\ref{fig:design_space}). The difference has two forms. In Khayelitsha, the agent-based model selects more capacity: 650~kW of installed power (5, 6 and 2 connectors at 50~kW; peak site load 600~kW on the ten fresh seeds), against 250~kW in the replay model. In Bellville and Wynberg, it selects the same installed power as the replay model (200~kW and 100~kW) at different hubs. In Bellville it puts all four connectors at the second hub, where the replay model puts one of them at the first hub. In Wynberg it puts both connectors at the first hub, where the replay model puts one at each of the first two hubs.
+The models select different charging designs in all three communities (Table~\ref{tab:two_by_two} and Figure~\ref{fig:design_space}). The difference has two forms. In Khayelitsha, the agent-based model selects more capacity: 650~kW of installed power (5, 6 and 2 connectors at 50~kW; peak site load 600~kW on the ten fresh seeds), against 250~kW in the replay model. In Bellville and Wynberg, it selects the same installed power as the replay model (200~kW and 100~kW) at different hubs. In Bellville it puts all four connectors at the second hub, where the replay model puts one of them at the first hub. In Wynberg it puts both connectors at the first hub, where the replay model puts one at each of the first two hubs.
 
 The agent-based search shows strongly falling returns to capacity in Khayelitsha. On the selection seeds, the EV passenger change rises from $-64\%$ at 22~kW to $-18\%$ at the replay design (250~kW) and $-6\%$ at the selected design (580~kW peak on these seeds). The designs with 660 to 860~kW of peak load gain only a further 0.6 to 3.4 percentage points. Under the replay model the same additional capacity has little effect: the selected agent-based design strands 55.1\% of the vehicle-days against 57.0\% for the replay design, because a replayed vehicle cannot divert to use the new connectors.
 
-The selected capacity depends on the tolerance of the selection rule (Table~\ref{tab:sweep}). Both models accept a design that keeps at least 95\% of the service of the best design. When this tolerance changes from 90\% to 99\%, the Khayelitsha agent-based design changes from 374 to 1,000~kW of installed power, and the replay design from 200 to 350~kW. At every tolerance the agent-based design has more installed power than the replay design in Khayelitsha, the same or less in Bellville, and the same in Wynberg. The knee of each front gives the cheapest efficient compromise: 150, 100 and 50~kW in the replay model and 286, 88 and 66~kW in the agent-based model.
-
-The upper bound of the design space does not constrain the result. The selection rule is relative to the best validated design, the design with the highest EV passenger change on the selection seeds, so a bound that capped this design could also move the selection. In Khayelitsha, the best validated design is 19-8-6 (1,650~kW), which reaches the bound of $2\hat{N}_j$ at hubs 2 and 3 (8 and 6 connectors; Table~\ref{tab:hubs}). Three designs above the bound, up to $3\hat{N}_j$, do not improve the EV passenger change (differences of $-0.1$ to $-1.0$ percentage points, within two standard errors; Table~\ref{tab:bound_check}), so a larger design space would not change the best design or the selection; two of them give identical runs, because the drivers do not use the extra connectors.
+The selected capacity depends on the tolerance of the selection rule, but the direction of the difference does not (Table~\ref{tab:sweep}). From 90\% to 99\%, the Khayelitsha agent-based design grows from 374 to 1,000~kW of installed power and the replay design from 200 to 350~kW; at every tolerance the agent-based design has more installed power than the replay design in Khayelitsha, the same or less in Bellville, and the same in Wynberg. The upper bound of the design space does not constrain the selection: three Khayelitsha designs above it do not improve the EV passenger change (\ref{app:bound_check}).
 
 Each design evaluated in both models (Table~\ref{tab:two_by_two}) shows that the two models disagree on which design is better in Bellville and Wynberg. There, the agent-based design strands more vehicle-days in the replay model (32.9\% against 22.6\% in Bellville, and 67.3\% against 49.0\% in Wynberg), while the replay design carries fewer EV passengers in the agent-based model. In Khayelitsha, the agent-based design is the better design in both models; the models disagree on whether its extra 400~kW is worth installing.
 
@@ -795,144 +726,38 @@ Each design evaluated in both models (Table~\ref{tab:two_by_two}) shows that the
 \begin{table}[htbp]
     \centering
     \footnotesize
-    \caption[Design that each model selects in each community]{Design that each model selects in each community: the connectors $N_1$, $N_2$ and $N_3$ at the first three hubs, the power $P$ of a connector, the installed power and the peak site load. A design ID $n\,N_1$-$N_2$-$N_3$\_$p\,P$ gives the same values.}
-    \label{tab:selected_designs}
-    % Source: tab06_selected_designs.
-    \begin{tabularx}{\linewidth}{@{}XlXrrrrrr@{}}
-        \toprule
-        \textbf{Community} & Model & Design & $N_1$ & $N_2$ & $N_3$ & $P$ (kW) & Installed (kW) & Peak (kW) \\
-        \midrule
-        Khayelitsha & \MR & n03-01-01\_p50 & 3 & 1 & 1 & 50 & 250 & 250 \\
-                    & \MA & n05-06-02\_p50 & 5 & 6 & 2 & 50 & 650 & 600 \\
-        \addlinespace
-        Bellville   & \MR & n01-03-00\_p50 & 1 & 3 & 0 & 50 & 200 & 200 \\
-                    & \MA & n00-04-00\_p50 & 0 & 4 & 0 & 50 & 200 & 200 \\
-        \addlinespace
-        Wynberg     & \MR & n01-01-00\_p50 & 1 & 1 & 0 & 50 & 100 & 100 \\
-                    & \MA & n02-00-00\_p50 & 2 & 0 & 0 & 50 & 100 & 100 \\
-        \bottomrule
-    \end{tabularx}
-\end{table}
-
-\begin{table}[htbp]
-    \centering
-    \footnotesize
-    \caption[Selected design of each model for each selection rule]{Selected design of each model for each selection rule. Relative: among the designs that keep at least the fraction $\tau$ of the service of the best design, the design with the lowest peak site load, then the lowest installed power ($\tau = 0.95$ is the main rule of both models). Knee: the front design nearest to the origin when each objective is scaled to its range on the front. Designs are $N_1$-$N_2$-$N_3$ connectors of $P$~kW. The \MA{} values are from the five selection seeds; the peak site load of \MR{} equals its installed power.}
-    \label{tab:sweep}
-    % CHANGE: "the cheapest design" -> the order of the selection rule (R2 self-review #6).
-    % Source: tab10_selection_sweep.
-    \begin{tabularx}{\linewidth}{@{}Xlllrllrr@{}}
-        \toprule
-        & & \multicolumn{3}{c}{\MR} & \multicolumn{4}{c}{\MA} \\
-        \cmidrule(lr){3-5}\cmidrule(l){6-9}
-        \textbf{Community} & Rule & Design & $P$ & Installed (kW) & Design & $P$ & Installed (kW) & Peak (kW) \\
-        \midrule
-        Khayelitsha & $\tau = 0.90$ & 3-1-0 & 50 & 200 & 11-0-6 & 22 & 374 & 374 \\
-                    & $\tau = 0.95$ & 3-1-1 & 50 & 250 & 5-6-2 & 50 & 650 & 580 \\
-                    & $\tau = 0.975$ & 4-1-1 & 50 & 300 & 5-8-4 & 50 & 850 & 670 \\
-                    & $\tau = 0.99$ & 4-2-1 & 50 & 350 & 8-7-5 & 50 & 1,000 & 800 \\
-                    & Knee & 2-1-0 & 50 & 150 & 6-3-4 & 22 & 286 & 286 \\
-        \addlinespace
-        Bellville   & $\tau = 0.90$ & 1-2-0 & 50 & 150 & 1-2-0 & 50 & 150 & 150 \\
-                    & $\tau = 0.95$ & 1-3-0 & 50 & 200 & 0-4-0 & 50 & 200 & 200 \\
-                    & $\tau = 0.975$ & 1-3-1 & 50 & 250 & 0-4-0 & 50 & 200 & 200 \\
-                    & $\tau = 0.99$ & 2-3-1 & 50 & 300 & 0-4-0 & 50 & 200 & 200 \\
-                    & Knee & 0-2-0 & 50 & 100 & 0-3-1 & 22 & 88 & 88 \\
-        \addlinespace
-        Wynberg     & $\tau = 0.90$ & 1-1-0 & 50 & 100 & 2-0-0 & 50 & 100 & 100 \\
-                    & $\tau = 0.95$ & 1-1-0 & 50 & 100 & 2-0-0 & 50 & 100 & 100 \\
-                    & $\tau = 0.975$ & 1-1-1 & 50 & 150 & 2-0-1 & 50 & 150 & 150 \\
-                    & $\tau = 0.99$ & 1-1-1 & 50 & 150 & 2-0-1 & 50 & 150 & 150 \\
-                    & Knee & 1-0-0 & 50 & 50 & 2-0-1 & 22 & 66 & 66 \\
-        \bottomrule
-    \end{tabularx}
-\end{table}
-
-\begin{table}[htbp]
-    \centering
-    \footnotesize
-    \caption[Connector estimate and upper bound of each candidate hub]{Connector estimate $\hat{N}_j$ and upper bound $2\hat{N}_j$ of each candidate hub, with the connectors of the selected designs. $\tau = 0.99$: the \MA{} design of the 99\% tolerance where it differs from $\xA$.}
-    \label{tab:hubs}
-    % Source: tab13_hubs.
-    \begin{tabularx}{\linewidth}{@{}Xrlrrrrr@{}}
-        \toprule
-        \textbf{Community} & Hub & Type & $\hat{N}_j$ & $2\hat{N}_j$ & $\xR$ & $\xA$ & $\tau = 0.99$ \\
-        \midrule
-        Khayelitsha & 1 & Rank & 10 & 20 & 3 & 5 & 8 \\
-                    & 2 & Terminus & 4 & 8 & 1 & 6 & 7 \\
-                    & 3 & Stop & 3 & 6 & 1 & 2 & 5 \\
-        \addlinespace
-        Bellville   & 1 & Rank & 4 & 8 & 1 & 0 & -- \\
-                    & 2 & Stop & 6 & 12 & 3 & 4 & -- \\
-                    & 3 & Terminus & 2 & 4 & 0 & 0 & -- \\
-        \addlinespace
-        Wynberg     & 1 & Terminus & 2 & 4 & 1 & 2 & 2 \\
-                    & 2 & Rank & 2 & 4 & 1 & 0 & 0 \\
-                    & 3 & Station & 3 & 6 & 0 & 0 & 1 \\
-        \bottomrule
-    \end{tabularx}
-\end{table}
-
-\begin{table}[htbp]
-    \centering
-    \footnotesize
-    \caption[Each selected design evaluated in both models]{Each selected design evaluated in both models. \MR: the stranded share of the vehicle-days and the peak site load on the replayed term weekdays. \MA: the EV passenger change against the ICE counterfactual (mean and standard error over ten fresh seeds) and the peak site load. $\tau = 0.99$: the \MA{} design of the 99\% tolerance where it differs from $\xA$.}
+    % CHANGE: Merged with the tables of the selected designs, the cross-evaluation and the synthesis, which repeated these values; the tau = 0.99 rows moved out with the selection sweep.
+    \caption[The selected designs evaluated in both models]{The design that each model selects, evaluated in both models. Designs are $N_1$-$N_2$-$N_3$ connectors of 50~kW at the first three hubs. \MR: the stranded share of the vehicle-days and the peak site load on the replayed term weekdays. \MA: the EV passenger change against the ICE counterfactual and the peak site load, as means over ten fresh seeds. Paired difference: the EV passenger change of $\xR$ minus that of $\xA$ on the same seed, with its standard error; it is the negative of the cost of $\xR$.}
     \label{tab:two_by_two}
-    % Source: tab11_two_by_two.
-    \resizebox{\textwidth}{!}{%
-    \begin{tabular}{@{}lllrrrrr@{}}
-        \toprule
-        & & & & \multicolumn{2}{c}{\MR} & \multicolumn{2}{c}{\MA} \\
-        \cmidrule(lr){5-6}\cmidrule(l){7-8}
-        \textbf{Community} & Design & Connectors & Installed (kW) & Stranded (share) & Peak (kW) & EV passenger change (SE) & Peak (kW) \\
-        \midrule
-        Khayelitsha & $\xR$ & 3-1-1 & 250 & 0.570 & 250 & $-$0.181 (0.004) & 250 \\
-                    & $\xA$ & 5-6-2 & 650 & 0.551 & 400 & $-$0.061 (0.004) & 600 \\
-                    & $\tau = 0.99$ & 8-7-5 & 1,000 & 0.549 & 500 & $-$0.028 (0.005) & 790 \\
-        \addlinespace
-        Bellville   & $\xR$ & 1-3-0 & 200 & 0.226 & 200 & $-$0.069 (0.005) & 200 \\
-                    & $\xA$ & 0-4-0 & 200 & 0.329 & 200 & $-$0.034 (0.009) & 200 \\
-        \addlinespace
-        Wynberg     & $\xR$ & 1-1-0 & 100 & 0.490 & 100 & $-$0.264 (0.008) & 100 \\
-                    & $\xA$ & 2-0-0 & 100 & 0.673 & 100 & $-$0.161 (0.006) & 100 \\
-                    & $\tau = 0.99$ & 2-0-1 & 150 & 0.653 & 150 & $-$0.141 (0.013) & 150 \\
-        \bottomrule
-    \end{tabular}
-    }
-\end{table}
-
-\subsubsection{Representation and behaviour effects}
-% CHANGE: The parts are parts of the paired difference, not of the cost, and the table columns say "Difference" (R2 self-review #5: "cost" had two signs).
-
-The simplified movement representation does not explain the design difference (Table~\ref{tab:decomposition}). When the replay selection rule is applied to simulated ICE movements, the resulting design \(\xS\) differs from \(\xR\) by at most 1.5 connectors moved between sites. On the fresh seeds, the representation part of the paired difference is $+6.7$ percentage points in Khayelitsha (SE 0.4), $-1.6$ in Bellville (0.7) and $-0.1$ in Wynberg (1.0), and the behaviour-and-selection part is $-18.6$ (0.5), $-2.0$ (1.0) and $-10.2$ (1.0); a negative part adds to the cost of \(\xR\). In Khayelitsha the representation works against the total: \(\xS\) has one connector fewer than \(\xR\) and loses more passengers. The difference between the selected designs therefore comes mainly from the operational responses of the drivers and from the selection criteria of \(\MA\), not from the movement representation.
-
-The decomposition combines behavioural effects with the differences in the models' service measures; it is not a causal estimate of behaviour alone.
-
-\begin{table}[htbp]
-    \centering
-    \footnotesize
-    \caption[Representation, behaviour and selection effects]{Representation, behaviour and selection effects. $\xS$ is the design that the \MR{} rule selects on the simulated ICE movement of \MA. The step $\xR \rightarrow \xS$ isolates the representation effect; $\xS \rightarrow \xA$ contains the behaviour-and-selection effect: driver adaptation together with the change of service measure and selection rule. Designs are $N_1$-$N_2$-$N_3$ connectors of 50~kW, with the installed power in kW. Change: the change of installed power in kW; moved: half the summed absolute change of the connectors per site. Difference: the EV passenger change in \MA{} of the first design minus that of the second, with its standard error over ten fresh paired seeds; the two parts sum to the paired difference in Table~\ref{tab:cross_evaluation}, the negative of the cost of $\xR$.}
-    \label{tab:decomposition}
+    % Source: tab11_two_by_two and tab07_cross_evaluation.
     \resizebox{\textwidth}{!}{%
     \begin{tabular}{@{}lllrrrrrr@{}}
         \toprule
-        & & & & \multicolumn{2}{c}{Representation ($\xR \rightarrow \xS$)} & \multicolumn{2}{c}{Behaviour and selection ($\xS \rightarrow \xA$)} \\
-        \cmidrule(lr){5-6}\cmidrule(l){7-8}
-        \textbf{Community} & $\xR$ & $\xS$ & $\xA$ & Change (moved) & Difference (SE) & Change (moved) & Difference (SE) \\
+        & & & & \multicolumn{2}{c}{\MR} & \multicolumn{3}{c}{\MA} \\
+        \cmidrule(lr){5-6}\cmidrule(l){7-9}
+        \textbf{Community} & Design & Connectors & Installed (kW) & Stranded (share) & Peak (kW) & EV passenger change & Peak (kW) & Paired difference (SE) \\
         \midrule
-        Khayelitsha & 3-1-1 (250) & 3-1-0 (200) & 5-6-2 (650) & $-$50 (0.5) & $+$0.067 (0.004) & $+$450 (4.5) & $-$0.186 (0.005) \\
-        Bellville & 1-3-0 (200) & 2-2-1 (250) & 0-4-0 (200) & $+$50 (1.5) & $-$0.016 (0.007) & $-$50 (2.5) & $-$0.020 (0.010) \\
-        Wynberg & 1-1-0 (100) & 0-1-1 (100) & 2-0-0 (100) & 0 (1.0) & $-$0.001 (0.010) & 0 (2.0) & $-$0.102 (0.010) \\
+        Khayelitsha & $\xR$ & 3-1-1 & 250 & 0.570 & 250 & $-$0.181 & 250 & $-$0.119 (0.004) \\
+                    & $\xA$ & 5-6-2 & 650 & 0.551 & 400 & $-$0.061 & 600 & \\
+        \addlinespace
+        Bellville   & $\xR$ & 1-3-0 & 200 & 0.226 & 200 & $-$0.069 & 200 & $-$0.035 (0.010) \\
+                    & $\xA$ & 0-4-0 & 200 & 0.329 & 200 & $-$0.034 & 200 & \\
+        \addlinespace
+        Wynberg     & $\xR$ & 1-1-0 & 100 & 0.490 & 100 & $-$0.264 & 100 & $-$0.103 (0.006) \\
+                    & $\xA$ & 2-0-0 & 100 & 0.673 & 100 & $-$0.161 & 100 & \\
         \bottomrule
     \end{tabular}
     }
 \end{table}
+
+% CHANGE: The representation subsection shortened to one paragraph; its table moved to the appendix.
+The simplified movement representation does not explain the design difference (Table~\ref{tab:decomposition}). The replay rule applied to simulated ICE movement selects a design \(\xS\) that differs from \(\xR\) by at most 1.5 connectors moved between sites. The representation part of the paired difference is $+6.7$, $-1.6$ and $-0.1$ percentage points in Khayelitsha, Bellville and Wynberg, against $-18.6$, $-2.0$ and $-10.2$ points for the behaviour-and-selection part (standard errors at most 1.0); in Khayelitsha the representation works against the total. The difference therefore comes mainly from the drivers' responses and the selection criteria of \(\MA\), although the decomposition is not a causal estimate of behaviour alone.
 
 \subsection{Cost of the replay design and the passengers that the EVs lose (RQ3)}
 \label{sec:results_rq3}
 % CHANGE: The selection-seed differences are within one point of the fresh-seed values in either direction (R2 self-review #18: in Wynberg they are smaller, so "favour x_A" was not right). "ICE vehicles" -> "ICE competitors" (#14); "of the comparison" -> "of the base case" (#19).
 
-The replay-selected design \(\xR\) is evaluated in \(\MA\) on ten seeds that the search and the selection did not use (Table~\ref{tab:cross_evaluation}). Its EV passenger change is 11.9, 3.5 and 10.3 percentage points lower than that of \(\xA\) in Khayelitsha, Bellville and Wynberg (standard errors 0.4, 1.0 and 0.7). On the selection seeds the differences were 12.3, 3.5 and 9.7 points, within one point of the fresh-seed values in either direction, so selecting on these seeds did not inflate the lead of \(\xA\). In Khayelitsha the difference comes with 400~kW of additional capacity. In Bellville and Wynberg the two designs have the same installed power and peak site load, so the whole difference of 3.5 and 10.3 points comes from the location of the connectors.
+The replay-selected design \(\xR\) is evaluated in \(\MA\) on ten seeds that the search and the selection did not use (Table~\ref{tab:two_by_two}). Its EV passenger change is 11.9, 3.5 and 10.3 percentage points lower than that of \(\xA\) in Khayelitsha, Bellville and Wynberg (standard errors 0.4, 1.0 and 0.7). On the selection seeds the differences were 12.3, 3.5 and 9.7 points, within one point of the fresh-seed values in either direction, so selecting on these seeds did not inflate the lead of \(\xA\). In Khayelitsha the difference comes with 400~kW of additional capacity. In Bellville and Wynberg the two designs have the same installed power and peak site load, so the whole difference of 3.5 and 10.3 points comes from the location of the connectors.
 
 The passengers that the EVs lose do not show up as an increase in the expired requests: the expired-request share changes by at most 0.04 percentage points, and the mean passenger wait by less than 10~s. The paired runs measure where the passengers go. In Khayelitsha the ICE competitors take 97\% (SE 4\%) of the passengers that the EV agents lose under \(\xR\) and 85\% (SE 11\%) under \(\xA\); in Wynberg they take 94\% (SE 10\%) and 98\% (SE 17\%) (Table~\ref{tab:ice_capture}). In Bellville the EV agents lose too few passengers (1,500 to 3,100 in 14 days) for the share to be determined against the variation of the other 1,629 drivers. Where the share is determined, the ICE competitors absorb almost all of the passengers that the EVs do not carry while they charge.
 
@@ -940,56 +765,6 @@ Even under \(\xA\), the EV agents carry 6.1\%, 3.4\% and 16.1\% fewer passengers
 
 % CHANGE: New paragraph: the charging time of the EV agents (F115), which the Discussion uses.
 The time that the EV agents spend on charging explains the size and the form of the difference (Figure~\ref{fig:passenger_loss}, bottom). Under \xR, they queue for a connector for 177, 52 and 223~min of each agent-day with a shift in Khayelitsha, Bellville and Wynberg, and under \xA{} for 35, 13 and 94~min. The paired fall of the queue (142, 39 and 130~min, SE 2.6, 1.1 and 4.9) ranks the communities in the same order as their passenger gains. In Bellville and Wynberg, \xA{} puts all connectors at one hub, and the queue falls by 75\% and 58\% at the same installed power. In Khayelitsha, the connectors of \xR{} would need 15.2~h a day at full power to deliver their site energy (Bellville 8.9~h, Wynberg 12.0~h), against 7.3~h under \xA. The drive to a charger changes little with the design: about 30~min a day in Khayelitsha and Bellville, and 72 to 76~min in Wynberg.
-
-\begin{table}[htbp]
-    \centering
-    \footnotesize
-    \caption[The selected \MR{} design against the selected \MA{} design in \MA]{The selected \MR{} design $\xR$ against the selected \MA{} design $\xA$, both evaluated in \MA: means over ten fresh seeds, and the paired difference ($\xR$ minus $\xA$) with its standard error. The ICE run is the counterfactual of both designs. No EV-day strands in any run.}
-    \label{tab:cross_evaluation}
-    % Source: tab07_cross_evaluation.
-    \resizebox{\textwidth}{!}{%
-    \begin{tabular}{@{}lrrrrrrrrr@{}}
-        \toprule
-        & \multicolumn{3}{c}{Khayelitsha} & \multicolumn{3}{c}{Bellville} & \multicolumn{3}{c}{Wynberg} \\
-        \cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(l){8-10}
-        \textbf{Measure} & $\xR$ & $\xA$ & Diff. (SE) & $\xR$ & $\xA$ & Diff. (SE) & $\xR$ & $\xA$ & Diff. (SE) \\
-        \midrule
-        EV passenger change & $-$0.181 & $-$0.061 & $-$0.119 (0.004) & $-$0.069 & $-$0.034 & $-$0.035 (0.010) & $-$0.264 & $-$0.161 & $-$0.103 (0.006) \\
-        Expired requests (share) & 0.041 & 0.041 & 0.000 (0.000) & 0.049 & 0.049 & 0.000 (0.000) & 0.034 & 0.034 & 0.000 (0.000) \\
-        Expired requests in the ICE run (share) & \multicolumn{2}{c}{0.040} & -- & \multicolumn{2}{c}{0.048} & -- & \multicolumn{2}{c}{0.034} & -- \\
-        Mean passenger wait (s) & 125.8 & 122.7 & 3.0 (1.2) & 267.6 & 270.0 & $-$2.5 (3.2) & 1,016.8 & 1,007.7 & 9.1 (6.4) \\
-        Peak site load (kW) & 250 & 600 & $-$350 (10.5) & 200 & 200 & 0 (0.0) & 100 & 100 & 0 (0.0) \\
-        Site energy (kWh a day) & 3,791 & 4,760 & $-$968 (7.2) & 1,778 & 1,922 & $-$144 (11.6) & 1,198 & 1,394 & $-$197 (10.5) \\
-        Site sessions a day & 239.5 & 316.3 & $-$76.9 (1.9) & 120.5 & 133.5 & $-$12.9 (1.3) & 62.4 & 78.6 & $-$16.2 (0.4) \\
-        \bottomrule
-    \end{tabular}
-    }
-\end{table}
-
-\begin{table}[htbp]
-    \centering
-    \footnotesize
-    \caption[Capture share of the passengers that the EV agents lose]{Capture share: the share of the passengers that the EV agents lose and the other drivers take, from the EV run and the ICE run of the same seed. Lost: the passengers that the EV agents lose; gained: the change of the passengers of all other drivers; both are means over the seeds for the 14 evaluation days of a run. Capture share: gained divided by lost, as the mean over the seeds of the share of each seed. Fresh: the ten fresh seeds; selection: the five selection seeds. In Bellville, the passengers lost are few against the variation of the passengers of the other 1,629 drivers, so the capture share is not determined. A share above 1 means that the other drivers gain more passengers than the EV agents lose; every share above 1 is within two standard errors of 1.}
-    \label{tab:ice_capture}
-    % CHANGE: Caption explains capture shares above 1 (R2 self-review #20).
-    % Source: tab12_ice_capture.
-    \begin{tabularx}{\linewidth}{@{}Xlrrrr@{}}
-        \toprule
-        & & \multicolumn{3}{c}{Fresh seeds} & Selection seeds \\
-        \cmidrule(lr){3-5}\cmidrule(l){6-6}
-        \textbf{Community} & Design & Lost & Gained & Capture share (SE) & Capture share (SE) \\
-        \midrule
-        Khayelitsha & $\xR$ & 12,503 & 12,145 & 0.97 (0.04) & 0.86 (0.04) \\
-                    & $\xA$ & 4,249 & 3,533 & 0.85 (0.11) & 0.86 (0.18) \\
-        \addlinespace
-        Bellville   & $\xR$ & 3,139 & 2,130 & 0.71 (0.40) & 1.07 (0.38) \\
-                    & $\xA$ & 1,539 & 772 & 1.62 (1.78) & 0.26 (0.70) \\
-        \addlinespace
-        Wynberg     & $\xR$ & 4,686 & 4,425 & 0.94 (0.10) & 1.03 (0.17) \\
-                    & $\xA$ & 2,852 & 2,827 & 0.98 (0.17) & 0.57 (0.22) \\
-        \bottomrule
-    \end{tabularx}
-\end{table}
 
 \begin{figure}[htbp]
     \centering
@@ -1003,16 +778,9 @@ The time that the EV agents spend on charging explains the size and the form of 
 \subsection{Size, form and robustness of the difference, and computational cost (RQ4)}
 \label{sec:results_rq4}
 
-Across the six sensitivity cases, evaluated on five fresh seeds, the cost of \(\xR\) in \(\MA\) is 7.8 to 15.9 percentage points in Khayelitsha and 5.9 to 15.1 points in Wynberg, each at least four standard errors from zero (Figure~\ref{fig:sensitivity} and Table~\ref{tab:sensitivity}). In Bellville it is 2.6 to 3.9 points in five cases, but with 15\% lower energy consumption the two designs do not differ ($+0.1$ points, SE 1.2): the Bellville location effect exists only when the energy need is high enough to make the charging site matter.
+Across the six sensitivity cases, evaluated on five fresh seeds, the cost of \(\xR\) in \(\MA\) is 7.8 to 15.9 percentage points in Khayelitsha and 5.9 to 15.1 points in Wynberg, each at least four standard errors from zero (Table~\ref{tab:sensitivity}). In Bellville it is 2.6 to 3.9 points in five cases, but with 15\% lower energy consumption the two designs do not differ ($+0.1$ points, SE 1.2): the Bellville location effect exists only when the energy need is high enough to make the charging site matter.
 
-Higher energy consumption widens the gap between the designs, and lower consumption narrows it. A lower charging-policy minimum also lowers the reserve of the route test, which is \(s_{\min}C\); with \(s_{\min}=0.1\) the replay design strands on at most 0.17\% (Bellville) and 0.36\% (Wynberg) of the EV agent-days of a run, and with 15\% higher energy consumption the Wynberg agent-based design strands on at most 0.37\%. The rule that a stranded run invalidates the result applies to the selection runs only, where no run strands.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=\textwidth]{figures/sensitivity.pdf}
-    \caption[Sensitivity of the EV passenger change in \MA{} in each community]{Sensitivity of the EV passenger change in \MA{} in each community (colour). (a) EV passenger change against internal-combustion operation of the selected \MA{} design. (b) EV passenger change of the selected \MR{} design minus that of the selected \MA{} design, both evaluated in \MA{}, in percentage points; below zero, the \MR{} design loses more passengers. Mean $\pm$ one standard error over five fresh seeds in each case and ten in the base case.}
-    \label{fig:sensitivity}
-\end{figure}
+Higher energy consumption widens the gap between the designs, and lower consumption narrows it. A few sensitivity runs strand, on at most 0.37\% of the EV agent-days of a run (\(s_{\min}=0.1\), which also lowers the reserve of the route test, and 15\% higher consumption); the rule that a stranded run invalidates the result applies to the selection runs only, where no run strands.
 
 \begin{table}[htbp]
     \centering
@@ -1038,92 +806,32 @@ Higher energy consumption widens the gap between the designs, and lower consumpt
     \end{tabularx}
 \end{table}
 
-The cross-community synthesis (Table~\ref{tab:synthesis}) shows the form and the size of the difference. In installed power, only Khayelitsha differs (+400~kW); Bellville and Wynberg select the same power at different hubs. In EV passengers, the cost of \(\xR\) is large in Khayelitsha and Wynberg (11.9 and 10.3 points) and small in Bellville (3.5 points), and the movement-representation component is small against it except in Khayelitsha, where it works in the opposite direction.
+% CHANGE: The synthesis table repeated Table tab:two_by_two; its content is now this sentence. Computational cost shortened; its table moved to the appendix.
+Across the communities, the difference therefore takes two forms: more capacity at other hubs in Khayelitsha (+400~kW, cost of \(\xR\) 11.9 points), and the same installed power at other hubs in Bellville and Wynberg (3.5 and 10.3 points). The replay model evaluates all designs of a community in at most about a minute, whereas the full agent-based analysis of a community needs 2.0 to 13.6~h of run time (Table~\ref{tab:computational_cost}), about three orders of magnitude more.
+
+The cost model turns the passenger difference into a decision (Table~\ref{tab:cost_model}). In Khayelitsha the agent-based design costs R2.0~million a year more than the replay design, 61\% of it demand charges, and its EV agents carry 147,000 more passengers a year. It pays for itself at a fare of R13.7 a trip (R11.4 to R17.7 over the cases). The City of Cape Town sampled fares of R14 to R20 for comparable routes in 2022~\cite{coct2023_citp}. In Bellville and Wynberg the agent-based design has the same installed power but costs R40,000 a year less, because its connectors are together at one site, and it carries more passengers; it dominates the replay design in every case.
 
 \begin{table}[htbp]
     \centering
     \footnotesize
-    \caption[Size and form of each difference between the models]{Size and form of each difference between the models in each community: whether the two models select the same design, the installed power of the \MA{} design minus that of the \MR{} design, the form of the change (more capacity, other hubs, or both), and the EV passenger change of the \MR{} design minus that of the \MA{} design in \MA{} with its standard error over ten fresh seeds (equal within two standard errors). Three communities do not give a statistical generalisation.}
-    \label{tab:synthesis}
-    % Source: tab09_synthesis.
-    \resizebox{\textwidth}{!}{%
-    \begin{tabular}{@{}lllcrlrl@{}}
-        \toprule
-        & \multicolumn{2}{c}{Selected design} & & \multicolumn{2}{c}{Installed power} & \multicolumn{2}{c}{EV passenger change} \\
-        \cmidrule(lr){2-3}\cmidrule(lr){5-6}\cmidrule(l){7-8}
-        \textbf{Community} & \MR & \MA & Same & Difference (kW) & Form & Difference (SE) & Direction \\
-        \midrule
-        Khayelitsha & n03-01-01\_p50 & n05-06-02\_p50 & No & +400 & Capacity and hubs & $-$0.119 (0.004) & Lower \\
-        Bellville & n01-03-00\_p50 & n00-04-00\_p50 & No & 0 & Hubs & $-$0.035 (0.010) & Lower \\
-        Wynberg & n01-01-00\_p50 & n02-00-00\_p50 & No & 0 & Hubs & $-$0.103 (0.006) & Lower \\
-        \bottomrule
-    \end{tabular}
-    }
-\end{table}
-
-The replay model evaluates all designs of a community in 2.2 to 67.5~s in one process (Table~\ref{tab:computational_cost}). One agent-based run of 28 days takes 0.5 to 3.4~min, and the full agent-based chain of a community (warm-up, a TPE search of 36 to 39 trials, the validation, the fresh-seed evaluation, the sensitivity cases and, in Khayelitsha, the bound check) needs 2.0 to 13.6~h of run time, of which the search is 0.4 to 2.2~h. The agent-based analysis therefore costs about three orders of magnitude more computation than the replay analysis.
-
-\begin{table}[htbp]
-    \centering
-    \footnotesize
-    \caption[Computational cost of each phase in each community]{Computational cost of each phase in each community. Each design evaluation of \MR{} and each engine run of \MA{} uses one process. Runs: the designs of \MR{} or the engine runs of \MA, with the paired ICE runs. Run time: the sum of the wall times of the runs. Elapsed: the wall time of the phase, with two runs at the same time; the search trials record only their run time. Memory: the peak resident memory of one run.}
-    \label{tab:computational_cost}
-    % Source: tab15_computational_cost.
-    % CHANGE: Community is an l column and Phase the X column; the X first column collapsed at the thesis width (supervisor R2 #57: text overlaps).
-    \begin{tabularx}{\linewidth}{@{}lXrrrrr@{}}
-        \toprule
-        \textbf{Community} & Phase & Runs & Run time (h) & Mean run (min) & Elapsed (h) & Memory (GB) \\
-        \midrule
-        Khayelitsha & \MR{} enumeration & 2,645 & 0.019 & -- & 0.019 & -- \\
-                    & \MA{} warm-up (49 days) & 1 & 0.05 & 3.0 & 0.05 & 1.8 \\
-                    & \MA{} TPE search & 39 & 2.20 & 3.4 & -- & -- \\
-                    & \MA{} validation (selection seeds) & 105 & 5.40 & 3.1 & 2.04 & 2.8 \\
-                    & \MA{} fresh seeds & 50 & 2.01 & 2.4 & 1.15 & 2.8 \\
-                    & \MA{} sensitivity & 70 & 3.30 & 2.8 & 1.89 & 3.8 \\
-                    & \MA{} bound check & 15 & 0.68 & 2.7 & 0.40 & 2.8 \\
-        \addlinespace
-        Bellville   & \MR{} enumeration & 1,169 & 0.011 & -- & 0.011 & -- \\
-                    & \MA{} warm-up (63 days) & 1 & 0.07 & 4.4 & 0.07 & 0.9 \\
-                    & \MA{} TPE search & 38 & 2.10 & 3.3 & -- & -- \\
-                    & \MA{} validation (selection seeds) & 50 & 2.17 & 2.6 & 1.17 & 2.3 \\
-                    & \MA{} fresh seeds & 40 & 1.83 & 2.7 & 1.01 & 2.3 \\
-                    & \MA{} sensitivity & 70 & 3.59 & 3.1 & 1.97 & 3.3 \\
-        \addlinespace
-        Wynberg     & \MR{} enumeration & 349 & 0.001 & -- & 0.001 & -- \\
-                    & \MA{} warm-up (91 days) & 1 & 0.02 & 1.3 & 0.02 & 0.5 \\
-                    & \MA{} TPE search & 36 & 0.43 & 0.7 & -- & -- \\
-                    & \MA{} validation (selection seeds) & 45 & 0.47 & 0.6 & 0.18 & 1.1 \\
-                    & \MA{} fresh seeds & 50 & 0.44 & 0.5 & 0.26 & 1.1 \\
-                    & \MA{} sensitivity & 70 & 0.68 & 0.6 & 0.39 & 1.4 \\
-        \bottomrule
-    \end{tabularx}
-\end{table}
-
-The cost model turns the passenger difference into a decision (Table~\ref{tab:cost_model}). In Khayelitsha the agent-based design costs R2.0~million a year more than the replay design, 61\% of it demand charges, and its EV agents carry 147,000 more passengers a year. It pays for itself at a fare of R13.7 a trip (R11.4 to R17.7 over the cases); the 1,000~kW design of the 99\% tolerance would need R19.8. The City of Cape Town sampled fares of R14 to R20 for comparable routes in 2022~\cite{coct2023_citp}. In Bellville and Wynberg the agent-based design has the same installed power but costs R40,000 a year less, because its connectors are together at one site, and it carries more passengers; it dominates the replay design in every case. In Wynberg, the 150~kW design of the 99\% tolerance would pay for its additional connector at R7.4 a trip.
-
-\begin{table}[htbp]
-    \centering
-    \footnotesize
-    \caption[Annual cost and break-even fare of the selected designs]{Annual cost and break-even fare of the selected designs (rand of December 2025, without VAT). Connectors: the installed connector cost, annualised over ten years at a discount rate of 0. Demand: the City of Cape Town demand and network capacity charges of the sites. EV passengers: the passengers that the EV agents carry each day (ten fresh seeds). Extra: against $\xR$, with 250 operating days a year. Break-even fare: the fare at which the extra fare revenue pays the extra cost, in the base case and its range over the discount rates of 4, 8 and 12\% and 300 operating days. Dominates: the design costs less and carries more passengers. $\tau = 0.99$: the \MA{} design of the 99\% tolerance where it differs from $\xA$.}
+    % CHANGE: Trimmed: the tau = 0.99 rows and the split of the annual cost into connectors and demand charges removed.
+    \caption[Annual cost and break-even fare of the selected designs]{Annual cost and break-even fare of the selected designs (rand of December 2025, without VAT). Annual cost: the installed connector cost, annualised over ten years at a discount rate of 0, plus the City of Cape Town demand and network capacity charges of the sites. EV passengers: the passengers that the EV agents carry each day (ten fresh seeds). Extra: against $\xR$, with 250 operating days a year. Break-even fare: the fare at which the extra fare revenue pays the extra cost, in the base case and its range over the discount rates of 4, 8 and 12\% and 300 operating days. Dominates: the design costs less and carries more passengers.}
     \label{tab:cost_model}
     % Source: tab16_cost_model.
     \resizebox{\textwidth}{!}{%
-    \begin{tabular}{@{}llrrrrrrrl@{}}
+    \begin{tabular}{@{}llrrrrrl@{}}
         \toprule
-        & & & \multicolumn{3}{c}{Annual cost (R thousand)} & EV passengers & Extra cost & Extra passengers & Break-even fare (R) \\
-        \cmidrule(lr){4-6}
-        \textbf{Community} & Design & Installed (kW) & Connectors & Demand & Total & a day & (R thousand a year) & a year & [range] \\
+        & & Installed & Annual cost & EV passengers & Extra cost & Extra passengers & Break-even fare (R) \\
+        \textbf{Community} & Design & (kW) & (R thousand) & a day & (R thousand a year) & a year & [range] \\
         \midrule
-        Khayelitsha & $\xR$ & 250 & 665 & 845 & 1,510 & 4,044 & -- & -- & -- \\
-                    & $\xA$ & 650 & 1,444 & 2,080 & 3,524 & 4,633 & 2,014 & 147,404 & 13.66 [11.39--17.73] \\
-                    & $\tau = 0.99$ & 1,000 & 2,046 & 3,191 & 5,237 & 4,799 & 3,726 & 188,671 & 19.75 [16.46--25.39] \\
+        Khayelitsha & $\xR$ & 250 & 1,510 & 4,044 & -- & -- & -- \\
+                    & $\xA$ & 650 & 3,524 & 4,633 & 2,014 & 147,404 & 13.66 [11.39--17.73] \\
         \addlinespace
-        Bellville   & $\xR$ & 200 & 508 & 676 & 1,184 & 3,016 & -- & -- & -- \\
-                    & $\xA$ & 200 & 469 & 676 & 1,145 & 3,130 & $-$40 & 28,568 & Dominates \\
+        Bellville   & $\xR$ & 200 & 1,184 & 3,016 & -- & -- & -- \\
+                    & $\xA$ & 200 & 1,145 & 3,130 & $-$40 & 28,568 & Dominates \\
         \addlinespace
-        Wynberg     & $\xR$ & 100 & 313 & 338 & 652 & 932 & -- & -- & -- \\
-                    & $\xA$ & 100 & 274 & 338 & 612 & 1,062 & $-$40 & 32,741 & Dominates \\
-                    & $\tau = 0.99$ & 150 & 431 & 507 & 938 & 1,086 & 286 & 38,675 & 7.40 [6.17--9.73] \\
+        Wynberg     & $\xR$ & 100 & 652 & 932 & -- & -- & -- \\
+                    & $\xA$ & 100 & 612 & 1,062 & $-$40 & 32,741 & Dominates \\
         \bottomrule
     \end{tabular}
     }
@@ -1142,13 +850,13 @@ The cost model turns the passenger difference into a decision (Table~\ref{tab:co
 
 The models select different designs in all three communities, but the size and the form of the difference depend on three conditions.
 
-First, the EVs must depend on charging at the hubs during the day. One night of home charging does not cover the daily energy need of 94\%--97\% of the replayed vehicle-days, so the time that an EV spends at a charger is potentially taken from passenger service when evaluated under \MA{}. The difference grows with the energy need. With 15\% higher consumption, the cost of \xR{} (Section~\ref{sec:sensitivity}) rises from 11.9, 3.5 and 10.3 percentage points in the base case to 15.9, 3.9 and 15.1 points in Khayelitsha, Bellville and Wynberg; with 15\% lower consumption, the Bellville difference disappears ($+0.1$ points, SE 1.2; Figure~\ref{fig:sensitivity}b).
+First, the EVs must depend on charging at the hubs during the day. One night of home charging does not cover the daily energy need of 94\%--97\% of the replayed vehicle-days, so the time that an EV spends at a charger is potentially taken from passenger service when evaluated under \MA{}. The difference grows with the energy need. With 15\% higher consumption, the cost of \xR{} (Section~\ref{sec:sensitivity}) rises from 11.9, 3.5 and 10.3 percentage points in the base case to 15.9, 3.9 and 15.1 points in Khayelitsha, Bellville and Wynberg; with 15\% lower consumption, the Bellville difference disappears ($+0.1$ points, SE 1.2; Table~\ref{tab:sensitivity}).
 
 Second, how busy the connectors are decides the form of the difference. Waiting in the queue for a free connector is the main way in which charging costs passengers in \MA, and the more \xA{} shortens this wait relative to \xR, the more passengers the EVs keep (Section~\ref{sec:results_rq3}). In Khayelitsha, the EVs draw so much energy from the connectors of \xR{} that every connector would have to charge at full power for 15.2~h a day to supply it. The connectors are therefore occupied for most of the day, only additional connectors can shorten the queue, and \MA{} adds 400~kW. In Bellville and Wynberg, the connectors have spare time, and \MA{} instead puts all of them at one hub at the same installed power. The EVs then share one queue for several connectors instead of a separate queue at each hub. Such a shared queue moves faster than separate queues with the same total number of connectors, which is known as the pooling effect in queueing theory~\cite{smith1981_resource_sharing, mandelbaum1998_pooling_queueing_networks}. The time that the EVs spend in the queue falls by 75\% in Bellville and by 58\% in Wynberg. The replay model rewards the opposite. A replayed vehicle can charge only at a hub where it already stops, so \MR{} spreads the connectors over the hubs at which the observed vehicles stop, and it rates the single-hub design as worse because the vehicles that do not stop at that hub cannot use its connectors (Table~\ref{tab:two_by_two}).
 
 Third, the difference is smallest where the observed vehicles already stop at the hubs. Bellville has the fewest replayed vehicle-days without a stop of 10~min or more within 100~m of a candidate hub (8.1\%, against 28.5\% in Khayelitsha and 33.3\% in Wynberg; Table~\ref{tab:fidelity}), and it has the smallest cost of \xR. The screening does not anticipate this. The binding of hub charging ($B = V_2 - V_1$; Table~\ref{tab:screening}) is largest in Bellville (49.7~pp), but it is large because its vehicles already stop at the hubs, which is the case in which replay is most adequate.
 
-The number of ICE competitors, by contrast, has little effect: halving the scale factor $k$, which sets the size of the ICE population and of the passenger demand, or increasing it by half changes the cost of \xR{} by at most 2.1 percentage points (Figure~\ref{fig:sensitivity}b). Competition does not set how many passengers the EVs lose; it sets where those passengers go as further discussed in Section~\ref{sec:discussion_implications}.
+The number of ICE competitors, by contrast, has little effect: halving the scale factor $k$, which sets the size of the ICE population and of the passenger demand, or increasing it by half changes the cost of \xR{} by at most 2.1 percentage points (Table~\ref{tab:sensitivity}). Competition does not set how many passengers the EVs lose; it sets where those passengers go as further discussed in Section~\ref{sec:discussion_implications}.
 
 A stronger replay baseline would let a vehicle divert to the nearest charger when its battery is low. Such a rule would remove part of the stranding of \MR{} at a fraction of the computational cost. Without a model of the queue at the charger, however, it would not show the passengers that EVs lose while they wait, and by sending each vehicle to its nearest hub it would not find the single-hub designs of Bellville and Wynberg. A queue-aware diversion rule would close part of the gap, but it would then need the same calibration of when and where drivers charge as the agent-based model.
 

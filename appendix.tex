@@ -368,6 +368,210 @@ Table~\ref{tab:calibration_search} gives the result of the search in each commun
 
 Each validated point is assessed with graded levels (good, acceptable or limited), which are expressed relative to the loss of the qualified vehicles against their own targets over resampled calibration dates, so that the losses of the three communities are comparable. The acceptance prioritises realistic behaviour and the duty-cycle families, followed by the stability across seeds, the served share and the occupancy, and finally the hourly shape of the day. After the acceptance, a hold-out report compares the fit of the accepted model against the targets of the hold-out days (2 and 10 December) with its fit against the calibration targets. The resulting hold-out gap is assessed against the loss of the observed hold-out days against the calibration targets, which quantifies how much two days differ from six days in the data alone. The hold-out days test only the calibrated behaviour, since the network, the communities and the routes use all study weekdays.
 
+% CHANGE: New appendix: tables and the fidelity figure moved from the Results to keep the main text to the results of the research questions.
+\section{Supplementary results}
+\label{app:supplementary}
+
+This appendix gives the tables behind the supporting results of Section~\ref{sec:results}: the screening of the eight communities (Table~\ref{tab:screening}); the duty-cycle fit of the calibrated models (Table~\ref{tab:calibration_fit}) and the full distributions of the observed and simulated movement (Figure~\ref{fig:fidelity}); the connector bound of each hub (Table~\ref{tab:hubs}) and the selected designs at other tolerances of the selection rule (Table~\ref{tab:sweep}); the representation and behaviour parts of the paired difference (Table~\ref{tab:decomposition}); the share of the lost EV passengers that the other drivers take (Table~\ref{tab:ice_capture}); and the computational cost of each phase (Table~\ref{tab:computational_cost}).
+
+\begin{table}[htbp]
+    \centering
+    \footnotesize
+    \caption[Electrification screening of each community]{Electrification screening of each community and the reason for each exclusion. $V_1$ and $V_2$ are the shares of the screened vehicle-days that are viable with overnight charging only, and with overnight and hub charging at the first three hubs. Binding: the binding of hub charging, $B = V_2 - V_1$ in percentage points, the gain in the viable share when hub charging is added to overnight charging; a community is eligible only when $B \geq 15$. A main hub is formal when it is a rank, a station or a terminus.}
+    \label{tab:screening}
+    % Source: tab02_screening.
+    % CHANGE: Caption explains the binding of hub charging and its threshold (R2 self-review #12). Text above: "130 km operating range" -> the 130 km battery window (#15).
+    \begin{tabularx}{\linewidth}{@{}lrlrrrlX@{}}
+        \toprule
+        \textbf{Community} & Vehicles & Main hub & $V_1$ (\%) & $V_2$ (\%) & Binding (pp) & Selected & Reason \\
+        \midrule
+        C1 Khayelitsha & 101 & Rank & 14.4 & 36.9 & 22.5 & Yes & -- \\
+        C2 & 65 & Terminus & 15.1 & 34.4 & 19.3 & No & A higher-ranked candidate was selected \\
+        C3 & 51 & Rank & 15.5 & 34.4 & 18.9 & No & A higher-ranked candidate was selected \\
+        C4 Bellville & 44 & Rank & 23.9 & 73.6 & 49.7 & Yes & -- \\
+        C5 Wynberg & 26 & Terminus & 21.9 & 50.3 & 28.4 & Yes & -- \\
+        C6 & 17 & Terminus & 31.5 & 51.4 & 19.8 & No & Routes cover too little of the driving \\
+        C7 & 17 & Terminus & 55.0 & 70.6 & 15.6 & No & Routes cover too little of the driving \\
+        C8 & 14 & Rank & 45.5 & 71.6 & 26.1 & No & Fewer vehicles than the minimum \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \footnotesize
+    \caption[Duty-cycle fit of the baseline agent-based model]{Duty-cycle fit of the baseline agent-based model of each community. Obs.: the calibration target from the vehicle-days of the qualified vehicles on the calibration days. \MA: the run of the accepted configuration from its warm start. \MR{} replays the observed movement, so it reproduces the observed values by construction and is not shown. The served share (constraint: at least 0.95) and the seat occupancy (goal: up to 0.6) are plausibility checks with no observed value.}
+    \label{tab:calibration_fit}
+    % Source: tab04_calibration.
+    % CHANGE: Caption: "agent-days of the observed agents" -> "vehicle-days of the qualified vehicles" (supervisor R2 #52: "agents" only in M_A).
+    \begin{tabularx}{\linewidth}{@{}Xrrrrrr@{}}
+        \toprule
+        & \multicolumn{2}{c}{Khayelitsha} & \multicolumn{2}{c}{Bellville} & \multicolumn{2}{c}{Wynberg} \\
+        \cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(l){6-7}
+        \textbf{Measure} & Obs. & \MA & Obs. & \MA & Obs. & \MA \\
+        \midrule
+        Daily distance, P10 (km) & 126.4 & 120.2 & 110.3 & 114.0 & 113.1 & 91.0 \\
+        Daily distance, P50 (km) & 212.6 & 210.3 & 150.5 & 163.4 & 200.5 & 201.9 \\
+        Daily distance, P90 (km) & 323.4 & 317.9 & 226.7 & 231.6 & 298.7 & 318.4 \\
+        Moving time, P10 (h) & 5.20 & 4.82 & 3.74 & 3.65 & 4.34 & 2.99 \\
+        Moving time, P50 (h) & 8.27 & 8.58 & 5.20 & 5.05 & 6.04 & 6.58 \\
+        Moving time, P90 (h) & 11.47 & 12.21 & 7.52 & 6.83 & 9.58 & 9.55 \\
+        Daily distance CV, P10 & 0.04 & 0.13 & 0.09 & 0.13 & 0.08 & 0.14 \\
+        Daily distance CV, P50 & 0.15 & 0.20 & 0.14 & 0.17 & 0.14 & 0.20 \\
+        Daily distance CV, P90 & 0.75 & 0.34 & 0.37 & 0.26 & 0.73 & 0.35 \\
+        Served requests (share) & -- & 0.958 & -- & 0.952 & -- & 0.967 \\
+        Seat occupancy on route runs & -- & 0.39 & -- & 0.57 & -- & 0.44 \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\begin{figure}[htbp]
+    \centering
+    % Figure > Observed against simulated movement, one column per community in the order (a) Khayelitsha, (b) Bellville, (c) Wynberg. Rows: the empirical cumulative distribution of the daily distance and of the overnight time (observed: the replayed vehicle-days; simulated: the duties of the five ICE seeds, one thin line per seed), and the charging opportunities per vehicle-day at each candidate site as paired bars. Source: representation/<community>/sim_days.parquet and the replay vehicle-days. Aggregates only; no vehicle identifiers.
+    \includegraphics[width=\textwidth]{figures/fidelity.pdf}
+    \caption[Observed against simulated movement]{Observed against simulated movement in each community: (a) Khayelitsha, (b) Bellville, (c) Wynberg. Top and middle: the empirical cumulative distribution of the daily distance and of the overnight time. Observed: the replayed vehicle-days of the qualified vehicles on the eight term weekdays. Simulated: the home-to-home duties of their agents in the calibrated ICE runs of \MA, one line for each of the five seeds. Bottom: the site opportunities per vehicle-day at each candidate site, as in Table~\ref{tab:fidelity}.}
+    \label{fig:fidelity}
+\end{figure}
+
+\begin{table}[htbp]
+    \centering
+    \footnotesize
+    \caption[Connector estimate and upper bound of each candidate hub]{Connector estimate $\hat{N}_j$ and upper bound $2\hat{N}_j$ of each candidate hub, with the connectors of the selected designs.}
+    \label{tab:hubs}
+    % Source: tab13_hubs.
+    \begin{tabularx}{\linewidth}{@{}Xrlrrrr@{}}
+        \toprule
+        \textbf{Community} & Hub & Type & $\hat{N}_j$ & $2\hat{N}_j$ & $\xR$ & $\xA$ \\
+        \midrule
+        Khayelitsha & 1 & Rank & 10 & 20 & 3 & 5 \\
+                    & 2 & Terminus & 4 & 8 & 1 & 6 \\
+                    & 3 & Stop & 3 & 6 & 1 & 2 \\
+        \addlinespace
+        Bellville   & 1 & Rank & 4 & 8 & 1 & 0 \\
+                    & 2 & Stop & 6 & 12 & 3 & 4 \\
+                    & 3 & Terminus & 2 & 4 & 0 & 0 \\
+        \addlinespace
+        Wynberg     & 1 & Terminus & 2 & 4 & 1 & 2 \\
+                    & 2 & Rank & 2 & 4 & 1 & 0 \\
+                    & 3 & Station & 3 & 6 & 0 & 0 \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \footnotesize
+    \caption[Selected design of each model for each selection tolerance]{Selected design of each model for each selection tolerance $\tau$: among the designs that keep at least the fraction $\tau$ of the service of the best design, the design with the lowest peak site load, then the lowest installed power ($\tau = 0.95$ is the main rule of both models). Designs are $N_1$-$N_2$-$N_3$ connectors of $P$~kW. The \MA{} values are from the five selection seeds; the peak site load of \MR{} equals its installed power.}
+    \label{tab:sweep}
+    % CHANGE: "the cheapest design" -> the order of the selection rule (R2 self-review #6).
+    % Source: tab10_selection_sweep.
+    \begin{tabularx}{\linewidth}{@{}Xlllrllrr@{}}
+        \toprule
+        & & \multicolumn{3}{c}{\MR} & \multicolumn{4}{c}{\MA} \\
+        \cmidrule(lr){3-5}\cmidrule(l){6-9}
+        \textbf{Community} & Rule & Design & $P$ & Installed (kW) & Design & $P$ & Installed (kW) & Peak (kW) \\
+        \midrule
+        Khayelitsha & $\tau = 0.90$ & 3-1-0 & 50 & 200 & 11-0-6 & 22 & 374 & 374 \\
+                    & $\tau = 0.95$ & 3-1-1 & 50 & 250 & 5-6-2 & 50 & 650 & 580 \\
+                    & $\tau = 0.975$ & 4-1-1 & 50 & 300 & 5-8-4 & 50 & 850 & 670 \\
+                    & $\tau = 0.99$ & 4-2-1 & 50 & 350 & 8-7-5 & 50 & 1,000 & 800 \\
+        \addlinespace
+        Bellville   & $\tau = 0.90$ & 1-2-0 & 50 & 150 & 1-2-0 & 50 & 150 & 150 \\
+                    & $\tau = 0.95$ & 1-3-0 & 50 & 200 & 0-4-0 & 50 & 200 & 200 \\
+                    & $\tau = 0.975$ & 1-3-1 & 50 & 250 & 0-4-0 & 50 & 200 & 200 \\
+                    & $\tau = 0.99$ & 2-3-1 & 50 & 300 & 0-4-0 & 50 & 200 & 200 \\
+        \addlinespace
+        Wynberg     & $\tau = 0.90$ & 1-1-0 & 50 & 100 & 2-0-0 & 50 & 100 & 100 \\
+                    & $\tau = 0.95$ & 1-1-0 & 50 & 100 & 2-0-0 & 50 & 100 & 100 \\
+                    & $\tau = 0.975$ & 1-1-1 & 50 & 150 & 2-0-1 & 50 & 150 & 150 \\
+                    & $\tau = 0.99$ & 1-1-1 & 50 & 150 & 2-0-1 & 50 & 150 & 150 \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \footnotesize
+    \caption[Representation, behaviour and selection effects]{Representation, behaviour and selection effects. $\xS$ is the design that the \MR{} rule selects on the simulated ICE movement of \MA. The step $\xR \rightarrow \xS$ isolates the representation effect; $\xS \rightarrow \xA$ contains the behaviour-and-selection effect: driver adaptation together with the change of service measure and selection rule. Designs are $N_1$-$N_2$-$N_3$ connectors of 50~kW, with the installed power in kW. Change: the change of installed power in kW; moved: half the summed absolute change of the connectors per site. Difference: the EV passenger change in \MA{} of the first design minus that of the second, with its standard error over ten fresh paired seeds; the two parts sum to the paired difference in Table~\ref{tab:two_by_two}, the negative of the cost of $\xR$.}
+    \label{tab:decomposition}
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{@{}lllrrrrrr@{}}
+        \toprule
+        & & & & \multicolumn{2}{c}{Representation ($\xR \rightarrow \xS$)} & \multicolumn{2}{c}{Behaviour and selection ($\xS \rightarrow \xA$)} \\
+        \cmidrule(lr){5-6}\cmidrule(l){7-8}
+        \textbf{Community} & $\xR$ & $\xS$ & $\xA$ & Change (moved) & Difference (SE) & Change (moved) & Difference (SE) \\
+        \midrule
+        Khayelitsha & 3-1-1 (250) & 3-1-0 (200) & 5-6-2 (650) & $-$50 (0.5) & $+$0.067 (0.004) & $+$450 (4.5) & $-$0.186 (0.005) \\
+        Bellville & 1-3-0 (200) & 2-2-1 (250) & 0-4-0 (200) & $+$50 (1.5) & $-$0.016 (0.007) & $-$50 (2.5) & $-$0.020 (0.010) \\
+        Wynberg & 1-1-0 (100) & 0-1-1 (100) & 2-0-0 (100) & 0 (1.0) & $-$0.001 (0.010) & 0 (2.0) & $-$0.102 (0.010) \\
+        \bottomrule
+    \end{tabular}
+    }
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \footnotesize
+    \caption[Capture share of the passengers that the EV agents lose]{Capture share: the share of the passengers that the EV agents lose and the other drivers take, from the EV run and the ICE run of the same seed. Lost: the passengers that the EV agents lose; gained: the change of the passengers of all other drivers; both are means over the seeds for the 14 evaluation days of a run. Capture share: gained divided by lost, as the mean over the seeds of the share of each seed. Fresh: the ten fresh seeds; selection: the five selection seeds. In Bellville, the passengers lost are few against the variation of the passengers of the other 1,629 drivers, so the capture share is not determined. A share above 1 means that the other drivers gain more passengers than the EV agents lose; every share above 1 is within two standard errors of 1.}
+    \label{tab:ice_capture}
+    % CHANGE: Caption explains capture shares above 1 (R2 self-review #20).
+    % Source: tab12_ice_capture.
+    \begin{tabularx}{\linewidth}{@{}Xlrrrr@{}}
+        \toprule
+        & & \multicolumn{3}{c}{Fresh seeds} & Selection seeds \\
+        \cmidrule(lr){3-5}\cmidrule(l){6-6}
+        \textbf{Community} & Design & Lost & Gained & Capture share (SE) & Capture share (SE) \\
+        \midrule
+        Khayelitsha & $\xR$ & 12,503 & 12,145 & 0.97 (0.04) & 0.86 (0.04) \\
+                    & $\xA$ & 4,249 & 3,533 & 0.85 (0.11) & 0.86 (0.18) \\
+        \addlinespace
+        Bellville   & $\xR$ & 3,139 & 2,130 & 0.71 (0.40) & 1.07 (0.38) \\
+                    & $\xA$ & 1,539 & 772 & 1.62 (1.78) & 0.26 (0.70) \\
+        \addlinespace
+        Wynberg     & $\xR$ & 4,686 & 4,425 & 0.94 (0.10) & 1.03 (0.17) \\
+                    & $\xA$ & 2,852 & 2,827 & 0.98 (0.17) & 0.57 (0.22) \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \footnotesize
+    \caption[Computational cost of each phase in each community]{Computational cost of each phase in each community. Each design evaluation of \MR{} and each engine run of \MA{} uses one process. Runs: the designs of \MR{} or the engine runs of \MA, with the paired ICE runs. Run time: the sum of the wall times of the runs. Elapsed: the wall time of the phase, with two runs at the same time; the search trials record only their run time. Memory: the peak resident memory of one run.}
+    \label{tab:computational_cost}
+    % Source: tab15_computational_cost.
+    % CHANGE: Community is an l column and Phase the X column; the X first column collapsed at the thesis width (supervisor R2 #57: text overlaps).
+    \begin{tabularx}{\linewidth}{@{}lXrrrrr@{}}
+        \toprule
+        \textbf{Community} & Phase & Runs & Run time (h) & Mean run (min) & Elapsed (h) & Memory (GB) \\
+        \midrule
+        Khayelitsha & \MR{} enumeration & 2,645 & 0.019 & -- & 0.019 & -- \\
+                    & \MA{} warm-up (49 days) & 1 & 0.05 & 3.0 & 0.05 & 1.8 \\
+                    & \MA{} TPE search & 39 & 2.20 & 3.4 & -- & -- \\
+                    & \MA{} validation (selection seeds) & 105 & 5.40 & 3.1 & 2.04 & 2.8 \\
+                    & \MA{} fresh seeds & 50 & 2.01 & 2.4 & 1.15 & 2.8 \\
+                    & \MA{} sensitivity & 70 & 3.30 & 2.8 & 1.89 & 3.8 \\
+                    & \MA{} bound check & 15 & 0.68 & 2.7 & 0.40 & 2.8 \\
+        \addlinespace
+        Bellville   & \MR{} enumeration & 1,169 & 0.011 & -- & 0.011 & -- \\
+                    & \MA{} warm-up (63 days) & 1 & 0.07 & 4.4 & 0.07 & 0.9 \\
+                    & \MA{} TPE search & 38 & 2.10 & 3.3 & -- & -- \\
+                    & \MA{} validation (selection seeds) & 50 & 2.17 & 2.6 & 1.17 & 2.3 \\
+                    & \MA{} fresh seeds & 40 & 1.83 & 2.7 & 1.01 & 2.3 \\
+                    & \MA{} sensitivity & 70 & 3.59 & 3.1 & 1.97 & 3.3 \\
+        \addlinespace
+        Wynberg     & \MR{} enumeration & 349 & 0.001 & -- & 0.001 & -- \\
+                    & \MA{} warm-up (91 days) & 1 & 0.02 & 1.3 & 0.02 & 0.5 \\
+                    & \MA{} TPE search & 36 & 0.43 & 0.7 & -- & -- \\
+                    & \MA{} validation (selection seeds) & 45 & 0.47 & 0.6 & 0.18 & 1.1 \\
+                    & \MA{} fresh seeds & 50 & 0.44 & 0.5 & 0.26 & 1.1 \\
+                    & \MA{} sensitivity & 70 & 0.68 & 0.6 & 0.39 & 1.4 \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\clearpage
+
 % CHANGE: Removed the appendix "Replication with a second fleet" and its TODO: the Bluedot replication is not part of the new pipeline, and a Gauteng replication is future work (Section 6.3). In its place, a new appendix with the bound check (supervisor: check whether x_A sits at its 2N-hat bound).
 \section{Upper bound of the design space}
 \label{app:bound_check}
