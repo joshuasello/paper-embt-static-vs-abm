@@ -156,7 +156,8 @@ At each stop of a route, the passengers for the stop alight, and the route ends 
 
 \paragraph{Basic principles and theoretical background} The drivers are boundedly rational: they choose among their eligible routes and idling with a multinomial logit model~\cite{mcfadden1974_mnl} that uses remembered and currently observed demand. The model follows minibus-taxi operation rather than demand-responsive dispatch: taxis load at ranks on a first-in, first-out basis and depart when sufficiently full, drive fixed routes between terminals, and wait at stops according to their remembered demand. No operator assigns requests to vehicles. The behavioural parameters are calibrated to the duty cycles of the observed vehicles (Section~\ref{sec:calibration}).
 
-\paragraph{Emergence} The movement of the vehicles, their daily distance and moving time, the site load, the charger queues, the passenger waits and the distribution of passengers between the EVs and the ICE taxis emerge from the decisions of the drivers and their competition for requests. None of these quantities is an input.
+% CHANGE: "the EVs and the ICE taxis" -> "the EV agents and the ICE competitors" (R2 self-review #14).
+\paragraph{Emergence} The movement of the vehicles, their daily distance and moving time, the site load, the charger queues, the passenger waits and the distribution of passengers between the EV agents and the ICE competitors emerge from the decisions of the drivers and their competition for requests. None of these quantities is an input.
 
 \paragraph{Adaptation and individual decision-making} A driver decides when to return home, which route to drive or whether to idle, and how long to wait at each stop. An EV driver also decides when to charge. Each decision is a stochastic choice whose probabilities depend on the remembered demand of the current interval of the day, the current demand at the node, the occupancy of the vehicle and, for an EV, its energy level.
 

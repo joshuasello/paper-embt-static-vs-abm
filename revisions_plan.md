@@ -5,6 +5,7 @@
 - **Scope:** comments #41 to #58, which fall on this paper (thesis PDF pp. 171 to 214). Comments #1 to #40 concern the thesis front matter, Chapter 1 and the other chapters, and are handled in the thesis repo. The one exception carried over is the "corridors" terminology of #4 (see Cross-cutting B under #42).
 - **Edit target:** `main.tex` and `appendix.tex` in this repo are the source. After the edits, re-sync into `thesis/phd-thesis/replay_vs_abm/replay_vs_abm.tex` (see Cross-cutting C under #47).
 - **Page numbers:** "PDF p." is the page of the feedback PDF; "printed p." is the thesis page number (PDF p. minus 24). Thesis section 8.x is section x of the paper; thesis Table 8.n is Table n of the paper. Line numbers refer to the source at commit `1e8d685` and will drift as edits are made.
+- **Self-review:** 20 further points, found after the supervisor's comments were applied, are recorded at the end ("Self-review").
 - **Comment numbers** follow the order of extraction from the PDF. #48 is a second note on the same table as #47 and is handled there.
 
 ## Index
@@ -261,3 +262,153 @@ The paper uses "agents" for the observed vehicles in the text, but for all simul
   - [ ] Rebuild the paper and check `main.log` for undefined citations and references.
   - [ ] Merge the entries into the thesis bibliography and repeat the check in the thesis build (Cross-cutting C).
 - **Reply:** Fixed. The missing entries were added, and both the paper and the thesis build have no undefined references.
+
+---
+
+## Self-review (not from the supervisor)
+
+After comments #41 to #57 were applied (commit `0af0e94`), a read-through of the paper found 20 further points of confusion. Joshua decided each one, and the project source (`embt_replay_vs_abm`: `docs/decisions.md`, `src/replay/`, `src/experiments/measures.py`, `experiments_fresh/*/main_means.parquet`) settled the factual ones. Every edit carries a `% CHANGE: ... (R2 self-review #N: ...)` comment. Line numbers refer to `main.tex` after these edits.
+
+| # | Topic | Decision | Status |
+|---|---|---|---|
+| 1 | One-standard-error rule still cited in the Results | Remove it | [x] |
+| 2 | "Viable" and "not stranded" both used for the $M_R$ measure | "Viable" only in the sense of Pretorius et al. | [x] |
+| 3 | Below-reserve share defined two ways | Rename both; report the $M_A$ value | [x] |
+| 4 | Two peak loads for the Khayelitsha $\mathbf{x}^\star_A$ | Tie each to its seed set | [x] |
+| 5 | "Cost of $\mathbf{x}^\star_R$" changes sign and is defined late | Define it and its sign in §4.7.3 | [x] |
+| 6 | "95% of the best design" vs the 99-connector ceiling | Ceiling = best enumerated design | [x] |
+| 7 | 40 TPE trials vs 36 to 39 | Explain repeated proposals | [x] |
+| 8 | Bound-check claim can't be checked | Name the design (19-8-6) | [x] |
+| 9 | $M_A$ home energy 3 to 6 times that of $M_R$ | Explain from the source | [x] |
+| 10 | "Qualif-" has four meanings | No change | n/a |
+| 11 | "Validation" has four meanings | Clarify | [x] |
+| 12 | V₃ name, "Binding" undefined, "gain" | Define binding and use it consistently | [x] |
+| 13 | $k$ has three names | No change | n/a |
+| 14 | ICE terms still mixed | "ICE competitors" in $M_A$ contexts | [x] |
+| 15 | Smaller mismatches (associations, 140 km, conclusive, hold-back) | Fix each | [x] |
+| 16 | TPE used in Table 5 before it is defined | Introduce it in §4.1.4 | [x] |
+| 17 | Sensitivity ranges vs the rounded table | Check against unrounded values | [x] |
+| 18 | Wynberg runs against the seed rationale | Reword | [x] |
+| 19 | "No agent-based run strands" needs a scope | Limit to the base case | [x] |
+| 20 | Capture shares above 1 unexplained | Explain | [x] |
+
+### SR1 One-standard-error rule
+
+- **Issue:** The Results cited a one-standard-error rule that round 1 removed from the Methods.
+- **Change:** The sentence is removed from the RQ2 results (`main.tex:781`).
+
+### SR2 "Viable"
+
+- **Issue:** The Planning principle said $M_R$ selects on the share of days that "remain viable", while the rule used the not-stranded share. Below-reserve days are neither viable nor stranded.
+- **Source:** Decision D142 and `src/replay/designs.py` (`OBJECTIVES = ("stranded_share", "peak_site_kw")`): $M_R$ selects on the steady-state not-stranded share.
+- **Change:**
+  - "Viable" is now used only as defined by Pretorius et al.: a vehicle-day that reaches a steady state without falling below the $0.2\,C$ reserve.
+  - The Planning principle (`main.tex:366`) says $M_R$ selects on the not-stranded share, and why. Falling below the reserve is normal behaviour in $M_A$, so selecting on the viable share would not be like-for-like.
+  - §4.3 (`main.tex:457`) defines viable, non-viable (below the reserve or stranded) and conclusive (not unconverged).
+  - The "viable" ceiling of §5.1.3 became "not-stranded" (`main.tex:705`), and "make a pilot viable" became "for a pilot to succeed".
+
+### SR3 Below-reserve share
+
+- **Issue:** Table 5 said $M_A$ reports the below-reserve share under the same definition. The reference-design table said $M_A$ used another definition and left its cell empty.
+- **Source:** `src/experiments/measures.py` (`below_reserve_share`). In $M_A$ it counts the agent-days on which a route run ends or a charging session starts below $0.2\,C$.
+- **Change:**
+  - Table 5 (`main.tex:372`) has two rows. "Non-viable share" ($M_R$): EV vehicle-days below $0.2\,C$ or stranded in the steady state. "Low-battery share" ($M_A$): EV agent-days with a route end or session start below $0.2\,C$.
+  - A paragraph in §4.1.4 explains the difference.
+  - The reference-design table (now Table 10, `main.tex:739`) reports both rows. The $M_A$ values for $\mathbf{x}^\star_R$ are 0.006, 0.004 and 0.016, from `experiments_fresh/*/main_means.parquet`.
+
+### SR4 Khayelitsha peak load
+
+- **Issue:** $\mathbf{x}^\star_A$ had a 600 kW peak in one place and 580 kW one paragraph later.
+- **Change:** The text gives 600 kW on the ten fresh seeds and 580 kW on the selection seeds (`main.tex:781`).
+
+### SR5 Cost of $\mathbf{x}^\star_R$
+
+- **Issue:** The abstract and Results gave the cost as positive (11.9 points) and the tables as negative ($-0.119$), and only the Discussion defined it.
+- **Change:**
+  - §4.7.3 (`main.tex:594`) defines the cost as the points by which $\mathbf{x}^\star_R$ falls short of $\mathbf{x}^\star_A$. The tables report $\mathbf{x}^\star_R - \mathbf{x}^\star_A$, its negative.
+  - The decomposition table's columns are renamed "Difference (SE)", and the text says that a negative part adds to the cost (`main.tex:912`).
+  - The Discussion points back to the definition (`main.tex:1149`).
+
+### SR6 Ceiling and selection wording
+
+- **Issue:** The text called the 99-connector design the ceiling, but that design lies outside the design space. Table 4 and the sweep caption said "best design" and "cheapest design".
+- **Source:** `src/replay/build.py` (`ceiling`) and `src/replay/designs.py` (`near_ceiling`). The ceiling is the highest not-stranded share of the enumerated designs. The 99-connector design only checks that the design space reaches it.
+- **Change:**
+  - §4.7.2 (`main.tex:577`) describes the ceiling and the check.
+  - Table 4 (`main.tex:346`) now reads "At least 95% of the service of the best design, then the lowest peak site load and installed power".
+  - The sweep caption (`main.tex:829`) says lowest peak, then lowest installed power. The fidelity table caption gives the ceiling over the design space.
+
+### SR7 TPE trial count
+
+- **Issue:** The Methods gave 40 trials; the Results and Table 20 gave 36 to 39.
+- **Change:** §4.7.2 (`main.tex:577`) says that TPE proposes 40 trials. A repeated proposal reuses its first result, so the 40 trials evaluate 36 to 39 distinct designs.
+
+### SR8 Bound check
+
+- **Issue:** "The best validated Khayelitsha design reaches the bound at hubs 2 and 3" named no design, and neither design in the table reaches the bound.
+- **Change:** The text names 19-8-6 (1,650 kW) and says why the bound matters (`main.tex:781`).
+
+### SR9 Home energy
+
+- **Issue:** $M_A$ reports 3 to 6 times the home energy of $M_R$, but the Limitations accounted for only 5 to 8 kWh more per vehicle-day.
+- **Source:** `src/replay/build.py` (`replay_days`) and the study-folder aggregates.
+- **Change:** §5.2 (`main.tex:739`) gives three reasons:
+  - $M_R$ replays only the valid vehicle-days that are not long-distance days: about 58, 29 and 12 a day, against the 89, 44 and 20 EV agents of $M_A$.
+  - A stranded vehicle leaves the active fleet and stops charging at home.
+  - The simulated overnight periods of $M_A$ are 1.5 to 2.5 h longer.
+- §4.3 (`main.tex:457`) states which days are replayed.
+
+### SR10 "Qualif-"
+
+- **Decision:** No change. Each use is qualified by its noun (vehicles, routes, communities, stop), and each definition is followed.
+
+### SR11 Validation
+
+- **Change:** A new opening paragraph in §4.5 (`main.tex:529`) separates calibration validation from a validated design and explains cold runs. "Validated design" is defined in §4.7.2 (`main.tex:577`).
+
+### SR12 Binding
+
+- **Issue:** V₃ was "depot only charging" in §4.2.3 but "hub charging only" in Table 6. "Binding" was never explained, and the Discussion called $V_2 - V_1$ "the gain".
+- **Source:** `docs/communities.md`.
+- **Change:**
+  - §4.2.3 (`main.tex:449`): V₃ is hub charging only, without overnight charging. The binding of hub charging, $B = V_2 - V_1$, is the gain in the viable share. The rule reads "a binding of hub charging of at least 15 percentage points ($B \geq 15$)".
+  - The Table 6 caption explains Binding (`main.tex:620`), and the Discussion uses the term.
+
+### SR13 $k$
+
+- **Decision:** No change. The three names refer to the same factor, and its definition covers every use.
+
+### SR14 ICE terms
+
+- **Change:** "ICE competitors" is used in the $M_A$ contexts: §2.4 (`main.tex:183`), §5.4, the Discussion (`main.tex:1176`) and the ODD Emergence paragraph (`appendix.tex:159`).
+
+### SR15 Smaller mismatches
+
+- **Change:**
+  - "Route associations" → "taxi associations" (`main.tex:226`).
+  - The 140 km range is removed from the introduction. It now reads "about 130 km for the battery window of the electric minibus of this study" (`main.tex:77`), which matches 0.7C × 70.47 / 0.38 = 129.8 km.
+  - "Conclusive" is defined in §4.3 (`main.tex:457`).
+  - Hold-back (drivers stop and wait for more passengers) is linked to the stop decision in §4.4.1 (`main.tex:482`).
+
+### SR16 TPE before its definition
+
+- **Change:** TPE is introduced in §4.1.4, with `\cite{watanabe2026_tpe}` (`main.tex:372`). §4.5 refers back to it (`main.tex:529`).
+
+### SR17 Sensitivity ranges
+
+- **Source:** `results/tables/synthesis/tab08_sensitivity.csv`. The unrounded values are: Bellville 2.63 to 3.94 and +0.12; Wynberg 5.90 to 15.07; the largest $k$ change 2.10. The text matches them.
+- **Change:** The sensitivity table caption notes that the text uses unrounded values (`main.tex:1030`).
+
+### SR18 Seed rationale
+
+- **Issue:** The Methods said the selection seeds favour $\mathbf{x}^\star_A$, but in Wynberg the selection-seed difference (9.7) is smaller than the fresh-seed difference (10.3).
+- **Change:** The sentence now says that the selection-seed differences are within one point of the fresh-seed values, in either direction (`main.tex:940`).
+
+### SR19 "No run strands"
+
+- **Issue:** Sensitivity runs strand on up to 0.37% of days.
+- **Change:** The abstract (`main.tex:55`), the Results (`main.tex:739`) and the Discussion (`main.tex:1165`) limit the claim to the base case. Joshua had already changed Table 5's "Reported (must be 0)" to "Reported".
+
+### SR20 Capture shares above 1
+
+- **Change:** §4.7.3 (`main.tex:589`) and the ICE-capture caption (`main.tex:982`) explain that a share above 1 means the other drivers gained more passengers than the EVs lost. All such values are within two standard errors of 1.
