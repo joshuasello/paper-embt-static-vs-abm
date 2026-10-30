@@ -933,6 +933,104 @@
   isbn = {978-1-315-84951-5}
 }
 
+% - TF-IDF weighting
+@article{salton1988_term_weighting,
+  title = {Term-Weighting Approaches in Automatic Text Retrieval},
+  author = {Salton, Gerard and Buckley, Christopher},
+  year = 1988,
+  month = jan,
+  journal = {Information Processing \& Management},
+  volume = {24},
+  number = {5},
+  pages = {513--523},
+  issn = {0306-4573},
+  doi = {10.1016/0306-4573(88)90021-0},
+  urldate = {2026-10-30},
+  abstract = {The experimental evidence accumulated over the past 20 years indicates that text indexing systems based on the assignment of appropriately weighted single terms produce retrieval results that are superior to those obtainable with other more elaborate text representations. These results depend crucially on the choice of effective termweighting systems. This article summarizes the insights gained in automatic term weighting, and provides baseline single-term-indexing models with which other more elaborate content analysis procedures can be compared.},
+  file = {C\:\\Users\\joshu\\Zotero\\storage\\9YK5ZF4W\\Salton and Buckley - 1988 - Term-weighting approaches in automatic text retrieval.pdf;C\:\\Users\\joshu\\Zotero\\storage\\MUZ3MVJ6\\0306457388900210.html}
+}
+
+% - Leiden algorithm
+@article{traag2019_louvain_to_leiden,
+  title = {From {{Louvain}} to {{Leiden}}: Guaranteeing Well-Connected Communities},
+  shorttitle = {From {{Louvain}} to {{Leiden}}},
+  author = {Traag, V. A. and Waltman, L. and {van Eck}, N. J.},
+  year = 2019,
+  month = mar,
+  journal = {Scientific Reports},
+  volume = {9},
+  number = {1},
+  pages = {5233},
+  publisher = {Nature Publishing Group},
+  issn = {2045-2322},
+  doi = {10.1038/s41598-019-41695-z},
+  urldate = {2026-10-30},
+  abstract = {Community detection is often used to understand the structure of large and complex networks. One of the most popular algorithms for uncovering community structure is the so-called Louvain algorithm. We show that this algorithm has a major defect that largely went unnoticed until now: the Louvain algorithm may yield arbitrarily badly connected communities. In the worst case, communities may even be disconnected, especially when running the algorithm iteratively. In our experimental analysis, we observe that up to 25\% of the communities are badly connected and up to 16\% are disconnected. To address this problem, we introduce the Leiden algorithm. We prove that the Leiden algorithm yields communities that are guaranteed to be connected. In addition, we prove that, when the Leiden algorithm is applied iteratively, it converges to a partition in which all subsets of all communities are locally optimally assigned. Furthermore, by relying on a fast local move approach, the Leiden algorithm runs faster than the Louvain algorithm. We demonstrate the performance of the Leiden algorithm for several benchmark and real-world networks. We find that the Leiden algorithm is faster than the Louvain algorithm and uncovers better partitions, in addition to providing explicit guarantees.},
+  copyright = {2019 The Author(s)},
+  langid = {english},
+  keywords = {Applied mathematics,Computational science,Computer science},
+  file = {C:\Users\joshu\Zotero\storage\ABH3UKNY\Traag et al. - 2019 - From Louvain to Leiden guaranteeing well-connected communities.pdf}
+}
+
+% - Modularity 
+@article{newmanFindingEvaluatingCommunity2004,
+  title = {Finding and Evaluating Community Structure in Networks},
+  author = {Newman, M. E. J. and Girvan, M.},
+  year = 2004,
+  month = feb,
+  journal = {Physical Review E},
+  volume = {69},
+  number = {2},
+  pages = {026113},
+  publisher = {American Physical Society},
+  doi = {10.1103/PhysRevE.69.026113},
+  urldate = {2026-10-30},
+  abstract = {We propose and study a set of algorithms for discovering community structure in networks---natural divisions of network nodes into densely connected subgroups. Our algorithms all share two definitive features: first, they involve iterative removal of edges from the network to split it into communities, the edges removed being identified using any one of a number of possible ``betweenness'' measures, and second, these measures are, crucially, recalculated after each removal. We also propose a measure for the strength of the community structure found by our algorithms, which gives us an objective metric for choosing the number of communities into which a network should be divided. We demonstrate that our algorithms are highly effective at discovering community structure in both computer-generated and real-world network data, and show how they can be used to shed light on the sometimes dauntingly complex structure of networked systems.},
+  file = {C\:\\Users\\joshu\\Zotero\\storage\\JNUE2CLU\\Newman and Girvan - 2004 - Finding and evaluating community structure in networks.pdf;C\:\\Users\\joshu\\Zotero\\storage\\3H9EL8UN\\PhysRevE.69.html}
+}
+
+% - Consensus partition over the 50 seeds
+@article{lancichinetti2012_consensus_clustering,
+  title = {Consensus Clustering in Complex Networks},
+  author = {Lancichinetti, Andrea and Fortunato, Santo},
+  year = 2012,
+  month = mar,
+  journal = {Scientific Reports},
+  volume = {2},
+  number = {1},
+  pages = {336},
+  publisher = {Nature Publishing Group},
+  issn = {2045-2322},
+  doi = {10.1038/srep00336},
+  urldate = {2026-10-30},
+  abstract = {The community structure of complex networks reveals both their organization and hidden relationships among their constituents. Most community detection methods currently available are not deterministic and their results typically depend on the specific random seeds, initial conditions and tie-break rules adopted for their execution. Consensus clustering is used in data analysis to generate stable results out of a set of partitions delivered by stochastic methods. Here we show that consensus clustering can be combined with any existing method in a self-consistent way, enhancing considerably both the stability and the accuracy of the resulting partitions. This framework is also particularly suitable to monitor the evolution of community structure in temporal networks. An application of consensus clustering to a large citation network of physics papers demonstrates its capability to keep track of the birth, death and diversification of topics.},
+  copyright = {2012 The Author(s)},
+  langid = {english},
+  keywords = {Applied physics,Statistical physics,Theoretical physics,thermodynamics and nonlinear dynamics},
+  file = {C:\Users\joshu\Zotero\storage\XDL9W3AE\Lancichinetti and Fortunato - 2012 - Consensus clustering in complex networks.pdf}
+}
+
+% - Adjusted Rand index
+@article{hubert1985_comparing_partitions,
+  title = {Comparing Partitions},
+  author = {Hubert, Lawrence and Arabie, Phipps},
+  year = 1985,
+  month = dec,
+  journal = {Journal of Classification},
+  volume = {2},
+  number = {1},
+  pages = {193--218},
+  issn = {1432-1343},
+  doi = {10.1007/BF01908075},
+  urldate = {2026-10-30},
+  abstract = {The problem of comparing two different partitions of a finite set of objects reappears continually in the clustering literature. We begin by reviewing a well-known measure of partition correspondence often attributed to Rand (1971), discuss the issue of correcting this index for chance, and note that a recent normalization strategy developed by Morey and Agresti (1984) and adopted by others (e.g., Miligan and Cooper 1985) is based on an incorrect assumption. Then, the general problem of comparing partitions is approached indirectly by assessing the congruence of two proximity matrices using a simple cross-product measure. They are generated from corresponding partitions using various scoring rules. Special cases derivable include traditionally familiar statistics and/or ones tailored to weight certain object pairs differentially. Finally, we propose a measure based on the comparison of object triples having the advantage of a probabilistic interpretation in addition to being corrected for chance (i.e., assuming a constant value under a reasonable null hypothesis) and bounded between \textpm 1.},
+  langid = {english},
+  keywords = {Consensus indices,Measures of agreement,Measures of association},
+  file = {C:\Users\joshu\Zotero\storage\QIM8MZ8T\Hubert and Arabie - 1985 - Comparing partitions.pdf}
+}
+
+
+
 % --------------------------------------------------
 %   Reports
 % --------------------------------------------------
