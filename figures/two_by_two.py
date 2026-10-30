@@ -34,8 +34,7 @@ COMMUNITIES: dict[str, dict[str, Any]] = {
 
 INK, MUTED, GRID = "#222222", "#6b6b6b", "#e6e6e6"
 YMAX = 9
-KW_AREA = 0.22  # marker area (pt^2) per kW of installed power
-STAR = 1.7  # a star covers less of its box than a diamond, so it gets more area
+DIAMOND_AREA, STAR_AREA = 45, 120  # marker areas (pt^2); a star covers less of its box
 
 plt.rcParams.update({
     "font.family": "DejaVu Sans", "font.size": 7, "axes.labelsize": 7,
@@ -45,7 +44,7 @@ plt.rcParams.update({
     "pdf.fonttype": 42,
 })
 
-fig = plt.figure(figsize=(510 / 72, 3.4))
+fig = plt.figure(figsize=(510 / 72, 3.15))
 gs = fig.add_gridspec(1, 2, width_ratios=(1.05, 1), wspace=0.26)
 gs_a = gs[0].subgridspec(1, 3, wspace=0.12)
 
@@ -86,7 +85,7 @@ axes_a[0].set_ylabel("Connectors (50 kW)")
 axes_a[1].set_xlabel("Candidate hub")
 axes_a[0].text(-0.45, 1.12, "(a)", transform=axes_a[0].transAxes, fontweight="bold", fontsize=8)
 
-# (b) Each design in both models; marker area by installed power, cost of x_R by each arrow.
+# (b) Each design in both models; the cost of x_R by each arrow.
 ax = fig.add_subplot(gs[1])
 for name, c in COMMUNITIES.items():
     ns = [1 - s for s in c["stranded"]]
@@ -97,9 +96,9 @@ for name, c in COMMUNITIES.items():
     for j in range(2):
         ax.errorbar(ns[j], dev[j], yerr=200 * c["se"][j], fmt="none",
                     ecolor=c["colour"], elinewidth=0.8, capsize=0, zorder=2)
-    ax.scatter(ns[0], dev[0], s=KW_AREA * c["kW"][0], marker="D", facecolor="white",
+    ax.scatter(ns[0], dev[0], s=DIAMOND_AREA, marker="D", facecolor="white",
                edgecolor=c["colour"], linewidth=1.3, zorder=3)
-    ax.scatter(ns[1], dev[1], s=STAR * KW_AREA * c["kW"][1], marker="*",
+    ax.scatter(ns[1], dev[1], s=STAR_AREA, marker="*",
                facecolor=c["colour"], edgecolor="white", linewidth=0.5, zorder=3)
     ax.text(ns[1], dev[1] + 2.4, name, ha="center", va="bottom", fontsize=7, color=INK)
     ax.text(*c["cost_xy"], f"{-100 * c['diff']:.1f} pp", ha=c["cost_ha"], va="center",
@@ -129,17 +128,8 @@ labels = [r"$\mathbf{x}_R^\star$, selected by the replay model",
           r"Connector bound $2\hat{N}_j$"]
 fig.legend(handles, labels, handler_map={tuple: HandlerTuple(ndivide=None, pad=0.8)},
            loc="lower center", ncol=3, frameon=False, fontsize=7,
-           bbox_to_anchor=(0.5, 0.09), handlelength=3.2, columnspacing=2.5)
-
-# Second row: the marker area of (b) by installed power (Line2D markersize is the side in pt).
-sizes = [Line2D([], [], ls="", marker="D", mfc="white", mec=MUTED, mew=1.0,
-                ms=(KW_AREA * kw) ** 0.5) for kw in (100, 250, 650)]
-fig.legend([Line2D([], [], ls="")] + sizes,
-           ["Installed power in (b):", "100 kW", "250 kW", "650 kW"],
-           loc="lower center", ncol=4, frameon=False, fontsize=7,
-           bbox_to_anchor=(0.5, 0.0), handlelength=2.2, handleheight=2.2,
-           columnspacing=2.2, handletextpad=0.8)
-fig.subplots_adjust(left=0.07, right=0.99, top=0.86, bottom=0.32)
+           bbox_to_anchor=(0.5, -0.01), handlelength=3.2, columnspacing=2.5)
+fig.subplots_adjust(left=0.07, right=0.99, top=0.85, bottom=0.26)
 
 fig.savefig(OUT.with_suffix(".pdf"))
 fig.savefig(OUT.with_suffix(".png"), dpi=300)
