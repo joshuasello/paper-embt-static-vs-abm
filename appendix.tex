@@ -10,15 +10,15 @@
 
 Vehicle communities are detected with a multi-view similarity graph. Each vehicle is described by four views of non-negative feature weights, which are computed from the stop events and edges inside the study area on valid weekdays: the dwell hours at each non-home node, the vehicle-days on each network edge, the dwell hours at each formal node, and the vehicle-days with each pair of consecutive anchor dwells (origin-destination pairs). The features of each view are weighted with term frequency-inverse document frequency (TF-IDF)~\cite{salton1988_term_weighting}:
 \begin{equation}
-    \tilde{x}^{(m)}_{vf} = \ln\left(1 + x^{(m)}_{vf}\right)\left(\ln\frac{1 + n}{1 + \mathrm{df}_f} + 1\right),
+    \tilde{x}^{(m)}_{vg} = \ln\left(1 + x^{(m)}_{vg}\right)\left(\ln\frac{1 + n}{1 + \mathrm{df}_g} + 1\right),
 \end{equation}
 
-\noindent where \( x^{(m)}_{vf} \) is the weight of feature \( f \) for vehicle \( v \) in view \( m \), \( n \) is the number of vehicles, and \( \mathrm{df}_f \) is the number of vehicles that use feature \( f \). Each weight vector is subsequently normalised to unit length, such that a hub used by the whole fleet contributes less to the similarity of two vehicles than a stop shared by only a few. The combined similarity \( S_{uv} \in [0, 1] \) of vehicles \( u \) and \( v \) is the mean cosine similarity over the views that both vehicles have. A similarity graph joins each vehicle to its 15 most similar vehicles, and the Leiden algorithm~\cite{traag2019_louvain_to_leiden} partitions the graph by maximising the modularity with a resolution parameter \( \gamma \)~\cite{newman2004_community_structure,reichardt2006_statistical_mechanics_communities}:
+\noindent where \( x^{(m)}_{vg} \) is the weight of feature \( g \) for vehicle \( v \) in view \( m \), \( n \) is the number of vehicles, and \( \mathrm{df}_g \) is the number of vehicles that use feature \( g \). Each weight vector is subsequently normalised to unit length, such that a hub used by the whole fleet contributes less to the similarity of two vehicles than a stop shared by only a few. The combined similarity \( \psi_{uv} \in [0, 1] \) of vehicles \( u \) and \( v \) is the mean cosine similarity over the views that both vehicles have. A similarity graph joins each vehicle to its 15 most similar vehicles, and the Leiden algorithm~\cite{traag2019_louvain_to_leiden} partitions the graph by maximising the modularity with a resolution parameter \( \gamma \)~\cite{newman2004_community_structure,reichardt2006_statistical_mechanics_communities}:
 \begin{equation}
-    Q_\gamma = \frac{1}{2W} \sum_{u,v} \left[ A_{uv} - \gamma \frac{k_u k_v}{2W} \right] \mathbf{1}\left[c_u = c_v\right],
+    Q_\gamma = \frac{1}{2W} \sum_{u,v} \left[ A_{uv} - \gamma \frac{\kappa_u \kappa_v}{2W} \right] \mathbf{1}\left[c_u = c_v\right],
 \end{equation}
 
-\noindent where \( A_{uv} \) is the edge weight between vehicles \( u \) and \( v \), \( k_u \) is the strength of vehicle \( u \), \( W \) is the total edge weight, \( c_u \) is the community of \( u \), and \( \mathbf{1}[\cdot] \) is the indicator function. A larger \( \gamma \) produces smaller communities.
+\noindent where \( A_{uv} \) is the edge weight between vehicles \( u \) and \( v \), \( \kappa_u \) is the strength of vehicle \( u \), \( W \) is the total edge weight, \( c_u \) is the community of \( u \), and \( \mathbf{1}[\cdot] \) is the indicator function. A larger \( \gamma \) produces smaller communities.
 
 For each resolution \( \gamma \in \{0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 2.5, 3\} \), the Leiden algorithm is run with 50 seeds, and the seed partitions are combined into a consensus partition~\cite{lancichinetti2012_consensus_clustering}. A resolution is eligible when its median seed partition contains at least two communities of five or more vehicles, and when its consensus partition retains at least 90\% of corridor use within one community, where a corridor is an undirected pair of consecutive anchor dwells that recurs on at least three vehicle-days and two dates. The latter condition encodes the operational meaning of a community, namely vehicles that share corridors in a common operating area. Of the eligible resolutions, the most stable resolution, as measured by the mean pairwise adjusted Rand index (ARI)~\cite{hubert1985_comparing_partitions} of its seed partitions, is selected. Vehicles in communities of fewer than five vehicles are not assigned to a community. The existence of the communities is tested against a null model of randomised fleets~\cite{strona2014_curveball}, and their seed stability, temporal stability and agreement across views are given in Table~\ref{tab:community_evidence}.
 
@@ -205,26 +205,26 @@ The model uses no external time series during a run. All days use the same deriv
         \toprule
         \textbf{Parameter} & Symbol & Khayelitsha & Bellville & Wynberg \\
         \midrule
-        Idle bias & & 0.207 & $-$0.793 & 0.207 \\
-        Idle demand weight & & 1.18 & 2.61 & 1.18 \\
-        Stop bias & $b$ & 0.181 & 3.12 & 0.181 \\
-        Maximum stop duration (s) & & 301 & 674 & 301 \\
-        First-stop bias & $b_1$ & $-$1.43 & $-$2.41 & $-$1.43 \\
-        First-stop demand weight & $w_{d,1}$ & 16.9 & 26.6 & 16.9 \\
+        Idle bias & $\beta_{\text{idle}}$ & 0.207 & $-$0.793 & 0.207 \\
+        Idle demand weight & $\beta_{\text{idle\_demand}}$ & 1.18 & 2.61 & 1.18 \\
+        Stop bias & $\beta_{\text{stop}}$ & 0.181 & 3.12 & 0.181 \\
+        Maximum stop duration (s) & $T_{\text{wait}}^{\text{max}}$ & 301 & 674 & 301 \\
+        First-stop bias & $\beta_{\text{first\_stop}}$ & $-$1.43 & $-$2.41 & $-$1.43 \\
+        First-stop demand weight & $\beta_{\text{first\_demand}}$ & 16.9 & 26.6 & 16.9 \\
         Maximum first-stop duration (s) & & 3,121 & 3,932 & 3,121 \\
         Shift spread & & 0.466 & 0.189 & 0.466 \\
         Shift end offset (s) & & $-$982 & $-$5,094 & $-$982 \\
         \addlinespace
-        Stop demand and occupancy weights & $w_d$, $w_o$ & \multicolumn{3}{c}{2.0 and 4.0} \\
-        Route weights: demand, competition, distance & & \multicolumn{3}{c}{0.10, 0.25 and 0.10} \\
-        Route weights: passengers, passenger distance & & \multicolumn{3}{c}{0.30 and 0.25} \\
-        Idle income weight & & \multicolumn{3}{c}{0.05} \\
-        Final temperature and exploration time & $\tau$ &\multicolumn{3}{c}{0.1 and 10 days (0 in warm-started runs)} \\
+        Stop demand and occupancy weights & $\beta_{\text{stop\_demand}}$, $\beta_{\text{stop\_occupancy}}$ & \multicolumn{3}{c}{2.0 and 4.0} \\
+        Route weights: demand, competition, distance & $\beta_{\text{demand}}$, $\beta_{\text{competition}}$, $\beta_{\text{distance}}$ & \multicolumn{3}{c}{0.10, 0.25 and 0.10} \\
+        Route weights: passengers, passenger distance & $\beta_{\text{num\_trips}}$, $\beta_{\text{pax-distance}}$ & \multicolumn{3}{c}{0.30 and 0.25} \\
+        Idle income weight & $\beta_{\text{unmet\_income}}$ & \multicolumn{3}{c}{0.05} \\
+        Final temperature and exploration time & $\mu$ &\multicolumn{3}{c}{0.1 and 10 days (0 in warm-started runs)} \\
         Mean interval between stop evaluations (s) & & \multicolumn{3}{c}{60, exponentially distributed} \\
         Memory interval (min) & & \multicolumn{3}{c}{30} \\
         Request expiry (h) & & \multicolumn{3}{c}{2} \\
         Last-run rule & & On & Off & Off \\
-        Travel-time excess factors $c_w$ & & 1.31--1.50 & -- & -- \\
+        Travel-time excess factors & $a_h$ & 1.31--1.50 & -- & -- \\
         \bottomrule
     \end{tabularx}
 \end{table}
@@ -240,27 +240,27 @@ Each agent has a typical-weekday shift, of which the start and end times are nor
 \subsubsection{Travel time}
 \label{app:abm_travel}
 
-The travel time of an edge \( \ell \) that a driver enters in time window \( w \) is modelled as follows:
+The travel time of an edge \( \ell \) that a driver enters in time window \( h \) is modelled as follows:
 \begin{equation}
-    T_\ell = \frac{s_\ell}{80\ \text{km/h}} + X_{\ell w}, \qquad
-    X_{\ell w} =
+    T_\ell = \frac{d_\ell}{80\ \text{km/h}} + X_{\ell h}, \qquad
+    X_{\ell h} =
     \begin{cases}
-        0, & \text{with probability } \pi_{\ell w}, \\
-        c_w Y, \quad \ln Y \sim \mathcal{N}\left(\mu_{\ell w}, \sigma_{\ell w}^2\right), & \text{otherwise},
+        0, & \text{with probability } p_{\ell h}, \\
+        a_h Y, \quad \ln Y \sim \mathcal{N}\left(\xi_{\ell h}, \zeta_{\ell h}^2\right), & \text{otherwise},
     \end{cases}
 \end{equation}
 
-\noindent where \( s_\ell \) is the road length of the edge, \( \pi_{\ell w} \) is the share of observed hops without excess time, \( \mu_{\ell w} \) and \( \sigma_{\ell w} \) are the parameters of a log-normal fit of the observed excess times, and \( c_w \) is an optional excess factor. The four time windows are the night (19:00 to 06:00), the AM peak (06:00 to 09:00), the midday (09:00 to 15:00) and the PM peak (15:00 to 19:00). The fit uses the hops of the whole fleet on the calibration days, excluding hops slower than 5~km/h, since such hops contain a stand rather than driving and would make the simulated vehicles much slower than the observed vehicles. Edges with fewer than five retained hops receive a fixed excess from the pooled speed of the window, reverse edges copy the model of their observed counterpart, and close-node links use the median speed of the short observed edges. In Khayelitsha, where the simulated agents drove faster than the observed vehicles in every window, the excess is scaled by a factor \( c_w \) for each window to match the observed median speed. Drivers travel along shortest paths by road length, and the model does not represent congestion. Only the 18 formal ranks of the network act as engine ranks with loading queues.
+\noindent where \( d_\ell \) is the road length of the edge, \( p_{\ell h} \) is the share of observed hops without excess time, \( \xi_{\ell h} \) and \( \zeta_{\ell h} \) are the parameters of a log-normal fit of the observed excess times, and \( a_h \) is an optional excess factor. The four time windows are the night (19:00 to 06:00), the AM peak (06:00 to 09:00), the midday (09:00 to 15:00) and the PM peak (15:00 to 19:00). The fit uses the hops of the whole fleet on the calibration days, excluding hops slower than 5~km/h, since such hops contain a stand rather than driving and would make the simulated vehicles much slower than the observed vehicles. Edges with fewer than five retained hops receive a fixed excess from the pooled speed of the window, reverse edges copy the model of their observed counterpart, and close-node links use the median speed of the short observed edges. In Khayelitsha, where the simulated agents drove faster than the observed vehicles in every window, the excess is scaled by a factor \( a_h \) for each window to match the observed median speed. Drivers travel along shortest paths by road length, and the model does not represent congestion. Only the 18 formal ranks of the network act as engine ranks with loading queues.
 
 \subsubsection{Route choice}
 \label{app:abm_choice}
 
 A driver that is not on a route first returns home when its shift has ended. Otherwise, an EV driver consults its charging policy, after which the driver chooses between its routes and idling with a multinomial logit model~\cite{mcfadden1974_mnl}:
 \begin{equation}
-    \Pr(j) = \frac{\exp\left(U_j / \tau(t)\right)}{\sum_{i} \exp\left(U_i / \tau(t)\right)},
+    P_r = \frac{\exp\left(U_r / \mu(t)\right)}{\sum_{r' \in \mathcal{R} \cup \{\emptyset\}} \exp\left(U_{r'} / \mu(t)\right)}, \qquad r \in \mathcal{R} \cup \{\emptyset\},
 \end{equation}
 
-\noindent where \( U_j \) is the utility of route \( j \) or of idling, and \( \tau(t) \) is a temperature that decreases from 1 to 0.1 during an initial exploration period of ten days, such that drivers initially sample all of their routes. The utility of a route is a weighted sum of normalised features: the waiting requests at the current node that the route can carry, the competing drivers at the node on the same route, and the remembered distance, passengers and passenger distance per run of the route in the current interval of the day. The utility of idling comprises an idle bias, a demand term with an idle demand weight that increases as the driver's remembered demand in the current interval decreases, and a small income term, such that drivers idle more during intervals that they remember as quiet. The route weights are fixed at the values of an earlier calibration of the model, whereas the idle bias and the idle demand weight are calibrated (Section~\ref{sec:calibration}).
+\noindent where \( \mathcal{R} \) is the set of eligible routes of the driver, \( U_r \) is the utility of route \( r \), \( U_\emptyset \) is the utility of idling, and \( \mu(t) \) is a temperature that decreases from 1 to 0.1 during an initial exploration period of ten days, such that drivers initially sample all of their routes. The utility of a route is a weighted sum of normalised features: the waiting requests at the current node that the route can carry, the competing drivers at the node on the same route, and the remembered distance, passengers and passenger distance per run of the route in the current interval of the day. The utility of idling comprises an idle bias \( \beta_{\text{idle}} \), a demand term with an idle demand weight \( \beta_{\text{idle\_demand}} \) that increases as the driver's remembered demand in the current interval decreases, and a small income term with weight \( \beta_{\text{unmet\_income}} \), such that drivers idle more during intervals that they remember as quiet. The route weights are fixed at the values of an earlier calibration of the model, whereas the idle bias and the idle demand weight are calibrated (Section~\ref{sec:calibration}).
 
 \subsubsection{Boarding and memory}
 \label{app:abm_boarding}
@@ -270,26 +270,26 @@ A passenger boards only a taxi that is at the origin node, has a free seat and s
 \subsubsection{Charging and reserve rules}
 \label{app:abm_charging}
 
-To prevent avoidable stranding, an EV maintains a reserve of \( 0.2\,C \). It does not select a route that a full battery cannot complete together with the drive from the last stop to the nearest station and the reserve. Moreover, it starts a route only when its energy covers the drive to the first stop, the route, the drive to the nearest station and the reserve, and otherwise charges first, and it charges before returning home when it would otherwise arrive below the reserve. At a station, a driver takes a connector only while it still needs to charge: before its shift end, while it is below its charge target or the energy needed for its cheapest route, or while its policy requests charging; and after its shift end, only while it would otherwise arrive home below the reserve. Home charging at 3.7~kW is applied for the time at home. An EV that nevertheless strands loses the passengers on board and is restored at home with a full battery at the next day start. These rules are corrections of the engine that replace its earlier charging behaviour without a setting to revert to it. Since ICE drivers never charge, the corrections do not change the ICE runs, which was verified by reproducing the logs of a frozen ICE run exactly.
+To prevent avoidable stranding, an EV maintains a reserve of \( 0.2\,E_\mathrm{cap} \). It does not select a route that a full battery cannot complete together with the drive from the last stop to the nearest station and the reserve. Moreover, it starts a route only when its energy covers the drive to the first stop, the route, the drive to the nearest station and the reserve, and otherwise charges first, and it charges before returning home when it would otherwise arrive below the reserve. At a station, a driver takes a connector only while it still needs to charge: before its shift end, while it is below its charge target or the energy needed for its cheapest route, or while its policy requests charging; and after its shift end, only while it would otherwise arrive home below the reserve. Home charging at 3.7~kW is applied for the time at home. An EV that nevertheless strands loses the passengers on board and is restored at home with a full battery at the next day start. These rules are corrections of the engine that replace its earlier charging behaviour without a setting to revert to it. Since ICE drivers never charge, the corrections do not change the ICE runs, which was verified by reproducing the logs of a frozen ICE run exactly.
 
 \subsubsection{Passenger demand}
 \label{app:abm_demand}
 
-A departure is an anchor-to-anchor trip of an agent on the calibration days that is at least 1~km long and leaves the catchment of its origin. The catchment is defined as all nodes within 300~m of the same facility of the Comprehensive Integrated Transport Plan (CITP) of the City of Cape Town or, if no such facility exists, the origin node alone, which removes short movements within a rank complex. Since the stop rates, slow-moving shares and speeds of the observed trips do not distinguish loaded from empty legs at this observation interval, the direction of demand is taken from survey data. Each departure receives a load factor \( \lambda \), which equals 1 except for departures in the counter-peak direction of a corridor during the AM peak (06:00 to 09:00) and in the AM-peak direction during the PM peak (15:00 to 19:00). For these departures, \( \lambda \) equals the ratio of counter-peak to peak vehicle trips on the corridor in CITP Table 3-18, which ranges between 0.09 and 0.39, or the mean ratio of 0.21 for corridors without a survey. The peak direction of a corridor is the surveyed direction with more AM-peak trips or, for corridors without a survey, the direction from its residential end, which is identified from OSM land use. Since the agents drive only their eligible routes in \MA, the departures of each agent are moreover redistributed onto its eligible routes in proportion to their load factors with a weight \( \omega_d \), such that each agent retains its total load and the supply and demand remain consistent with what the agents drive.
+A departure is an anchor-to-anchor trip of an agent on the calibration days that is at least 1~km long and leaves the catchment of its origin. The catchment is defined as all nodes within 300~m of the same facility of the Comprehensive Integrated Transport Plan (CITP) of the City of Cape Town or, if no such facility exists, the origin node alone, which removes short movements within a rank complex. Since the stop rates, slow-moving shares and speeds of the observed trips do not distinguish loaded from empty legs at this observation interval, the direction of demand is taken from survey data. Each departure receives a load factor \( \varphi \), which equals 1 except for departures in the counter-peak direction of a corridor during the AM peak (06:00 to 09:00) and in the AM-peak direction during the PM peak (15:00 to 19:00). For these departures, \( \varphi \) equals the ratio of counter-peak to peak vehicle trips on the corridor in CITP Table 3-18, which ranges between 0.09 and 0.39, or the mean ratio of 0.21 for corridors without a survey. The peak direction of a corridor is the surveyed direction with more AM-peak trips or, for corridors without a survey, the direction from its residential end, which is identified from OSM land use. Since the agents drive only their eligible routes in \MA, the departures of each agent are moreover redistributed onto its eligible routes in proportion to their load factors with a weight \( \omega_e \), such that each agent retains its total load and the supply and demand remain consistent with what the agents drive.
 
 The scale factor is the ratio of the full population of taxis that load at the main hub to the agents:
 \begin{equation}
-    k = \frac{B}{Q\,L}, \qquad L = f \sum_{d \in \mathcal{H}} \lambda_d\, \omega_d, \qquad f = \frac{n_{\text{active}}}{n_{\text{valid}}\,\lvert \mathcal{D}_c \rvert},
+    k = \frac{D_\mathrm{hub}}{N_{\text{max}}\,L}, \qquad L = f \sum_{e \in \mathcal{H}} \varphi_e\, \omega_e, \qquad f = \frac{n_{\text{active}}}{n_{\text{valid}}\,\lvert \mathcal{D}_c \rvert},
 \end{equation}
 
-\noindent where \( B \) is the daily number of boardings at the CITP facility of the main hub (Section~\ref{sec:spatial_data}), \( \mathcal{H} \) is the set of agent departures from the hub catchment on valid vehicle-days, and \( L \) is the number of full loads of the agents per day. The day factor \( f \) converts counts on valid vehicle-days to counts per calibration day, where \( n_{\text{active}} \) and \( n_{\text{valid}} \) are the active and valid agent vehicle-days and \( \lvert \mathcal{D}_c \rvert = 6 \) is the number of calibration days, which corrects for the strong variation of the valid share between dates. This formulation assumes that the routes of the community represent all routes of its hub and that departures in the peak direction and off-peak depart full. The resulting scale factors are given in Table~\ref{tab:models}. As a plausibility check, \( k \) is compared with an upper bound that is derived from the operating licences in the provincial route register. The Bellville value exceeds this bound, which is discussed as a limitation in Section~\ref{sec:discussion_limitations}.
+\noindent where \( D_\mathrm{hub} \) is the daily number of boardings at the CITP facility of the main hub (Section~\ref{sec:spatial_data}), \( N_{\text{max}} \) is the seating capacity, \( \mathcal{H} \) is the set of agent departures \( e \) from the hub catchment on valid vehicle-days, and \( L \) is the number of full loads of the agents per day. The day factor \( f \) converts counts on valid vehicle-days to counts per calibration day, where \( n_{\text{active}} \) and \( n_{\text{valid}} \) are the active and valid agent vehicle-days and \( \lvert \mathcal{D}_c \rvert = 6 \) is the number of calibration days, which corrects for the strong variation of the valid share between dates. This formulation assumes that the routes of the community represent all routes of its hub and that departures in the peak direction and off-peak depart full. The resulting scale factors are given in Table~\ref{tab:models}. As a plausibility check, \( k \) is compared with an upper bound that is derived from the operating licences in the provincial route register. The Bellville value exceeds this bound, which is discussed as a limitation in Section~\ref{sec:discussion_limitations}.
 
-Each departure with load factor \( \lambda \) on a route with node sequence \( s_0, s_1, \ldots, s_m \) generates \( Q\lambda \) terminal boardings at \( s_0 \), which alight at the downstream nodes in proportion to the node weights \( w_n = 1 + c_n \), where \( c_n \) is the number of agent stop events at node \( n \) on the calibration days. The floor of one gives every route node some alightings, since short stops cannot be observed in the data. A further \( Q\lambda(1 - \alpha)/\alpha \) passengers board and alight between the en-route nodes in proportion to \( w_{s_i} w_{s_j} \), such that a share \( \alpha = 0.8 \) of all passengers boards at the terminal. The terminal share \( \alpha \) cannot be identified from the data and is therefore a judgement value. The daily number of requests of each origin-destination pair is given by:
+Each departure with load factor \( \varphi \) on a route with node sequence \( s_0, s_1, \ldots, s_K \) generates \( N_{\text{max}}\varphi \) terminal boardings at \( s_0 \), which alight at the downstream nodes in proportion to the node weights \( w_i = 1 + q_i \), where \( q_i \) is the number of agent stop events at node \( i \) on the calibration days. The floor of one gives every route node some alightings, since short stops cannot be observed in the data. A further \( N_{\text{max}}\varphi(1 - \alpha)/\alpha \) passengers board and alight between the en-route nodes \( s_a \) and \( s_b \) in proportion to \( w_{s_a} w_{s_b} \), such that a share \( \alpha = 0.8 \) of all passengers boards at the terminal. The terminal share \( \alpha \) cannot be identified from the data and is therefore a judgement value. The daily number of requests of each origin-destination pair is given by:
 \begin{equation}
-    R_{od} = k\, f \sum_{d} \omega_d\, r_{od}(d),
+    R_{od} = k\, f \sum_{e} \omega_e\, R_{od}(e),
 \end{equation}
 
-\noindent where the sum covers the eligible departures \( d \) on valid vehicle-days and \( r_{od}(d) \) is the number of requests that departure \( d \) generates on the pair. Since \( k \) is derived from the same departures, load factors and weights, the terminal requests at the hub equal the facility boardings by construction. Moreover, demand is generated only for servable pairs, i.e., pairs that lie in order on an eligible route of an agent.
+\noindent where the sum covers the eligible departures \( e \) on valid vehicle-days and \( R_{od}(e) \) is the number of requests that departure \( e \) generates on the pair. Since \( k \) is derived from the same departures, load factors and weights, the terminal requests at the hub equal the facility boardings by construction. Moreover, demand is generated only for servable pairs, i.e., pairs that lie in order on an eligible route of an agent.
 
 The daily requests of each pair are distributed over the hours of the day according to the profile of its direction class (peak, counter-peak or no direction). In Wynberg, the profile is the load of the agents' eligible departures in each hour, including the evening trips home, without which the profile would have almost no evening peak. In Khayelitsha and Bellville, the departures of the agents are almost uniform over the day, whereas their movement duration shows clear morning and evening peaks, i.e., at the peaks, the taxis move longer rather than more often. The profile of these communities is therefore the observed movement duration of the agents in each hour, shifted earlier by half the median trip duration to approximate the boarding time and weighted by the mean load factor of the class in the period. Wynberg retains the departure-based timing with which it was calibrated and accepted. In the engine, the number of requests of each pair in each 15-minute interval is drawn from a Poisson distribution with uniformly distributed request times, which yields a non-homogeneous Poisson process with a piecewise-constant rate. The same profile applies to every simulated day. The resulting demand levels are given in Table~\ref{tab:models}, and the demand is audited against the corridor survey counts and the published boardings at facilities outside the communities.
 
@@ -327,10 +327,10 @@ Table~\ref{tab:abm_corrections} lists the corrections of the charging behaviour 
 % CHANGE: "the observed agents" -> "the qualified vehicles", here and in the graded levels below (supervisor R2 #52: "agents" only in M_A).
 The calibration targets are computed from the qualified vehicles on the calibration days and comprise four families: the share of agents moving in each hour of the day; the 10th, 50th and 90th percentiles of the daily distance; the same percentiles of the daily movement duration (the summed observation intervals of point-to-point displacements at 5~km/h or faster, the same threshold that separates a stand from a hop in the travel times); and the same percentiles of the coefficient of variation of each agent's daily distance. Additionally, at least 95\% of the requests must be served (a constraint), and the median seat occupancy should be as high as possible up to 0.6 (a goal), which reflects full departures from the rank and partly empty returns. The noise \( \sigma_i \) of each target is the standard deviation of its statistic over 500 bootstrap resamples of whole calibration dates, which preserves the dependence between vehicles on the same date. The fit of target \( i \) is given by:
 \begin{equation}
-    z_i = \frac{\left| y_i^{\text{sim}} - y_i^{\text{obs}} \right|}{\max\left(\sigma_i,\ \epsilon_i\right)},
+    z_i = \frac{\left| y_i^{\text{sim}} - y_i^{\text{obs}} \right|}{\max\left(\sigma_i,\ \sigma_i^{\text{min}}\right)},
 \end{equation}
 
-\noindent where \( y_i^{\text{sim}} \) and \( y_i^{\text{obs}} \) are the simulated and observed values of the target, and \( \epsilon_i \) is a floor (0.01 for the movement share, 5~km, 0.02 for the coefficient of variation and 0.25~h) that prevents targets with very small noise from dominating the fit. The loss of a family is the mean fit of its targets, and the loss of a run is the weighted mean of the family losses.
+\noindent where \( y_i^{\text{sim}} \) and \( y_i^{\text{obs}} \) are the simulated and observed values of the target, and \( \sigma_i^{\text{min}} \) is a floor (0.01 for the movement share, 5~km, 0.02 for the coefficient of variation and 0.25~h) that prevents targets with very small noise from dominating the fit. The loss of a family is the mean fit of its targets, and the loss of a run is the weighted mean of the family losses.
 
 \subsection{Search}
 
@@ -461,7 +461,7 @@ This appendix gives the tables behind the supporting results of Section~\ref{sec
 \begin{table}[htbp]
     \centering
     \footnotesize
-    \caption[Selected design of each model for each selection tolerance]{Selected design of each model for each selection tolerance $\tau$: among the designs that keep at least the fraction $\tau$ of the service of the best design, the design with the lowest peak site load, then the lowest installed power ($\tau = 0.95$ is the main rule of both models). Designs are $N_1$-$N_2$-$N_3$ connectors of $P$~kW. The \MA{} values are from the five selection seeds; the peak site load of \MR{} equals its installed power.}
+    \caption[Selected design of each model for each selection tolerance]{Selected design of each model for each selection tolerance $\tau$: among the designs that keep at least the fraction $\tau$ of the service of the best design, the design with the lowest peak site load, then the lowest installed power ($\tau = 0.95$ is the main rule of both models). Designs are $N_1$-$N_2$-$N_3$ connectors of $P_\mathrm{out}$~kW. The \MA{} values are from the five selection seeds; the peak site load of \MR{} equals its installed power.}
     \label{tab:sweep}
     % CHANGE: "the cheapest design" -> the order of the selection rule (R2 self-review #6).
     % Source: tab10_selection_sweep.
@@ -469,7 +469,7 @@ This appendix gives the tables behind the supporting results of Section~\ref{sec
         \toprule
         & & \multicolumn{3}{c}{\MR} & \multicolumn{4}{c}{\MA} \\
         \cmidrule(lr){3-5}\cmidrule(l){6-9}
-        \textbf{Community} & Rule & Design & $P$ & Installed (kW) & Design & $P$ & Installed (kW) & Peak (kW) \\
+        \textbf{Community} & Rule & Design & $P_\mathrm{out}$ & Installed (kW) & Design & $P_\mathrm{out}$ & Installed (kW) & Peak (kW) \\
         \midrule
         Khayelitsha & $\tau = 0.90$ & 3-1-0 & 50 & 200 & 11-0-6 & 22 & 374 & 374 \\
                     & $\tau = 0.95$ & 3-1-1 & 50 & 250 & 5-6-2 & 50 & 650 & 580 \\
